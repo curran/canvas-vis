@@ -1,0 +1,42 @@
+<html>
+<head>
+  <title>Unit Tests</title>
+  <link rel="shortcut icon" type="image/png" href="jasmine-1.2.0/jasmine_favicon.png">
+  <link rel="stylesheet" type="text/css" href="jasmine-1.2.0/jasmine.css">
+  <script type="text/javascript" src="jasmine-1.2.0/jasmine.js"></script>
+  <script type="text/javascript" src="jasmine-1.2.0/jasmine-html.js"></script>
+
+  <!-- Load the Require.js configuration -->
+  <script src="requireJSConfig.js"></script>
+
+  <!-- Load Require.js, which will use the loaded configuration. -->
+  <script src="../lib/require-jquery.js"></script>
+
+  <!-- This script loads unit tests using Require.js. 
+       This way of loading tests is used so that the tests
+       themselves could use Require.js to load modules asynchronously. -->
+  <script type="text/javascript">
+    require([
+        // Include all specs to be run here
+        'spec/Libs',
+        'spec/Rectangle',
+        'spec/Viewport',
+        'spec/Container'
+      ],
+      // This runs the specs once they are loaded.
+      function() {
+        var jasmineEnv = jasmine.getEnv();
+        jasmineEnv.updateInterval = 1000;
+        var htmlReporter = new jasmine.HtmlReporter();
+        jasmineEnv.addReporter(htmlReporter);
+        jasmineEnv.specFilter = function(spec) {
+          return htmlReporter.specFilter(spec);
+        };
+        jasmineEnv.execute();
+      }
+    );
+  </script>
+</head>
+<body>
+</body>
+</html>
