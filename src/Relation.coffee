@@ -4,19 +4,16 @@ define ['backbone'], (Backbone) ->
   Model = Backbone.Model
   Collection = Backbone.Collection
 
-  Relation = ( ->
-    getValue = () ->
-    Model.extend
-      initialize: () ->
-        @columns = new Collection model: Column
-        @rows = new Collection model: Row
-      addColumn: (name) -> @columns.add new Column {name}
-      addRow:    (values) -> @rows.add  new Row {values}
-      computeMinMax: () -> @columns.each (column) =>
-        column.set
-          min: @rows.min (row) -> row.values[column.index]
-          max: @rows.max (row) -> row.values[column.index]
-  )()
+  Relation = Model.extend
+    initialize: () ->
+      @columns = new Collection model: Column
+      @rows = new Collection model: Row
+    addColumn: (name) -> @columns.add new Column {name}
+    addRow:    (values) -> @rows.add  new Row {values}
+    computeMinMax: () -> @columns.each (column) =>
+      column.set
+        min: @rows.min (row) -> row.values[column.index]
+        max: @rows.max (row) -> row.values[column.index]
 
   Row = Model.extend()
     # use property `data` = an array of literal values
