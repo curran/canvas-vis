@@ -4,7 +4,8 @@
   define(['cv/Component'], function(Component) {
     return {
       create: function(x, y, radius) {
-        return Component.create({
+        var circle;
+        circle = Component.create({
           paint: function(ctx, bounds) {
             ctx.fillStyle = 'black';
             ctx.beginPath();
@@ -12,6 +13,12 @@
             return ctx.fill();
           }
         });
+        circle.getBoundingBox = function(boundingBox) {
+          var r2;
+          r2 = radius * 2;
+          return boundingBox.set(x - radius, y - radius, r2, r2);
+        };
+        return circle;
       }
     };
   });
