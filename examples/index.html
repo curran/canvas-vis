@@ -1,6 +1,8 @@
 <html>
 <head>
   <title>Canvas-Vis Examples</title>
+  <script src="../lib/underscore.js"></script>
+  <script src="../lib/backbone.js"></script>
   <!-- Configure and load Require.js -->
   <script>
   require = {
@@ -8,8 +10,6 @@
       // To get a canvas-vis module `Foo`, use
       // `require('cv/Foo', function(Foo){ ... }`
       'cv': '../js',
-      'underscore': '../lib/underscore',
-      'backbone': '../lib/backbone',
       'requestAnimFrame': '../lib/requestAnimFrame',
     },
     // This prevents caching during development

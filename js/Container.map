@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "Container.js",
+  "sourceRoot": "",
+  "sources": [
+    "Container.coffee"
+  ],
+  "names": [],
+  "mappings": ";;AAAA;CAAA;CAAA,CAAA,CAAyB,GAAzB,GAA0B,KAAnB;WACN;CAAA,CAAS,CAAA,GAAR,CAAQ,EAAC;CACP,QAAA,GAAA;CAAA,EAAgB,CAAA,GAAA,CAAhB,CAAA;AACoB,CADpB,CACoB,CAAA,GAApB,EAAA,CAAA,CAAA;CADA,CAEA,CAAoB,EAApB,GAAA,CAAS;CACG,MAAV,EAAS,MAAT,EAAA;CADF,QAAoB;CAEpB,QAAA,MAAO;CALV,MAAS;CADe;CAAzB,EAAyB;CAAzB"
+}

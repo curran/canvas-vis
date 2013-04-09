@@ -20,7 +20,7 @@
 rm -r js
 
 # Set up CoffeeScript for watching and compiling in `src`.
-coffee -o js/ -cw src/ &
+coffee -o js -cmw src &
 
 # Set up CoffeeScript for watching and compiling in `examples`.
-coffee -o examples/js -cw examples/
+coffee -o examples/js -cmw examples

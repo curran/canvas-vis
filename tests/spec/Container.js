@@ -2,7 +2,7 @@ define(["cv/Container", "cv/Component"],
        function(Container, Component) {
   describe("Container", function() {
     var container = Container.create(),
-        child = Component.create(),
+        child = new Component(),
         graphicsDirty = false;
 
     container.on('graphicsDirty', function(){

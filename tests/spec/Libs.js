@@ -1,4 +1,5 @@
-define(["underscore", "backbone"], function(_, Backbone) {
+// Underscore and Backbone are included as script tags.
+define([], function() {
   describe("Underscore", function() {
     it("should compute min", function(){
       expect(_.min([6, 5, 8])).toEqual(5);

@@ -1,4 +1,4 @@
-define ['backbone'], (Backbone) ->
+define [], ->
 
   # `match`
   #
@@ -17,7 +17,6 @@ define ['backbone'], (Backbone) ->
   Model = Backbone.Model
   Collection = Backbone.Collection
 
-  Component = Model.extend()
 
   BufferedComponent = Component.extend
     initialize: ->

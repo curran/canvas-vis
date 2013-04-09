@@ -2,7 +2,7 @@
 # 
 #   * `x`: Number
 #   * `y`: Number
-define ['backbone', 'underscore', 'cv/expose'], (Backbone, _, expose) ->
+define ['cv/expose'], (expose) ->
   Backbone.Model.extend
     initialize: ->
       expose @, 'x', 'y'

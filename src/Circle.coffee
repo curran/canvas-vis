@@ -1,4 +1,4 @@
-define ['cv/Component', 'backbone'], (Component, Backbone) ->
+define ['cv/Component'], (Component) ->
   Backbone.Model.extend
     paint: (ctx, bounds) ->
       ctx.fillStyle = 'black'

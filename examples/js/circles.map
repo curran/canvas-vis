@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "circles.js",
+  "sourceRoot": "",
+  "sources": [
+    "circles.coffee"
+  ],
+  "names": [],
+  "mappings": ";;AAAA;CAAA;CAAA,CAAA,CACQ,GAAA,CADR,EACS,EADD,GAAA,GACA,KADA;CAEN,OAAA,CAAA;CAAA,EAAY,CAAZ,EAAY,GAAZ,QAA6B;CAA7B,EACA,CAAA,EAAkB,GAAT;CACR,CAAI,CAAJ,GAAC;CAAD,CACI,CADJ,GACC;CADD,CAES,CAFT,GAEC;CAHF,KAAkB;CAIR,CAAwB,OAAzB,EAAT,CAAA;CAPF,EACQ;CADR"
+}

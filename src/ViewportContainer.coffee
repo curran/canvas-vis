@@ -1,6 +1,5 @@
-define ['cv/Container', 'cv/Viewport',
-        'cv/Rectangle', 'underscore']
-     , (Container, Viewport, Rectangle, _) ->
+define ['cv/Container', 'cv/Viewport', 'cv/Rectangle']
+     , (Container, Viewport, Rectangle) ->
   add = (superAdd, child) ->
     if not child.getBoundingBox then throw Error """
       ViewportContainer.add(child) expects 

@@ -2,7 +2,7 @@
 # 
 #   * `position`: Point
 #   * `size`: Dimension
-define ['backbone', 'cv/expose'], (Backbone, expose) ->
+define ['cv/expose'], (expose) ->
   Backbone.Model.extend
     initialize: ->
       expose @, 'x', 'y', 'w', 'h'

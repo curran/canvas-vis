@@ -2,7 +2,7 @@
 # 
 #   * `src`: Rectangle
 #   * `dest`: Rectangle
-define ['backbone', 'cv/expose'], (Backbone, expose) ->
+define ['cv/expose'], (expose) ->
   Viewport = Backbone.Model.extend
     initialize: -> expose @, 'src', 'dest'
     srcToDest: (inPt, outPt) ->

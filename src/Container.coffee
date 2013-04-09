@@ -1,7 +1,6 @@
-define ['cv/Component', 'underscore', 'backbone']
-     , (Component, _, Backbone) ->
+define ['cv/Component'], (Component) ->
   create: (options) ->
-    container = Component.create options
+    container = new Component options
     _.extend container, new Backbone.Collection
     container.on 'add', () ->
       container.trigger 'graphicsDirty'

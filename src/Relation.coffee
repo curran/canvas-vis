@@ -1,5 +1,5 @@
 # Some ideas for defining relations (as in tables) using Backbone.
-define ['backbone'], (Backbone) ->
+define [], ->
 
   Model = Backbone.Model
   Collection = Backbone.Collection
