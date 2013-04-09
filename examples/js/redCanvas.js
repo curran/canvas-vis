@@ -3,7 +3,7 @@
 
   require(['cv/Component'], function(Component) {
     var component;
-    component = Component.create({
+    component = new Component({
       paint: function(ctx, bounds) {
         ctx.fillStyle = 'red';
         return ctx.fillRect(bounds.x, bounds.y, bounds.w, bounds.h);

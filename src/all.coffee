@@ -1,14 +1,15 @@
 define ['backbone'], (Backbone) ->
 
+  # `match`
+  #
   # This utility lets us approximate Haskell's 
   # pattern matching syntax in CoffeeScript
   match = (property, fns, fnName = 'obj') ->
     (obj) ->
       fn = fns[obj[property]]
       if fn
-        # fn.apply is used
-        # ( instead of `fn(tree)`)
-        # so s can take many arguments.
+        # fn.apply is used ( instead of `fn(tree)`)
+        # so matched functions can take many arguments.
         fn.apply null, arguments
       else
         throw Error "no match for #{fnName}.#{property} = #{tree.type}"
@@ -18,19 +19,44 @@ define ['backbone'], (Backbone) ->
 
   Component = Model.extend()
 
-  LinearComponent = Component.extend()
+  BufferedComponent = Component.extend
+    initialize: ->
+      if !@get 'component'
+        throw Error """ BufferedComponent constructor
+          expects a `component` property, which was not given """
+      (@get 'component').on 'graphicsDirty', =>
+        @trigger 'graphicsDirty'
 
-  ViewportComponent = Component.extend()
+  Container = Component.extend
+    initialize: ->
+      if !@get 'children'
+        @set 'children', new Collection
+      (@get 'children').on 'graphicsDirty', =>
+        @trigger 'graphicsDirty'
+
+  LinearContainer = Component.extend()
+
+# `ViewportContainer`
+#
+#   * `viewport`:`Viewport`
+  ViewportContainer = Component.extend()
 
 # `MarkSet`
 #
-#  * `relations`: -> RelationSet
-#  * `generator`: -> (RelationSet) -> MarkIterator
-  MarkSet = ViewportComponent.extend()
+#  * `relation`:`Relation`
+#  * `generator`: -> (`Relation`) -> MarkIterator
+  MarkSet = ViewportContainer.extend()
 
-  RelationSet = Collection.extend model: Relation
+# `MarkIterator`
+#
+#   * `hasNext`: -> Boolean
+#   * `next`: -> Mark
 
-# A `Relation` is a table 
+# `Relation`
+#
+#   * `tuples`: Collection<`Tuple`> - rows
+#   * `attributes`: Collection<`Attribute`> - columns
+#
 # with rows (`tuples`) and columns (`attributes`).
 # The terms "tuple" and "attribute" are used because
 # they are the norm in literature on relational algebra.
@@ -57,19 +83,11 @@ define ['backbone'], (Backbone) ->
 #   * `name`: String
 #   * `min`: Number
 #   * `max`: String
+#   * `index`: Integer - the tuple index of this attribute
 #
 # TODO move min/max computation our into a relational
 # algebra aggregation operator
   Attribute = Model.extend()
-
-# `MarkIterator`
-#
-#   * `hasNext`: -> Boolean
-#   * `next`: -> Mark
-  MarkIterator = Model.extend
-    hasNext: ->
-    next: ->
-
 
 # `Point`
 # 
@@ -83,12 +101,6 @@ define ['backbone'], (Backbone) ->
 #   * `h`: Number
   Dimension = Model.extend()
 
-# `Rectangle`
-# 
-#   * `location`: Point
-#   * `size`: Dimension
-  Rectangle = Model.extend()
-
 # `Viewport`
 # 
 #   * `src`: Rectangle
@@ -96,49 +108,91 @@ define ['backbone'], (Backbone) ->
   Viewport = Model.extend
     srcToDestPoint: (srcPoint, outDestPoint) ->
     srcToDestRect: (srcRect, outDestRect) ->
+    project: alias @ 'srcToDestRect'
     destToSrcPoint: (destPoint, outSrcPoint) ->
     destToSrcRect: (destRect, outSrcRect) ->
 
-# A "mark" is Bertin's notion of a single visualization element, comprised of
-# 
-#  * Position (x, y)
-#  * Value (Luminance)
-#  * Color (Hue)
-#  * Texture
-#  * Shape
-#  * Orientation
+  alias = (_this, method) ->
+    -> _this[method].call arguments
+
+# `mark`
 #
-# This `mark` module defines a mark API that never creates new objects.
- 
-mark = (->
-  properties = {}
+# A visual mark API that never creates new objects.
+#
+# Example usage:
+#
+#     code
+#     code
+   
+  mark = (->
+    mark = ->
+      _.extend properties defaults
+      return singleton
 
-  defaults =
-    bounds: new Rectangle
-    fillStyle: 'black'
-    shape: 'square'
+    properties = {}
 
-  singleton =
-    bounds: (             ) -> shape().bounds()
-    render: (ctx, viewport) -> shape().render(ctx, viewport)
+    defaults =
+      bounds: new Rectangle
+      fillStyle: 'black'
+      shape: 'square'
+      rotation: 0
 
-  shape = ->
-    if !shapes[properties.shape]
-      throw Error "Unknown shape type '#{properties.shape}'"
-    shapes[properties.shape]
+    singleton =
 
-  shapes =
-    square:
-      bounds: -> properties.bounds.clone()
-      render: (ctx, viewport) ->
-        ctx.fillStyle = properties.fillStyle
-        ctx.fillRect(
-          properties.bounds.location.x,
-          properties.bounds.location.y,
-          properties.bounds.size.w,
-          properties.bounds.size.h
-        )
+      # Chainable property setter functions
+      shape:     (   shape   ) -> properties.shape = shape;            @
+      fillStyle: (cssColorStr) -> properties.fillStyle = cssColorStr;  @
+      bounds:    (x, y, w, h ) -> properties.bounds.setAll x, y, w, h; @
+      position:  (   x, y    ) -> properties.bounds.position.set x, y; @
+      size:      (  w, h = w ) -> properties.bounds.size.set w, h;     @
+      x:         (     x     ) -> properties.bounds.position.x = x;    @
+      y:         (     y     ) -> properties.bounds.position.y = y;    @
+      w:         (     w     ) -> properties.bounds.size.w = w;        @
+      h:         (     h     ) -> properties.bounds.size.h = h;        @
+      rotation:  (  rotation ) -> properties.rotation = rotation;      @
 
-  mark = ->
-    _.extend singleton defaults
-)()
+      # Functions that evaluate the mark
+      getBounds: (             ) -> shape().bounds()
+      render:    (ctx, viewport) -> shape().render(ctx, viewport)
+
+    shape = ->
+      if !shapes[properties.shape]
+        throw Error "Unknown shape type '#{properties.shape}'"
+      shapes[properties.shape]
+
+    shapes =
+      square:
+        bounds: -> properties.bounds.clone()
+        render: (ctx, viewport) ->
+          ctx.fillStyle = properties.fillStyle
+          bounds = viewport.project properties.bounds
+          ctx.fillRect(
+            bounds.position.x,
+            bounds.position.y,
+            bounds.size.w,
+            bounds.size.h
+          )
+
+    return mark
+  )()
+
+  ScatterPlot = MarkSet.extend
+    initialize: ->
+      expectProperties 'xAttr', 'yAttr'
+    generator: (relation) ->
+      tuples = relation.iterator()
+
+      hasNext: -> tuples.hasNext()
+      next: ->
+        tuple = tuples.next()
+        x = (@get 'xAttr').index
+        y = (@get 'yAttr').index
+        mark()
+          .x    tuple[x]
+          .y    tuple[y]
+
+  expectProperties = (_this, properties...) ->
+    _.each properties, (property) ->
+      if !_this.get property
+        throw Error """ Missing expected property
+          '#{property}' in constructor call."""

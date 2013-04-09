@@ -1,8 +1,8 @@
 define(["cv/Rectangle", "cv/Viewport", "cv/Point"], 
        function(Rectangle, Viewport, Point){
   describe("Viewport", function() {
-    var src = Rectangle.create(10, 20, 40, 80),
-        dest = Rectangle.create(0, 0, 1, 1),
+    var src = new Rectangle({x:10, y:20, w:40, h:80}),
+        dest = new Rectangle({x:0, y:0, w:1, h:1}),
         viewport = Viewport.create(src, dest),
         inPt = Point.create(),
         outPt = Point.create();

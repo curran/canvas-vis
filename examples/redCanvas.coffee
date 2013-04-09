@@ -1,5 +1,5 @@
 require ['cv/Component'], (Component) ->
-  component = Component.create
+  component = new Component
     paint: (ctx, bounds) ->
       ctx.fillStyle = 'red'
       ctx.fillRect bounds.x, bounds.y, bounds.w, bounds.h
