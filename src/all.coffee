@@ -89,12 +89,6 @@ define ['backbone'], (Backbone) ->
 # algebra aggregation operator
   Attribute = Model.extend()
 
-# `Point`
-# 
-#   * `x`: Number
-#   * `y`: Number
-  Point = Model.extend()
-
 # `Dimension`
 # 
 #   * `w`: Number
