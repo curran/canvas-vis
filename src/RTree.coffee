@@ -32,15 +32,13 @@ define ['Rectangle'], (Rectangle) ->
     insert: (item, bounds) ->
       insert @root, (new Entry item, bounds), @bucketSize
 
-  class RNode
-    constructor: () ->
-      @children = []
-      @bounds = emptyBounds()
-      @isLeaf = true
-      @entries = []
+  RNode = ->
+    @children = []
+    @bounds = emptyBounds()
+    @isLeaf = true
+    @entries = []
 
-  class Entry
-    constructor: (@item, @bounds) ->
+  Entry = (@item, @bounds) ->
 
   # TODO transition to using constructors
   create: (bucketSize = 50) ->
