@@ -89,12 +89,6 @@ define ['backbone'], (Backbone) ->
 # algebra aggregation operator
   Attribute = Model.extend()
 
-# `Dimension`
-# 
-#   * `w`: Number
-#   * `h`: Number
-  Dimension = Model.extend()
-
 # `Viewport`
 # 
 #   * `src`: Rectangle

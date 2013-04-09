@@ -1,4 +1,4 @@
-# `expose` exposes properties of
+# The `expose` module is a function that exposes properties of
 # Backbone models using JS setters and getters.
 define ['underscore'], (_) ->
   (model, properties...) ->
