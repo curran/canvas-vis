@@ -3,17 +3,15 @@
 (function() {
 
   define(['cv/Component'], function(Component) {
-    return {
-      create: function(options) {
-        var container;
-        container = new Component(options);
-        _.extend(container, new Backbone.Collection);
-        container.on('add', function() {
-          return container.trigger('graphicsDirty');
+    return Backbone.Model.extend({
+      initialize: function() {
+        var _this = this;
+        this.children = new Backbone.Collection;
+        return this.children.on('add remove graphicsDirty', function() {
+          return _this.trigger('graphicsDirty');
         });
-        return container;
       }
-    };
+    });
   });
 
 }).call(this);

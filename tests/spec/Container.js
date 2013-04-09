@@ -1,7 +1,7 @@
 define(["cv/Container", "cv/Component"], 
        function(Container, Component) {
   describe("Container", function() {
-    var container = Container.create(),
+    var container = new Container(),
         child = new Component(),
         graphicsDirty = false;
 
@@ -11,7 +11,7 @@ define(["cv/Container", "cv/Component"],
 
     it("should fire 'graphicsDirty' when child added", function(){ 
       expect(graphicsDirty).toEqual(false);
-      container.add(child);
+      container.children.add(child);
       expect(graphicsDirty).toEqual(true);
     });
 

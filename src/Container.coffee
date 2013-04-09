@@ -1,7 +1,6 @@
 define ['cv/Component'], (Component) ->
-  create: (options) ->
-    container = new Component options
-    _.extend container, new Backbone.Collection
-    container.on 'add', () ->
-      container.trigger 'graphicsDirty'
-    return container
+  Backbone.Model.extend
+    initialize: ->
+      @children = new Backbone.Collection
+      @children.on 'add remove graphicsDirty', =>
+        @trigger 'graphicsDirty'
