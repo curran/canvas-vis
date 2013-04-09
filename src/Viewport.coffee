@@ -1,12 +1,15 @@
-define ['backbone'], (Backbone) ->
+# `Viewport`
+# 
+#   * `src`: Rectangle
+#   * `dest`: Rectangle
+define ['backbone', 'cv/expose'], (Backbone, expose) ->
   Viewport = Backbone.Model.extend
+    initialize: -> expose @, 'src', 'dest'
     srcToDest: (inPt, outPt) ->
-      outPt.x = (inPt.x - (@get 'src').x) / (@get 'src').w * (@get 'dest').w + (@get 'dest').x
-      outPt.y = (inPt.y - (@get 'src').y) / (@get 'src').h * (@get 'dest').h + (@get 'dest').y
+      s = @src; d = @dest
+      outPt.x = (inPt.x - s.x) / s.w * d.w + d.x
+      outPt.y = (inPt.y - s.y) / s.h * d.h + d.y
     destToSrc: (inPt, outPt) ->
-      outPt.x = (inPt.x - (@get 'dest').x) / (@get 'dest').w * (@get 'src').w + (@get 'src').x
-      outPt.y = (inPt.y - (@get 'dest').y) / (@get 'dest').h * (@get 'src').h + (@get 'src').y
-  create: (src, dest) ->
-    new Viewport
-      src: src
-      dest: dest
+      s = @src; d = @dest
+      outPt.x = (inPt.x - d.x) / d.w * s.w + s.x
+      outPt.y = (inPt.y - d.y) / d.h * s.h + s.y
