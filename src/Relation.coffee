@@ -1,5 +1,6 @@
 # Relation
 # ========
+# [benchmark of object tuples vs. array tuples](http://jsperf.com/relations)
 #
 #   * attributes:Collection<Relation.Attribute>
 #   * tuples:Collection<Relation.Tuple>
