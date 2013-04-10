@@ -232,7 +232,12 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>    initialize: -&gt;
-      expose @, <span class="string">'x'</span>, <span class="string">'y'</span>, <span class="string">'w'</span>, <span class="string">'h'</span></pre></div></div>
+      expose @, <span class="string">'x'</span>, <span class="string">'y'</span>, <span class="string">'w'</span>, <span class="string">'h'</span>
+    copy: (rectangle) -&gt;
+      <span class="property">@x</span> = rectangle.x
+      <span class="property">@y</span> = rectangle.y
+      <span class="property">@w</span> = rectangle.w
+      <span class="property">@h</span> = rectangle.h</pre></div></div>
             
         </li>
         
@@ -271,12 +276,42 @@
       <span class="property">@tuples</span>     = <span class="keyword">new</span> Backbone.Collection
     addAttribute: (name) -&gt; <span class="property">@attributes</span>.add <span class="keyword">new</span> Attribute {name}
     addTuple:   (values) -&gt; <span class="property">@tuples</span>.add <span class="keyword">new</span> Tuple {values}
-    computeMinMax: () -&gt; <span class="property">@attributes</span>.each (attribute) =&gt;
-      i = attribute.index
-      attribute.set
-        min: <span class="property">@tuples</span>.min (tuple) -&gt; tuple.values[i]
-        max: <span class="property">@tuples</span>.max (tuple) -&gt; tuple.values[i]
-    select: (test) -&gt;
+    computeMinMax: -&gt;
+      <span class="property">@attributes</span>.each (attribute) =&gt;
+        name = attribute.name
+        minTuple = <span class="property">@tuples</span>.min (tuple) -&gt; tuple.values[name]</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>minTuple gets Infinity when there are no numbers</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        attribute.min = minTuple.values?[name]
+        maxTuple = <span class="property">@tuples</span>.max (tuple) -&gt; tuple.values[name]
+        attribute.max = maxTuple.values?[name]</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>TODO test select and project</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    select: (test) -&gt;
       result = <span class="keyword">new</span> Relation
       <span class="property">@attributes</span>.each (attr) -&gt; result.addAttribute attr.name
       result.tuples.add <span class="property">@tuples</span>.filter (tuple) -&gt; test tuple.values
@@ -291,11 +326,11 @@
         </li>
         
         
-        <li id="section-15">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap for-h2">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <h2>Relation.Tuple</h2>
 
@@ -304,11 +339,11 @@
         </li>
         
         
-        <li id="section-16">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <ul>
 <li>values: an object mapping attribute names to their values.</li>
@@ -322,11 +357,11 @@
         </li>
         
         
-        <li id="section-17">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap for-h2">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <h2>Relation.Attribute</h2>
 
@@ -335,11 +370,11 @@
         </li>
         
         
-        <li id="section-18">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <ul>
 <li><code>name</code>: String</li>
@@ -359,11 +394,11 @@
         </li>
         
         
-        <li id="section-19">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <h1>Viewport</h1>
 
@@ -372,11 +407,11 @@
         </li>
         
         
-        <li id="section-20">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <ul>
 <li>src: Rectangle</li>
@@ -400,11 +435,11 @@
         </li>
         
         
-        <li id="section-21">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <h1>ViewportContainer</h1>
 
@@ -413,11 +448,11 @@
         </li>
         
         
-        <li id="section-22">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p>TODO replace this code with newer version from <code>all.coffee</code></p>
 
@@ -446,11 +481,11 @@
         </li>
         
         
-        <li id="section-23">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <h1>bindToCanvas</h1>
 
@@ -459,11 +494,11 @@
         </li>
         
         
-        <li id="section-24">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p>Binds a Component to a Canvas.</p>
 <p>The component is re-rendered on the Canvas whenever it fires a &#39;graphicsDirty&#39; event.</p>
@@ -500,11 +535,11 @@
         </li>
         
         
-        <li id="section-25">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <h1>expose</h1>
 
@@ -513,11 +548,11 @@
         </li>
         
         
-        <li id="section-26">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p>Exposes properties of Backbone models using JS setters and getters.</p>
 
@@ -532,11 +567,11 @@
         </li>
         
         
-        <li id="section-27">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <pre><code> if !(model.get p) then throw Error &quot;&quot;&quot;
    Missing expected property &#39;#{p}&#39; &quot;&quot;&quot;</code></pre>
@@ -546,27 +581,26 @@
             <div class="content"><div class='highlight'><pre>      model.__defineGetter__ p, -&gt; model.get p
       model.__defineSetter__ p, (val) -&gt; model.set p, val
 define [<span class="string">'jquery.csv'</span>, <span class="string">'cv/Relation'</span>], (csv, Relation) -&gt;
-  (fileName) -&gt;
-    console.log <span class="string">'loading file '</span>+fileName
+  (fileName, callback) -&gt;
     $.get fileName, (data) -&gt;
       table = $.csv.toArrays data
       attrNames = _.first table
-      console.log attrNames
       tupleArrays = _.rest table
 
       relation = <span class="keyword">new</span> Relation
+
       relation.addAttribute name <span class="keyword">for</span> name <span class="keyword">in</span> attrNames</pre></div></div>
             
         </li>
         
         
-        <li id="section-28">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
-              <p>relation.attributes.each (attr) -&gt; console.log &#39;a:&#39;+attr.name</p>
+              <p>Construct tuple objects from tuple arrays.</p>
 
             </div>
             
@@ -577,22 +611,9 @@ define [<span class="string">'jquery.csv'</span>, <span class="string">'cv/Relat
           tuple[attrNames[i]] = tupleArr[i]
         relation.addTuple tuple
 
-      relation.tuples.each (tuple) -&gt; console.log tuple.values</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-29">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
-              </div>
-              <p>_.each table[0]
-relation.addAttribute
-return relation</p>
+      relation.computeMinMax()
 
-            </div>
+      callback <span class="literal">null</span>, relation</pre></div></div>
             
         </li>
         

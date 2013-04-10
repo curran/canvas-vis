@@ -3,13 +3,11 @@
 (function() {
 
   define(['jquery.csv', 'cv/Relation'], function(csv, Relation) {
-    return function(fileName) {
-      console.log('loading file ' + fileName);
+    return function(fileName, callback) {
       return $.get(fileName, function(data) {
         var attrNames, n, name, relation, table, tupleArrays, _i, _len;
         table = $.csv.toArrays(data);
         attrNames = _.first(table);
-        console.log(attrNames);
         tupleArrays = _.rest(table);
         relation = new Relation;
         for (_i = 0, _len = attrNames.length; _i < _len; _i++) {
@@ -25,9 +23,8 @@
           }
           return relation.addTuple(tuple);
         });
-        return relation.tuples.each(function(tuple) {
-          return console.log(tuple.values);
-        });
+        relation.computeMinMax();
+        return callback(null, relation);
       });
     };
   });

@@ -107,7 +107,35 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>require [<span class="string">'cv/Component'</span>, <span class="string">'cv/bindToCanvas'</span>, <span class="string">'cv/readCSV'</span>] , (Component, bindToCanvas, readCSV) -&gt;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>require [<span class="string">'cv/Component'</span>, <span class="string">'cv/bindToCanvas'</span>, <span class="string">'cv/readCSV'</span>,
+         <span class="string">'cv/Viewport'</span>, <span class="string">'cv/Rectangle'</span>, <span class="string">'cv/Point'</span>]
+      , (Component, bindToCanvas, readCSV,
+         Viewport, Rectangle, Point) -&gt;
+
+  readCSV <span class="string">'../data/iris.csv'</span>, (err, relation) -&gt;
+    xAttr = relation.attributes.at <span class="number">0</span>
+    yAttr = relation.attributes.at <span class="number">1</span>
+
+    srcPt = <span class="keyword">new</span> Point
+    destPt = <span class="keyword">new</span> Point
+
+    viewport = <span class="keyword">new</span> Viewport
+      src: <span class="keyword">new</span> Rectangle
+        x: xAttr.min
+        y: yAttr.min
+        w: xAttr.max - xAttr.min
+        h: yAttr.max - yAttr.min
+      dest: <span class="keyword">new</span> Rectangle
+    component = <span class="keyword">new</span> Component
+      paint: (ctx, bounds) -&gt;
+        viewport.dest.copy bounds
+        relation.tuples.each (tuple) -&gt;
+          srcPt.x = tuple.values[xAttr.name]
+          srcPt.y = tuple.values[yAttr.name]
+          viewport.srcToDest srcPt, destPt
+          ctx.fillRect destPt.x, destPt.y, <span class="number">5</span>, <span class="number">5</span>
+
+    bindToCanvas <span class="string">'scatterPlot'</span>, component</pre></div></div>
             
         </li>
         
@@ -115,23 +143,12 @@
         <li id="section-5">
             <div class="annotation">
               
-              <div class="pilwrap ">
+              <div class="pilwrap for-h1">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p> markIterator = (relation) -&gt;
-   xAttr = relation.attributes.at 0
-   yAttr = relation.attributes.at 1
-   tuples = relation.iterator()
-   hasNext: -&gt; tuples.hasNext()
-   next: -&gt;
-     tuple = tuples.next()
-     mark()
-       .x tuple[x]
-       .y tuple[y]</p>
+              <h1>Roadmap</h1>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>  relation = readCSV <span class="string">'../data/iris.csv'</span></pre></div></div>
             
         </li>
         
@@ -142,58 +159,9 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  component = <span class="keyword">new</span> Component
-    paint: (ctx, bounds) -&gt;
-      ctx.fillStyle = <span class="string">'red'</span>
-      ctx.fillRect bounds.x, bounds.y, bounds.w, bounds.h</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
-              </div>
-              <pre><code> iterator = marks relation
- while iterator.hasNext()
-   mark = iterator.next()
-   mark.paint ctx, viewport</code></pre>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  bindToCanvas <span class="string">'scatterPlot'</span>, component</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              <h1>Roadmap</h1>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-9">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
-              </div>
               <ul>
 <li>Bertin example from p.43</li>
 <li>Nested Components example</li>
-<li>Scatter Plot of Iris Data</li>
 <li>Timeline of Population Data</li>
 <li>Pan &amp; Zoom example</li>
 <li>Zoomable Scatter Plot of Iris Data</li>

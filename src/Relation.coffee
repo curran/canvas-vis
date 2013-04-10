@@ -11,11 +11,15 @@ define ['cv/expose'], (expose) ->
       @tuples     = new Backbone.Collection
     addAttribute: (name) -> @attributes.add new Attribute {name}
     addTuple:   (values) -> @tuples.add new Tuple {values}
-    computeMinMax: () -> @attributes.each (attribute) =>
-      i = attribute.index
-      attribute.set
-        min: @tuples.min (tuple) -> tuple.values[i]
-        max: @tuples.max (tuple) -> tuple.values[i]
+    computeMinMax: ->
+      @attributes.each (attribute) =>
+        name = attribute.name
+        minTuple = @tuples.min (tuple) -> tuple.values[name]
+        # minTuple gets Infinity when there are no numbers
+        attribute.min = minTuple.values?[name]
+        maxTuple = @tuples.max (tuple) -> tuple.values[name]
+        attribute.max = maxTuple.values?[name]
+    # TODO test select and project
     select: (test) ->
       result = new Relation
       @attributes.each (attr) -> result.addAttribute attr.name

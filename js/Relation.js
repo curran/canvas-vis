@@ -22,16 +22,16 @@
       computeMinMax: function() {
         var _this = this;
         return this.attributes.each(function(attribute) {
-          var i;
-          i = attribute.index;
-          return attribute.set({
-            min: _this.tuples.min(function(tuple) {
-              return tuple.values[i];
-            }),
-            max: _this.tuples.max(function(tuple) {
-              return tuple.values[i];
-            })
+          var maxTuple, minTuple, name, _ref, _ref1;
+          name = attribute.name;
+          minTuple = _this.tuples.min(function(tuple) {
+            return tuple.values[name];
           });
+          attribute.min = (_ref = minTuple.values) != null ? _ref[name] : void 0;
+          maxTuple = _this.tuples.max(function(tuple) {
+            return tuple.values[name];
+          });
+          return attribute.max = (_ref1 = maxTuple.values) != null ? _ref1[name] : void 0;
         });
       },
       select: function(test) {

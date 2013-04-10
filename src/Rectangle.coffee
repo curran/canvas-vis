@@ -8,3 +8,8 @@ define ['cv/expose'], (expose) ->
 #TODO use Point and Dimension
     initialize: ->
       expose @, 'x', 'y', 'w', 'h'
+    copy: (rectangle) ->
+      @x = rectangle.x
+      @y = rectangle.y
+      @w = rectangle.w
+      @h = rectangle.h

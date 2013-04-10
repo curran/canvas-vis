@@ -117,6 +117,10 @@ define [], ->
         mark()
           .x    tuple[x]
           .y    tuple[y]
+      #      iterator = marks relation
+      #      while iterator.hasNext()
+      #        mark = iterator.next()
+      #        mark.paint ctx, viewport
 
   expectProperties = (_this, properties...) ->
     _.each properties, (property) ->

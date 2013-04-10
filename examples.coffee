@@ -25,39 +25,41 @@ require ['cv/Component', 'cv/bindToCanvas'], (Component, bindToCanvas) ->
 # Scatter Plot
 # ==============
 # <canvas id="scatterPlot" width="400" height="200"></canvas>
-require ['cv/Component', 'cv/bindToCanvas', 'cv/readCSV'] , (Component, bindToCanvas, readCSV) ->
+require ['cv/Component', 'cv/bindToCanvas', 'cv/readCSV',
+         'cv/Viewport', 'cv/Rectangle', 'cv/Point']
+      , (Component, bindToCanvas, readCSV,
+         Viewport, Rectangle, Point) ->
 
-  #  markIterator = (relation) ->
-  #    xAttr = relation.attributes.at 0
-  #    yAttr = relation.attributes.at 1
-  #    tuples = relation.iterator()
-  #    hasNext: -> tuples.hasNext()
-  #    next: ->
-  #      tuple = tuples.next()
-  #      mark()
-  #        .x tuple[x]
-  #        .y tuple[y]
-  #
-  relation = readCSV '../data/iris.csv'
-  #
-  component = new Component
-    paint: (ctx, bounds) ->
-      ctx.fillStyle = 'red'
-      ctx.fillRect bounds.x, bounds.y, bounds.w, bounds.h
-      #      iterator = marks relation
-      #      while iterator.hasNext()
-      #        mark = iterator.next()
-      #        mark.paint ctx, viewport
+  readCSV '../data/iris.csv', (err, relation) ->
+    xAttr = relation.attributes.at 0
+    yAttr = relation.attributes.at 1
 
-  bindToCanvas 'scatterPlot', component
+    srcPt = new Point
+    destPt = new Point
 
+    viewport = new Viewport
+      src: new Rectangle
+        x: xAttr.min
+        y: yAttr.min
+        w: xAttr.max - xAttr.min
+        h: yAttr.max - yAttr.min
+      dest: new Rectangle
+    component = new Component
+      paint: (ctx, bounds) ->
+        viewport.dest.copy bounds
+        relation.tuples.each (tuple) ->
+          srcPt.x = tuple.values[xAttr.name]
+          srcPt.y = tuple.values[yAttr.name]
+          viewport.srcToDest srcPt, destPt
+          ctx.fillRect destPt.x, destPt.y, 5, 5
+
+    bindToCanvas 'scatterPlot', component
 
 # Roadmap
 # =======
 #
 #   * Bertin example from p.43
 #   * Nested Components example
-#   * Scatter Plot of Iris Data
 #   * Timeline of Population Data
 #   * Pan & Zoom example
 #   * Zoomable Scatter Plot of Iris Data
