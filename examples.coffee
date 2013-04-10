@@ -1,5 +1,12 @@
+# Red Canvas
+# ==========
 # <canvas id="redCanvas"></canvas>
-# <h1>Hello</h1>
+#
+# An example of
+#
+#   * Creating a `Component`
+#   * Defining its `paint` method
+#   * Binding it to a Canvas
 require ['cv/Component', 'cv/bindToCanvas'], (Component, bindToCanvas) ->
   component = new Component
   
@@ -17,19 +24,7 @@ require ['cv/Component', 'cv/bindToCanvas'], (Component, bindToCanvas) ->
 
 #  <script src="../lib/underscore.js"></script>
 #  <script src="../lib/backbone.js"></script>
-#  <!-- Configure and load Require.js -->
-#  <script>
-#  require = {
-#    paths: {
-#      // To get a canvas-vis module `Foo`, use
-#      // `require('cv/Foo', function(Foo){ ... }`
-#      'cv': '../js',
-#      'requestAnimFrame': '../lib/requestAnimFrame',
-#    },
-#    // This prevents caching during development
-#    urlArgs: "cacheBust=" +  (new Date()).getTime()
-#  };
-#  </script>
-#  <script src="../lib/require-jquery.js"></script>
 #  <script src="../lib/coffee-script.js"></script>
-#  <script type="text/coffeescript" src="redCanvas.coffee"> </script>
+#  <script src="../requireConfig.js"> </script>
+#  <script src="../lib/require-jquery.js"></script>
+#  <script type="text/coffeescript" src="../examples.coffee"> </script>

@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>examples.coffee</title>
+  <title>Red Canvas</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="docco.css" />
@@ -34,22 +34,35 @@
     
     <ul class="sections">
         
-          <li id="title">
-              <div class="annotation">
-                  <h1>examples.coffee</h1>
-              </div>
-          </li>
-        
         
         
         <li id="section-1">
             <div class="annotation">
               
-              <div class="pilwrap ">
+              <div class="pilwrap for-h1">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <p><canvas id="redCanvas"></canvas></p>
-<h1>Hello</h1>
+              <h1>Red Canvas</h1>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <canvas id="redCanvas"></canvas>
+
+<p>An example of</p>
+<ul>
+<li>Creating a <code>Component</code></li>
+<li>Defining its <code>paint</code> method</li>
+<li>Binding it to a Canvas</li>
+</ul>
 
             </div>
             
@@ -71,30 +84,18 @@
         </li>
         
         
-        <li id="section-2">
+        <li id="section-3">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-2">&#182;</a>
+                <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
                <script src="../lib/underscore.js"></script>
  <script src="../lib/backbone.js"></script>
- <!-- Configure and load Require.js -->
- <script>
- require = {
-   paths: {
-     // To get a canvas-vis module <code>Foo</code>, use
-     // <code>require(&#39;cv/Foo&#39;, function(Foo){ ... }</code>
-     &#39;cv&#39;: &#39;../js&#39;,
-     &#39;requestAnimFrame&#39;: &#39;../lib/requestAnimFrame&#39;,
-   },
-   // This prevents caching during development
-   urlArgs: &quot;cacheBust=&quot; +  (new Date()).getTime()
- };
- </script>
- <script src="../lib/require-jquery.js"></script>
  <script src="../lib/coffee-script.js"></script>
- <script type="text/coffeescript" src="redCanvas.coffee"> </script>
+ <script src="../requireConfig.js"> </script>
+ <script src="../lib/require-jquery.js"></script>
+ <script type="text/coffeescript" src="../examples.coffee"> </script>
 
 
             </div>
