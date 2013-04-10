@@ -24,7 +24,7 @@ require ['cv/Component', 'cv/bindToCanvas'], (Component, bindToCanvas) ->
 
 # Scatter Plot
 # ==============
-# <canvas id="scatterPlot" width="400" height="200"></canvas>
+# <canvas id="scatterPlot" width="450" height="450"></canvas>
 require ['cv/Component', 'cv/bindToCanvas', 'cv/readCSV',
          'cv/Viewport', 'cv/Rectangle', 'cv/Point']
       , (Component, bindToCanvas, readCSV,
