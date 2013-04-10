@@ -1,7 +1,8 @@
-# `Rectangle`
+# Rectangle
+# =========
 # 
-#   * `position`: Point
-#   * `size`: Dimension
+#   * position: Point
+#   * size: Dimension
 define ['cv/expose'], (expose) ->
   Backbone.Model.extend
     initialize: ->

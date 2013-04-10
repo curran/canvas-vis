@@ -1,7 +1,9 @@
-# `bindToCanvas` causes a given `Component` to be rendered
-# on a given HTML5 Canvas element.
+# bindToCanvas
+# ============
 #
-# The component is re-rendered whenever it fires a 'graphicsDirty' event.
+# Binds a Component to a Canvas.
+#
+# The component is re-rendered on the Canvas whenever it fires a 'graphicsDirty' event.
 define ['requestAnimFrame', 'cv/Rectangle']
        ,(requestAnimFrame,      Rectangle) ->
   (canvasId, component) ->

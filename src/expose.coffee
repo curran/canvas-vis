@@ -1,5 +1,7 @@
-# The `expose` module is a function that exposes properties of
-# Backbone models using JS setters and getters.
+# expose
+# ======
+#
+# Exposes properties of Backbone models using JS setters and getters.
 define [], ->
   (model, properties...) ->
     if !model then throw Error 'model argument to `expose` is null!'

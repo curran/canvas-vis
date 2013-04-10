@@ -1,3 +1,7 @@
+# ViewportContainer
+# =================
+#
+# TODO replace this code with newer version from `all.coffee`
 define ['cv/Container', 'cv/Viewport', 'cv/Rectangle']
      , (Container, Viewport, Rectangle) ->
   add = (superAdd, child) ->

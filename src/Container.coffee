@@ -1,3 +1,7 @@
+# Container
+# =========
+#
+#   * children: Collection<Component>
 define ['cv/Component'], (Component) ->
   Backbone.Model.extend
     initialize: ->

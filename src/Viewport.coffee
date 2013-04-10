@@ -1,7 +1,8 @@
-# `Viewport`
+# Viewport
+# ========
 # 
-#   * `src`: Rectangle
-#   * `dest`: Rectangle
+#   * src: Rectangle
+#   * dest: Rectangle
 define ['cv/expose'], (expose) ->
   Viewport = Backbone.Model.extend
     initialize: -> expose @, 'src', 'dest'
