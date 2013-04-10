@@ -1,0 +1,45 @@
+// See Wilkinson's Grammar of Graphics p. 38
+
+start
+  = statements:statement* {return {type:"statements", statements:statements}}
+
+statement
+  = statementType:statementType ":" " "* expr:expr "\n"*
+    {return {type:"statement", statementType:statementType, expr:expr};}
+
+statementType
+  = chars:[A-Z]* { return chars.join(""); }
+
+expr
+  = function
+  / assignment
+  / cross
+  / name
+  / number
+  / string
+
+
+name
+  = chars:([a-z]/[A-Z])+ { return {type:"name", name:chars.join("")}; }
+
+number
+  = chars:[0-9]+ { return {type:"number", value:parseFloat(chars.join(""))}; }
+
+string
+  = '"' chars:( [a-z] / [A-Z] / [0-9] )* '"'
+    { return {type:"string", value:chars.join("")}; }
+
+cross
+  = left:name " "* "*" " "* right:name
+  { return {type:"cross", left:left, right:right}}
+
+function
+  = name:([a-z]/".")+ args:args
+    {return {type:"function", name:name.join(""), args:args};}
+
+args = "(" " "* args:arg* " "* ")" { return args; }
+
+arg = expr:expr /" "* "," " "*  expr:expr { return expr; }
+
+assignment
+  = left:name " "* "=" " "* right:name { return {type:"assignment", left:left, right:right}}

@@ -28,9 +28,16 @@ require ['cv/Component', 'cv/bindToCanvas'], (Component, bindToCanvas) ->
 #   * Bertin example from p.43
 #   * Nested Components example
 #   * Scatter Plot of Iris Data
-#   * Parallel Coordinates of Iris Data
 #   * Timeline of Population Data
-#   * Choropleth Map of US counties using Quadstream
+#   * Pan & Zoom example
+#   * Zoomable Scatter Plot of Iris Data
+#   * Zoomable Timeline of Population Data (A)
+#   * Parallel Coordinates of Iris Data (B)
+#   * Brushing & Linking Example containing A and B
+#   * Map of labeled US counties using Quadstream (C)
+#   * Zoomable Choropleth Map
+#   * Color Maps
+#   * HeatMap
 
 #  <script src="../lib/underscore.js"></script>
 #  <script src="../lib/backbone.js"></script>
