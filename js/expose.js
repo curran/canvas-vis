@@ -8,7 +8,7 @@
       var model, properties;
       model = arguments[0], properties = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
       if (!model) {
-        throw Error('model argument to `expose` is null!');
+        throw Error("'model' argument to `expose` is null!'");
       }
       return _.each(properties, function(p) {
         model.__defineGetter__(p, function() {

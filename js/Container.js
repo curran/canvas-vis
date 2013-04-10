@@ -3,7 +3,7 @@
 (function() {
 
   define(['cv/Component'], function(Component) {
-    return Backbone.Model.extend({
+    return Component.extend({
       initialize: function() {
         var _this = this;
         this.children = new Backbone.Collection;

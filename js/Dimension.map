@@ -1,9 +1,9 @@
 {
   "version": 3,
-  "file": "Point.js",
+  "file": "Dimension.js",
   "sourceRoot": "",
   "sources": [
-    "Point.coffee"
+    "Dimension.coffee"
   ],
   "names": [],
   "mappings": ";;AAKA;CAAA;CAAA,CAAA,CAAsB,GAAtB,GAAuB,EAAhB;CACI,IAAK,CAAd,EAAQ,GAAR;CACC,CAAa,CAAA,GAAZ,GAAY,CAAZ;CAAsB,CAAG,CAAV,CAAA,EAAA,SAAA;CAAhB,MAAa;CAAb,CACQ,CAAA,EAAP,CAAA,GAAS;CAAQ,EAAR,CAAA,IAAD;CAAS,EAAJ,CAAA,IAAD;CADb,MACQ;CAHW,KACpB;CADF,EAAsB;CAAtB"

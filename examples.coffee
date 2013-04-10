@@ -22,6 +22,36 @@ require ['cv/Component', 'cv/bindToCanvas'], (Component, bindToCanvas) ->
 
   bindToCanvas 'coloredCanvas', component
 
+# Scatter Plot
+# ==============
+# <canvas id="scatterPlot" width="400" height="200"></canvas>
+require ['cv/Component', 'cv/bindToCanvas', 'cv/readCSV'] , (Component, bindToCanvas, readCSV) ->
+
+  #  markIterator = (relation) ->
+  #    xAttr = relation.attributes.at 0
+  #    yAttr = relation.attributes.at 1
+  #    tuples = relation.iterator()
+  #    hasNext: -> tuples.hasNext()
+  #    next: ->
+  #      tuple = tuples.next()
+  #      mark()
+  #        .x tuple[x]
+  #        .y tuple[y]
+  #
+  relation = readCSV '../data/iris.csv'
+  #
+  component = new Component
+    paint: (ctx, bounds) ->
+      ctx.fillStyle = 'red'
+      ctx.fillRect bounds.x, bounds.y, bounds.w, bounds.h
+      #      iterator = marks relation
+      #      while iterator.hasNext()
+      #        mark = iterator.next()
+      #        mark.paint ctx, viewport
+
+  bindToCanvas 'scatterPlot', component
+
+
 # Roadmap
 # =======
 #

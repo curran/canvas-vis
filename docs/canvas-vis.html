@@ -265,10 +265,10 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>define [<span class="string">'cv/expose'</span>], (expose) -&gt;
-  Relation = Model.extend
+  Relation = Backbone.Model.extend
     initialize: -&gt;
-      <span class="property">@attributes</span> = <span class="keyword">new</span> Collection model: Attribute
-      <span class="property">@tuples</span>     = <span class="keyword">new</span> Collection model: Tuple
+      <span class="property">@attributes</span> = <span class="keyword">new</span> Backbone.Collection
+      <span class="property">@tuples</span>     = <span class="keyword">new</span> Backbone.Collection
     addAttribute: (name) -&gt; <span class="property">@attributes</span>.add <span class="keyword">new</span> Attribute {name}
     addTuple:   (values) -&gt; <span class="property">@tuples</span>.add <span class="keyword">new</span> Tuple {values}
     computeMinMax: () -&gt; <span class="property">@attributes</span>.each (attribute) =&gt;
@@ -316,7 +316,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  Tuple = Model.extend</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  Tuple = Backbone.Model.extend
+    initialize: -&gt; expose @, <span class="string">'values'</span></pre></div></div>
             
         </li>
         
@@ -348,7 +349,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  Attribute = Model.extend
+            <div class="content"><div class='highlight'><pre>  Attribute = Backbone.Model.extend
     initialize: -&gt; expose @, <span class="string">'name'</span>, <span class="string">'min'</span>, <span class="string">'max'</span>
 
   Relation.Attribute = Attribute
@@ -526,11 +527,72 @@
   (model, properties...) -&gt;
     <span class="keyword">if</span> !model <span class="keyword">then</span> <span class="keyword">throw</span> Error <span class="string">"""
       'model' argument to `expose` is null!'"""</span>
-    _.each properties, (p) -&gt;
-      <span class="keyword">if</span> !(model.get p) <span class="keyword">then</span> <span class="keyword">throw</span> Error <span class="string">"""
-        Missing expected property '<span class="subst">#{p}</span>' """</span>
-      model.__defineGetter__ p, -&gt; model.get p
-      model.__defineSetter__ p, (val) -&gt; model.set p, val</pre></div></div>
+    _.each properties, (p) -&gt;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <pre><code> if !(model.get p) then throw Error &quot;&quot;&quot;
+   Missing expected property &#39;#{p}&#39; &quot;&quot;&quot;</code></pre>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      model.__defineGetter__ p, -&gt; model.get p
+      model.__defineSetter__ p, (val) -&gt; model.set p, val
+define [<span class="string">'jquery.csv'</span>, <span class="string">'cv/Relation'</span>], (csv, Relation) -&gt;
+  (fileName) -&gt;
+    console.log <span class="string">'loading file '</span>+fileName
+    $.get fileName, (data) -&gt;
+      table = $.csv.toArrays data
+      attrNames = _.first table
+      console.log attrNames
+      tupleArrays = _.rest table
+
+      relation = <span class="keyword">new</span> Relation
+      relation.addAttribute name <span class="keyword">for</span> name <span class="keyword">in</span> attrNames</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>relation.attributes.each (attr) -&gt; console.log &#39;a:&#39;+attr.name</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      n = attrNames.length
+      _.each tupleArrays, (tupleArr) -&gt;
+        tuple = {}
+        <span class="keyword">for</span> i <span class="keyword">in</span> [<span class="number">0.</span>..n]
+          tuple[attrNames[i]] = tupleArr[i]
+        relation.addTuple tuple
+
+      relation.tuples.each (tuple) -&gt; console.log tuple.values</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <p>_.each table[0]
+relation.addAttribute
+return relation</p>
+
+            </div>
             
         </li>
         

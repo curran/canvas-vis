@@ -5,10 +5,10 @@
 #   * attributes:Collection<Relation.Attribute>
 #   * tuples:Collection<Relation.Tuple>
 define ['cv/expose'], (expose) ->
-  Relation = Model.extend
+  Relation = Backbone.Model.extend
     initialize: ->
-      @attributes = new Collection model: Attribute
-      @tuples     = new Collection model: Tuple
+      @attributes = new Backbone.Collection
+      @tuples     = new Backbone.Collection
     addAttribute: (name) -> @attributes.add new Attribute {name}
     addTuple:   (values) -> @tuples.add new Tuple {values}
     computeMinMax: () -> @attributes.each (attribute) =>
@@ -32,7 +32,8 @@ define ['cv/expose'], (expose) ->
 # --------------
 #
 #   * values: an object mapping attribute names to their values.
-  Tuple = Model.extend
+  Tuple = Backbone.Model.extend
+    initialize: -> expose @, 'values'
 
 # Relation.Attribute
 # ------------------
@@ -40,7 +41,7 @@ define ['cv/expose'], (expose) ->
 #   * `name`: String
 #   * `min`: Number
 #   * `max`: Number
-  Attribute = Model.extend
+  Attribute = Backbone.Model.extend
     initialize: -> expose @, 'name', 'min', 'max'
 
   Relation.Attribute = Attribute
