@@ -132,9 +132,7 @@
             
             <div class="content"><div class='highlight'><pre>define [<span class="string">'cv/expose'</span>], (expose) -&gt;
   Backbone.Model.extend
-    initialize: -&gt;
-      expose @, <span class="string">'x'</span>, <span class="string">'y'</span>
-      _.defaults @, {x:<span class="number">0</span>, y:<span class="number">0</span>}
+    initialize: -&gt; expose @, <span class="string">'x'</span>, <span class="string">'y'</span>
     setXY: (<span class="property">@x</span>, <span class="property">@y</span>) -&gt;</pre></div></div>
             
         </li>
@@ -340,8 +338,11 @@
             
             <div class="content"><div class='highlight'><pre>define [], -&gt;
   (model, properties...) -&gt;
-    <span class="keyword">if</span> !model <span class="keyword">then</span> <span class="keyword">throw</span> Error <span class="string">'model argument to `expose` is null!'</span>
+    <span class="keyword">if</span> !model <span class="keyword">then</span> <span class="keyword">throw</span> Error <span class="string">"""
+      'model' argument to `expose` is null!'"""</span>
     _.each properties, (p) -&gt;
+      <span class="keyword">if</span> !(model.get p) <span class="keyword">then</span> <span class="keyword">throw</span> Error <span class="string">"""
+        Missing expected property '<span class="subst">#{p}</span>' """</span>
       model.__defineGetter__ p, -&gt; model.get p
       model.__defineSetter__ p, (val) -&gt; model.set p, val</pre></div></div>
             

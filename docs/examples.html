@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>Red Canvas</title>
+  <title>Colored Canvas</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="docco.css" />
@@ -42,7 +42,7 @@
               <div class="pilwrap for-h1">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <h1>Red Canvas</h1>
+              <h1>Colored Canvas</h1>
 
             </div>
             
@@ -55,7 +55,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <canvas id="redCanvas"></canvas>
+              <canvas id="coloredCanvas"></canvas>
 
 <p>An example of</p>
 <ul>
@@ -68,18 +68,12 @@
             
             <div class="content"><div class='highlight'><pre>require [<span class="string">'cv/Component'</span>, <span class="string">'cv/bindToCanvas'</span>], (Component, bindToCanvas) -&gt;
   component = <span class="keyword">new</span> Component
-  
     paint: (ctx, bounds) -&gt;
-
-      ctx.fillStyle = <span class="string">'red'</span>
-      ctx.fillRect(
-        bounds.x,
-        bounds.y,
-        bounds.w,
-        bounds.h
-      )
-
-  <span class="keyword">return</span> bindToCanvas <span class="string">'redCanvas'</span>, component</pre></div></div>
+      ctx.fillStyle = randomColor()
+      ctx.fillRect bounds.x, bounds.y, bounds.w, bounds.h
+  <span class="function"><span class="title">randomColor</span></span> = -&gt; <span class="string">"rgb(<span class="subst">#{r()}</span>,<span class="subst">#{r()}</span>,<span class="subst">#{r()}</span>)"</span>
+  <span class="function"><span class="title">r</span></span> = -&gt; Math.floor(Math.random() * <span class="number">255</span>)
+  bindToCanvas <span class="string">'coloredCanvas'</span>, component</pre></div></div>
             
         </li>
         
