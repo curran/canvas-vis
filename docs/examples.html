@@ -61,18 +61,24 @@
 <ul>
 <li>Creating a <code>Component</code></li>
 <li>Defining its <code>paint</code> method</li>
-<li>Binding it to a Canvas</li>
+<li>Using the <code>graphicsDirty</code> event to schedule repainting</li>
+<li>Binding a component to a Canvas</li>
 </ul>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>require [<span class="string">'cv/Component'</span>, <span class="string">'cv/bindToCanvas'</span>], (Component, bindToCanvas) -&gt;
+
   component = <span class="keyword">new</span> Component
     paint: (ctx, bounds) -&gt;
       ctx.fillStyle = randomColor()
       ctx.fillRect bounds.x, bounds.y, bounds.w, bounds.h
+
   <span class="function"><span class="title">randomColor</span></span> = -&gt; <span class="string">"rgb(<span class="subst">#{r()}</span>,<span class="subst">#{r()}</span>,<span class="subst">#{r()}</span>)"</span>
   <span class="function"><span class="title">r</span></span> = -&gt; Math.floor(Math.random() * <span class="number">255</span>)
+
+  setInterval (-&gt; component.trigger <span class="string">'graphicsDirty'</span>), <span class="number">1000</span>
+
   bindToCanvas <span class="string">'coloredCanvas'</span>, component</pre></div></div>
             
         </li>

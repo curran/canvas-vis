@@ -251,14 +251,24 @@
     initialize: -&gt;
       <span class="property">@attributes</span> = <span class="keyword">new</span> Collection model: Attribute
       <span class="property">@tuples</span>     = <span class="keyword">new</span> Collection model: Tuple
-      expose @, <span class="string">'attributes'</span>, <span class="string">'tuples'</span>
     addAttribute: (name) -&gt; <span class="property">@attributes</span>.add <span class="keyword">new</span> Attribute {name}
     addTuple:   (values) -&gt; <span class="property">@tuples</span>.add <span class="keyword">new</span> Tuple {values}
     computeMinMax: () -&gt; <span class="property">@attributes</span>.each (attribute) =&gt;
       i = attribute.index
       attribute.set
         min: <span class="property">@tuples</span>.min (tuple) -&gt; tuple.values[i]
-        max: <span class="property">@tuples</span>.max (tuple) -&gt; tuple.values[i]</pre></div></div>
+        max: <span class="property">@tuples</span>.max (tuple) -&gt; tuple.values[i]
+    select: (test) -&gt;
+      result = <span class="keyword">new</span> Relation
+      <span class="property">@attributes</span>.each (attr) -&gt; result.addAttribute attr.name
+      result.tuples.add <span class="property">@tuples</span>.filter (tuple) -&gt; test tuple.values
+      <span class="keyword">return</span> result
+    project: (attrNames) -&gt;
+      result = <span class="keyword">new</span> Relation
+      result.addAttribute name <span class="keyword">for</span> name <span class="keyword">in</span> attrNames
+      <span class="property">@tuples</span>.each (tuple) -&gt;
+        result.addTuple _.pick tuple.values, attrNames
+      <span class="keyword">return</span> result</pre></div></div>
             
         </li>
         
@@ -315,15 +325,13 @@
               <ul>
 <li><code>name</code>: String</li>
 <li><code>min</code>: Number</li>
-<li><code>max</code>: String</li>
-<li><code>index</code>: Integer - the tuple index of this attribute</li>
+<li><code>max</code>: Number</li>
 </ul>
-<p>TODO move min/max computation our into a relational
-algebra aggregation operator</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  Attribute = Model.extend()
+            <div class="content"><div class='highlight'><pre>  Attribute = Model.extend
+    initialize: -&gt; expose @, <span class="string">'name'</span>, <span class="string">'min'</span>, <span class="string">'max'</span>
 
   Relation.Attribute = Attribute
   Relation.Tuple = Tuple
