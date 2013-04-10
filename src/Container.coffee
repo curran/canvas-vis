@@ -3,7 +3,7 @@
 #
 #   * children: Collection<Component>
 define ['cv/Component'], (Component) ->
-  Backbone.Model.extend
+  Component.extend
     initialize: ->
       @children = new Backbone.Collection
       @children.on 'add remove graphicsDirty', =>

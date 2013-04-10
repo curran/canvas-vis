@@ -42,57 +42,6 @@ define [], ->
 #   * `hasNext`: -> Boolean
 #   * `next`: -> Mark
 
-# `Relation`
-#
-#   * `tuples`: Collection<`Tuple`> - rows
-#   * `attributes`: Collection<`Attribute`> - columns
-#
-# with rows (`tuples`) and columns (`attributes`).
-# The terms "tuple" and "attribute" are used because
-# they are the norm in literature on relational algebra.
-  Relation = Model.extend
-    initialize: () ->
-      @tuples =    new Collection model: Tuple
-      @attributes = new Collection model: Attribute
-
-    addAttribute: (name) -> @attributes.add new Attribute {name}
-    addTuple: (values) -> @tuples.add new Tuple {values}
-    computeMinMax: () -> @attributes.each (attribute) =>
-      i = attribute.index
-      attribute.set
-        min: @tuples.min (tuple) -> tuple.values[i]
-        max: @tuples.max (tuple) -> tuple.values[i]
-
-# `Tuple`
-#
-#  * `values`: a JS Array of literal values (strings or numbers)
-  Tuple = Model.extend()
-
-# `Attribute`
-#
-#   * `name`: String
-#   * `min`: Number
-#   * `max`: String
-#   * `index`: Integer - the tuple index of this attribute
-#
-# TODO move min/max computation our into a relational
-# algebra aggregation operator
-  Attribute = Model.extend()
-
-# `Viewport`
-# 
-#   * `src`: Rectangle
-#   * `dest`: Rectangle
-  Viewport = Model.extend
-    srcToDestPoint: (srcPoint, outDestPoint) ->
-    srcToDestRect: (srcRect, outDestRect) ->
-    project: alias @ 'srcToDestRect'
-    destToSrcPoint: (destPoint, outSrcPoint) ->
-    destToSrcRect: (destRect, outSrcRect) ->
-
-  alias = (_this, method) ->
-    -> _this[method].call arguments
-
 # `mark`
 #
 # A visual mark API that never creates new objects.

@@ -16,6 +16,16 @@ require ['cv/Component', 'cv/bindToCanvas'], (Component, bindToCanvas) ->
   r = -> Math.floor(Math.random() * 255)
   bindToCanvas 'coloredCanvas', component
 
+# Roadmap
+# =======
+#
+#   * Bertin example from p.43
+#   * Nested Components example
+#   * Scatter Plot of Iris Data
+#   * Parallel Coordinates of Iris Data
+#   * Timeline of Population Data
+#   * Choropleth Map of US counties using Quadstream
+
 #  <script src="../lib/underscore.js"></script>
 #  <script src="../lib/backbone.js"></script>
 #  <script src="../lib/coffee-script.js"></script>

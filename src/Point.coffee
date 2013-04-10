@@ -1,8 +1,8 @@
 # Point
 # =====
 # 
-#   * x: Number = 0
-#   * y: Number = 0
+#   * x: Number
+#   * y: Number
 define ['cv/expose'], (expose) ->
   Backbone.Model.extend
     initialize: -> expose @, 'x', 'y'
