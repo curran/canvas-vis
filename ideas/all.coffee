@@ -16,20 +16,12 @@ define [], ->
   Model = Backbone.Model
   Collection = Backbone.Collection
 
-
   BufferedComponent = Component.extend
     initialize: ->
       if !@get 'component'
         throw Error """ BufferedComponent constructor
           expects a `component` property, which was not given """
       (@get 'component').on 'graphicsDirty', =>
-        @trigger 'graphicsDirty'
-
-  Container = Component.extend
-    initialize: ->
-      if !@get 'children'
-        @set 'children', new Collection
-      (@get 'children').on 'graphicsDirty', =>
         @trigger 'graphicsDirty'
 
   LinearContainer = Component.extend()
