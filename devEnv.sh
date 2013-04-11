@@ -21,5 +21,8 @@
 cd server
 node app.js &
 cd ../
-#   * Recompiles CoffeeScript source files into "canvas-vis.js" when they are changed.
-coffee -o js -cmw src
+#   * Recompiles CoffeeScript source files when they are changed.
+coffee -o js -cmw src &
+
+cd examples
+coffee -o js -cmw ./
