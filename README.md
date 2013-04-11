@@ -6,7 +6,7 @@ Check out
 
   * [Docs](http://canvas-vis.org/docs/canvas-vis.html)
   * [Examples](http://canvas-vis.org/docs/examples.html)
-  * [Unit Tests](http://canvas-vis.org/docs/examples.html)
+  * [Unit Tests](http://canvas-vis.org/tests)
 
 over at [canvas-vis.org](http://canvas-vis.org).
 
