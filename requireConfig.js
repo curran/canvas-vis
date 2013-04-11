@@ -5,6 +5,7 @@ require = {
     'cv': '../js',
     'requestAnimFrame': '../lib/requestAnimFrame',
     'jquery.csv': '../lib/jquery.csv',
+    'text': '../lib/text'
   },
   // This prevents caching during development
   urlArgs: "cacheBust=" +  (new Date()).getTime()
