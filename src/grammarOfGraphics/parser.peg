@@ -18,7 +18,6 @@ expr
   / number
   / string
 
-
 name
   = chars:([a-z]/[A-Z])+ { return {type:"name", name:chars.join("")}; }
 

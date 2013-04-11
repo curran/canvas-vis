@@ -21,8 +21,8 @@
 cd server
 node app.js &
 cd ../
-#   * Recompiles CoffeeScript source files when they are changed.
 coffee -o js -cmw src &
-
+mkdir js/grammarOfGraphics
+cp src/grammarOfGraphics/parser.js js/grammarOfGraphics
 cd examples
 coffee -o js -cmw ./
