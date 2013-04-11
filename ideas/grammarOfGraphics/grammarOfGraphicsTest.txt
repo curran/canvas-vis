@@ -1,4 +1,4 @@
-Input:
+Input: an example dual-pie-chart visualization from Wilkinson's Grammar of Graphics p. 38.
 
 DATA: response = response
 DATA: gender = Gender
@@ -7,7 +7,7 @@ SCALE: cat(dim(2), values("Female", "Male"))
 COORD: rect(dim(2),polar.theta(dim(1)))
 ELEMENT: interval.stack(position(summary.proportion(response * gender)), label(response), color(response))
 
-Output:
+Output from parser:
 
 {
    "type": "statements",
