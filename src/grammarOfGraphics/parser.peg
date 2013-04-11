@@ -18,6 +18,17 @@ expr
   / number
   / string
 
+function
+  = name:([a-z]/".")+ args:args
+    {return {type:"function", name:name.join(""), args:args};}
+
+args = "(" " "* args:arg* " "* ")" { return args; }
+
+arg = expr:expr /" "* "," " "*  expr:expr { return expr; }
+
+assignment
+  = left:name " "* "=" " "* right:name { return {type:"assignment", left:left, right:right}}
+
 name
   = chars:([a-z]/[A-Z])+ { return {type:"name", name:chars.join("")}; }
 
@@ -32,13 +43,5 @@ cross
   = left:name " "* "*" " "* right:name
   { return {type:"cross", left:left, right:right}}
 
-function
-  = name:([a-z]/".")+ args:args
-    {return {type:"function", name:name.join(""), args:args};}
 
-args = "(" " "* args:arg* " "* ")" { return args; }
 
-arg = expr:expr /" "* "," " "*  expr:expr { return expr; }
-
-assignment
-  = left:name " "* "=" " "* right:name { return {type:"assignment", left:left, right:right}}

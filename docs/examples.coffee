@@ -58,6 +58,8 @@ require ['cv/Component', 'cv/bindToCanvas', 'cv/readCSV',
           ctx.fillRect destPt.x, destPt.y, 5, 5
 
     bindToCanvas 'scatterPlot', component
+require ['cv/grammarOfGraphics'], (grammarOfGraphics) ->
+
 # Roadmap
 # =======
 #
