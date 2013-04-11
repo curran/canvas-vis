@@ -1,0 +1,11 @@
+{
+  source: "http://www.pewforum.org/global-religious-landscape-exec.aspx",
+  title: "The Global Religious Landscape",
+  description: "A Report on the Size and Distribution of the World’s Major Religious Groups as of 2010. From a study conducted by the Pew Forum on Religion and Public Life.",
+  columns:[
+    {
+      name: "Percent",
+      description: "Percentage of the World population in 2010."
+    }
+  ]
+}
