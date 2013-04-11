@@ -3,7 +3,7 @@
 #
 # This docrment is a collection of examples that use the Canvas-vis library. This file is built from `examples.coffee` in `buildDocs.sh`, which uses [Docco](http://jashkenas.github.io/docco/). Because Docco supports [Markdown](http://daringfireball.net/projects/markdown/) with inline HTML in comments, it is possible to execute `examples.coffee` within this document, producing running examples right next to their source code. Enjoy! --Curran Kelleher, April 2013
 #
-# Colored Canvas
+# [Colored Canvas](../examples/01_coloredCanvas.html)
 # --------------
 # <canvas id="coloredCanvas"></canvas>
 #
@@ -26,8 +26,7 @@ require ['cv/Component', 'cv/bindToCanvas'], (Component, bindToCanvas) ->
   setInterval (-> component.trigger 'graphicsDirty'), 1000
 
   bindToCanvas 'coloredCanvas', component
-
-# Scatter Plot
+# [Scatter Plot](../examples/02_ScatterPlot.html)
 # --------------
 # <canvas id="scatterPlot" width="450" height="450"></canvas>
 require ['cv/Component', 'cv/bindToCanvas', 'cv/readCSV',
@@ -59,7 +58,6 @@ require ['cv/Component', 'cv/bindToCanvas', 'cv/readCSV',
           ctx.fillRect destPt.x, destPt.y, 5, 5
 
     bindToCanvas 'scatterPlot', component
-
 # Roadmap
 # =======
 #
@@ -81,4 +79,4 @@ require ['cv/Component', 'cv/bindToCanvas', 'cv/readCSV',
 #  <script src="../lib/coffee-script.js"></script>
 #  <script src="../requireConfig.js"> </script>
 #  <script src="../lib/require-jquery.js"></script>
-#  <script type="text/coffeescript" src="../examples.coffee"> </script>
+#  <script type="text/coffeescript" src="examples.coffee"> </script>
