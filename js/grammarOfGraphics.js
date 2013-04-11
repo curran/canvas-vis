@@ -3,7 +3,7 @@
 (function() {
 
   require(['cv/grammarOfGraphics/parser'], function(parser) {
-    var byType, match, printTree, testInput;
+    var byType, match, printTree, testInput, testInput0;
     match = function(property, fns, fnName) {
       if (fnName == null) {
         fnName = 'obj';
@@ -22,7 +22,8 @@
     byType = function(fnName, fns) {
       return match('type', fns, fnName);
     };
-    testInput = "DATA: response = response\nDATA: gender = Gender\nSCALE: cat(dim(1), values(\"Rarely\", \"Infrequently\"))\nSCALE: cat(dim(2), values(\"Female\", \"Male\"))\nCOORD: rect(dim(2),polar.theta(dim(1)))\nELEMENT: interval.stack(position(summary.proportion(response * gender)), label(response), color(response))";
+    testInput0 = "DATA: response = response\nDATA: gender = Gender\nSCALE: cat(dim(1), values(\"Rarely\", \"Infrequently\"))\nSCALE: cat(dim(2), values(\"Female\", \"Male\"))\nCOORD: rect(dim(2),polar.theta(dim(1)))\nELEMENT: interval.stack(position(summary.proportion(response * gender)), label(response), color(response))";
+    testInput = "DATA: x = x\nDATA: y = y\nTRANS: x = x\nTRANS: y = y\nSCALE: linear(dim(1))\nSCALE: linear(dim(2))\nCOORD: rect(dim(1, 2))\nGUIDE: axis(dim(1))\nGUIDE: axis(dim(2))\nELEMENT: point(position(x*y))";
     printTree = function(tree) {
       var helper;
       helper = byType('printTree', {
@@ -56,15 +57,15 @@
           return helper(cross.right, indent + '  ');
         },
         'assignment': function(assignment, indent) {
-          console.log(indent + 'cross');
+          console.log(indent + 'assignment');
           indent += '  ';
           console.log(indent + 'left');
-          helper(assignment.left, indent);
+          helper(assignment.left, indent + '  ');
           console.log(indent + 'right');
-          return helper(assignment.right, indent);
+          return helper(assignment.right, indent + '  ');
         },
         'function': function(fn, indent) {
-          console.log(indent + 'function ' + fn.name);
+          console.log(indent + 'function: ' + fn.name);
           indent += '  ';
           console.log(indent + 'args:');
           indent += '  ';

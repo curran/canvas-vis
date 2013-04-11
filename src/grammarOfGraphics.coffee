@@ -16,13 +16,26 @@ require ['cv/grammarOfGraphics/parser'], (parser) ->
   byType = (fnName, fns) ->
     match 'type', fns, fnName
 
-  testInput = """
+  testInput0 = """
     DATA: response = response
     DATA: gender = Gender
     SCALE: cat(dim(1), values("Rarely", "Infrequently"))
     SCALE: cat(dim(2), values("Female", "Male"))
     COORD: rect(dim(2),polar.theta(dim(1)))
     ELEMENT: interval.stack(position(summary.proportion(response * gender)), label(response), color(response))
+  """
+
+  testInput = """
+    DATA: x = x
+    DATA: y = y
+    TRANS: x = x
+    TRANS: y = y
+    SCALE: linear(dim(1))
+    SCALE: linear(dim(2))
+    COORD: rect(dim(1, 2))
+    GUIDE: axis(dim(1))
+    GUIDE: axis(dim(2))
+    ELEMENT: point(position(x*y))
   """
 
   # Prints the tree structure using indentation.
@@ -51,19 +64,21 @@ require ['cv/grammarOfGraphics/parser'], (parser) ->
         console.log indent+'right'
         helper cross.right, indent+'  '
       'assignment': (assignment, indent) ->
-        console.log indent+'cross'
+        console.log indent+'assignment'
         indent += '  '
         console.log indent+'left'
-        helper assignment.left, indent
+        helper assignment.left, indent+'  '
         console.log indent+'right'
-        helper assignment.right, indent
+        helper assignment.right, indent+'  '
       'function': (fn, indent) ->
-        console.log indent+'function '+fn.name
+        console.log indent+'function: '+fn.name
         indent += '  '
         console.log indent+'args:'
         indent += '  '
         _.each fn.args, (arg) ->
           helper arg, indent
     helper tree, ''
+
+  # TODO variables, algebra, scales, statistics, geometry, coordinates, aesthetics, renderer
 
   printTree parser.parse testInput
