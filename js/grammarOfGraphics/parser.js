@@ -620,7 +620,7 @@ parser = (function(){
                 }
               }
               if (result3 !== null) {
-                result4 = parse_name();
+                result4 = parse_expr();
                 if (result4 !== null) {
                   result0 = [result0, result1, result2, result3, result4];
                 } else {
@@ -771,68 +771,24 @@ parser = (function(){
         }
         if (result0 !== null) {
           result1 = [];
-          if (/^[a-z]/.test(input.charAt(pos))) {
+          if (/^[^"]/.test(input.charAt(pos))) {
             result2 = input.charAt(pos);
             pos++;
           } else {
             result2 = null;
             if (reportFailures === 0) {
-              matchFailed("[a-z]");
-            }
-          }
-          if (result2 === null) {
-            if (/^[A-Z]/.test(input.charAt(pos))) {
-              result2 = input.charAt(pos);
-              pos++;
-            } else {
-              result2 = null;
-              if (reportFailures === 0) {
-                matchFailed("[A-Z]");
-              }
-            }
-            if (result2 === null) {
-              if (/^[0-9]/.test(input.charAt(pos))) {
-                result2 = input.charAt(pos);
-                pos++;
-              } else {
-                result2 = null;
-                if (reportFailures === 0) {
-                  matchFailed("[0-9]");
-                }
-              }
+              matchFailed("[^\"]");
             }
           }
           while (result2 !== null) {
             result1.push(result2);
-            if (/^[a-z]/.test(input.charAt(pos))) {
+            if (/^[^"]/.test(input.charAt(pos))) {
               result2 = input.charAt(pos);
               pos++;
             } else {
               result2 = null;
               if (reportFailures === 0) {
-                matchFailed("[a-z]");
-              }
-            }
-            if (result2 === null) {
-              if (/^[A-Z]/.test(input.charAt(pos))) {
-                result2 = input.charAt(pos);
-                pos++;
-              } else {
-                result2 = null;
-                if (reportFailures === 0) {
-                  matchFailed("[A-Z]");
-                }
-              }
-              if (result2 === null) {
-                if (/^[0-9]/.test(input.charAt(pos))) {
-                  result2 = input.charAt(pos);
-                  pos++;
-                } else {
-                  result2 = null;
-                  if (reportFailures === 0) {
-                    matchFailed("[0-9]");
-                  }
-                }
+                matchFailed("[^\"]");
               }
             }
           }

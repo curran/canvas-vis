@@ -27,7 +27,7 @@ args = "(" " "* args:arg* " "* ")" { return args; }
 arg = expr:expr /" "* "," " "*  expr:expr { return expr; }
 
 assignment
-  = left:name " "* "=" " "* right:name { return {type:"assignment", left:left, right:right}}
+  = left:name " "* "=" " "* right:expr { return {type:"assignment", left:left, right:right}}
 
 name
   = chars:([a-z]/[A-Z])+ { return {type:"name", name:chars.join("")}; }
@@ -36,7 +36,7 @@ number
   = chars:[0-9]+ { return {type:"number", value:parseFloat(chars.join(""))}; }
 
 string
-  = '"' chars:( [a-z] / [A-Z] / [0-9] )* '"'
+  = '"' chars:[^"]* '"'
     { return {type:"string", value:chars.join("")}; }
 
 cross

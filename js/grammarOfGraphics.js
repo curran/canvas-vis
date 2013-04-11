@@ -23,7 +23,7 @@
       return match('type', fns, fnName);
     };
     testInput0 = "DATA: response = response\nDATA: gender = Gender\nSCALE: cat(dim(1), values(\"Rarely\", \"Infrequently\"))\nSCALE: cat(dim(2), values(\"Female\", \"Male\"))\nCOORD: rect(dim(2),polar.theta(dim(1)))\nELEMENT: interval.stack(position(summary.proportion(response * gender)), label(response), color(response))";
-    testInput = "DATA: x = x\nDATA: y = y\nTRANS: x = x\nTRANS: y = y\nSCALE: linear(dim(1))\nSCALE: linear(dim(2))\nCOORD: rect(dim(1, 2))\nGUIDE: axis(dim(1))\nGUIDE: axis(dim(2))\nELEMENT: point(position(x*y))";
+    testInput = "DATA: x = \"test this\"\nDATA: y = y\nTRANS: x = x\nTRANS: y = y\nSCALE: linear(dim(1))\nSCALE: linear(dim(2))\nCOORD: rect(dim(1, 2))\nGUIDE: axis(dim(1))\nGUIDE: axis(dim(2))\nELEMENT: point(position(x*y))";
     printTree = function(tree) {
       var helper;
       helper = byType('printTree', {

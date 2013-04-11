@@ -26,7 +26,7 @@ require ['cv/grammarOfGraphics/parser'], (parser) ->
   """
 
   testInput = """
-    DATA: x = x
+    DATA: x = "test this"
     DATA: y = y
     TRANS: x = x
     TRANS: y = y
