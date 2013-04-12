@@ -672,36 +672,9 @@ performs a relational algebra &#39;project&#39; operation</li>
             
             <div class="content"><div class='highlight'><pre>      model.__defineGetter__ p, -&gt; model.get p
       model.__defineSetter__ p, (val) -&gt; model.set p, val
-require [<span class="string">'cv/grammarOfGraphics/parser'</span>], (parser) -&gt;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-35">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
-              </div>
-              <p>This utility lets us approximate Haskell&#39;s 
-pattern matching syntax in CoffeeScript</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  <span class="function"><span class="title">match</span></span> = (property, fns, fnName = <span class="string">'obj'</span>) -&gt;
-    (obj) -&gt;
-      key = obj[property]
-      fn = fns[key]
-      <span class="keyword">if</span> fn
-        fn.apply <span class="literal">null</span>, arguments
-      <span class="keyword">else</span>
-        <span class="keyword">throw</span> Error <span class="string">"""
-          no match for <span class="subst">#{fnName}</span>.<span class="subst">#{property}</span> = <span class="subst">#{key}</span>
-        """</span>
-
-  <span class="function"><span class="title">byType</span></span> = (fnName, fns) -&gt;
-    match <span class="string">'type'</span>, fns, fnName
-
+require [<span class="string">'cv/grammarOfGraphics/parser'</span>, <span class="string">'cv/grammarOfGraphics/printTree'</span>]
+      , (parser, printTree) -&gt;
+  
   testInput0 = <span class="string">"""
     DATA: response = response
     DATA: gender = Gender
@@ -712,7 +685,7 @@ pattern matching syntax in CoffeeScript</p>
   """</span>
 
   testInput = <span class="string">"""
-    DATA: x = "test this"
+    DATA: x = x*y
     DATA: y = y
     TRANS: x = x
     TRANS: y = y
@@ -727,55 +700,30 @@ pattern matching syntax in CoffeeScript</p>
         </li>
         
         
-        <li id="section-36">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
-              <p>Prints the tree structure using indentation.</p>
+              <p>TODO variables, algebra, scales, statistics, geometry, coordinates, aesthetics, renderer</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="function"><span class="title">printTree</span></span> = (tree) -&gt;
-    helper = byType <span class="string">'printTree'</span>,
-      <span class="string">'statements'</span>: (statements, indent) -&gt;
-        console.log indent + <span class="string">'statements'</span>
-        indent += <span class="string">'  '</span>
-        _.each statements.statements, (statement) -&gt;
-          helper statement, indent
-      <span class="string">'statement'</span>: (stmt, indent) -&gt;
-        console.log indent+<span class="string">'statement: '</span>+stmt.statementType
-        indent += <span class="string">'  '</span>
-        helper stmt.expr, indent
-      <span class="string">'name'</span>: (name, indent) -&gt;
-        console.log indent+<span class="string">'name '</span>+name.name
-      <span class="string">'number'</span>: (number, indent) -&gt;
-        console.log indent+<span class="string">'number '</span>+number.value
-      <span class="string">'string'</span>: (string, indent) -&gt;
-        console.log indent+<span class="string">'string '</span>+string.value
-      <span class="string">'cross'</span>: (cross, indent) -&gt;
-        console.log indent+<span class="string">'cross'</span>
-        indent += <span class="string">'  '</span>
-        console.log indent+<span class="string">'left'</span>
-        helper cross.left, indent+<span class="string">'  '</span>
-        console.log indent+<span class="string">'right'</span>
-        helper cross.right, indent+<span class="string">'  '</span>
-      <span class="string">'assignment'</span>: (assignment, indent) -&gt;
-        console.log indent+<span class="string">'assignment'</span>
-        indent += <span class="string">'  '</span>
-        console.log indent+<span class="string">'left'</span>
-        helper assignment.left, indent+<span class="string">'  '</span>
-        console.log indent+<span class="string">'right'</span>
-        helper assignment.right, indent+<span class="string">'  '</span>
-      <span class="string">'function'</span>: (fn, indent) -&gt;
-        console.log indent+<span class="string">'function: '</span>+fn.name
-        indent += <span class="string">'  '</span>
-        console.log indent+<span class="string">'args:'</span>
-        indent += <span class="string">'  '</span>
-        _.each fn.args, (arg) -&gt;
-          helper arg, indent
-    helper tree, <span class="string">''</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  console.log printTree parser.parse testInput</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h1">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <h1>Match</h1>
+
+            </div>
             
         </li>
         
@@ -786,11 +734,22 @@ pattern matching syntax in CoffeeScript</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
-              <p>TODO variables, algebra, scales, statistics, geometry, coordinates, aesthetics, renderer</p>
+              <p>This utility lets us approximate Haskell&#39;s 
+pattern matching syntax in CoffeeScript</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  printTree parser.parse testInput
+            <div class="content"><div class='highlight'><pre>define [], -&gt;
+  <span class="function"><span class="title">match</span></span> = (property, fns, fnName = <span class="string">'obj'</span>) -&gt;
+    (obj) -&gt;
+      key = obj[property]
+      fn = fns[key]
+      <span class="keyword">if</span> fn
+        fn.apply <span class="literal">null</span>, arguments
+      <span class="keyword">else</span>
+        <span class="keyword">throw</span> Error <span class="string">"""
+          no match for <span class="subst">#{fnName}</span>.<span class="subst">#{property}</span> = <span class="subst">#{key}</span>
+        """</span>
 define [<span class="string">'jquery.csv'</span>, <span class="string">'cv/Relation'</span>], (csv, Relation) -&gt;
   (fileName, callback) -&gt;
     $.get fileName, (data) -&gt;
