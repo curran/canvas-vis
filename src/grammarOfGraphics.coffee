@@ -1,5 +1,21 @@
-require ['cv/grammarOfGraphics/parser', 'cv/grammarOfGraphics/printTree']
-      , (parser, printTree) ->
+#grammarOfGraphics
+#=================
+# The top level module exposing Grammar of Graphics functionality.
+#
+# For inner modules, check out [grammarOfGraphics docs](grammarOfGraphics.html)
+require [
+  'cv/grammarOfGraphics/parser',
+  'cv/grammarOfGraphics/printTree',
+  'cv/grammarOfGraphics/step1_variables'
+#  'cv/grammarOfGraphics/step2_variables',
+#  'cv/grammarOfGraphics/step3_algebra',
+#  'cv/grammarOfGraphics/step4_scales',
+#  'cv/grammarOfGraphics/step5_statistics',
+#  'cv/grammarOfGraphics/step6_geometry',
+#  'cv/grammarOfGraphics/step7_coordinates',
+#  'cv/grammarOfGraphics/step8_aesthetics',
+#  'cv/grammarOfGraphics/step9_renderer'
+], (parser, printTree, variables) ->
   
   testInput0 = """
     DATA: response = response
@@ -24,7 +40,11 @@ require ['cv/grammarOfGraphics/parser', 'cv/grammarOfGraphics/printTree']
   """
 
 
-  # TODO variables, algebra, scales, statistics, geometry, coordinates, aesthetics, renderer
+  #console.log printTree parser.parse testInput
 
-  console.log printTree parser.parse testInput
+  # grammarOfGraphics(relation, expression) -> MarkIterator
+  grammarOfGraphics = (relation, expression) ->
+    tree = parser.parse expression
+    vars = variables tree, relation
 
+  grammarOfGraphics null, testInput

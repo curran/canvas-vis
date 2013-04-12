@@ -3,16 +3,13 @@
 (function() {
 
   define(['cv/match'], function(match) {
-    var byType, line, printTree;
-    byType = function(fnName, fns) {
-      return match('type', fns, fnName);
-    };
+    var line, printTree;
     line = function(str) {
       return str + '\n';
     };
     return printTree = function(tree) {
       var p;
-      p = byType('printTree', {
+      p = match('type', 'printTree', {
         'statements': function(statements, indent) {
           var i, s, ss, _ref;
           _ref = [statements.statements, indent], ss = _ref[0], i = _ref[1];

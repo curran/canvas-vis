@@ -4,10 +4,7 @@
 
   define([], function() {
     var match;
-    return match = function(property, fns, fnName) {
-      if (fnName == null) {
-        fnName = 'obj';
-      }
+    return match = function(property, fnName, fns) {
       return function(obj) {
         var fn, key;
         key = obj[property];

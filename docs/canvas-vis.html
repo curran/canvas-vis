@@ -28,6 +28,11 @@
                 examples.coffee
               </a>
             
+              
+              <a class="source" href="grammarOfGraphics.html">
+                grammarOfGraphics.coffee
+              </a>
+            
           </div>
         </li>
       </ul>
@@ -671,9 +676,61 @@ performs a relational algebra &#39;project&#39; operation</li>
             </div>
             
             <div class="content"><div class='highlight'><pre>      model.__defineGetter__ p, -&gt; model.get p
-      model.__defineSetter__ p, (val) -&gt; model.set p, val
-require [<span class="string">'cv/grammarOfGraphics/parser'</span>, <span class="string">'cv/grammarOfGraphics/printTree'</span>]
-      , (parser, printTree) -&gt;
+      model.__defineSetter__ p, (val) -&gt; model.set p, val</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h1">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <h1>grammarOfGraphics</h1>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <p>The top level module exposing Grammar of Graphics functionality.</p>
+<p>For inner modules, check out <a href="grammarOfGraphics.html">grammarOfGraphics docs</a></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>require [
+  <span class="string">'cv/grammarOfGraphics/parser'</span>,
+  <span class="string">'cv/grammarOfGraphics/printTree'</span>,
+  <span class="string">'cv/grammarOfGraphics/step1_variables'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
+              </div>
+              <p> &#39;cv/grammarOfGraphics/step2_variables&#39;,
+ &#39;cv/grammarOfGraphics/step3_algebra&#39;,
+ &#39;cv/grammarOfGraphics/step4_scales&#39;,
+ &#39;cv/grammarOfGraphics/step5_statistics&#39;,
+ &#39;cv/grammarOfGraphics/step6_geometry&#39;,
+ &#39;cv/grammarOfGraphics/step7_coordinates&#39;,
+ &#39;cv/grammarOfGraphics/step8_aesthetics&#39;,
+ &#39;cv/grammarOfGraphics/step9_renderer&#39;</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>], (parser, printTree, variables) -&gt;
   
   testInput0 = <span class="string">"""
     DATA: response = response
@@ -700,26 +757,31 @@ require [<span class="string">'cv/grammarOfGraphics/parser'</span>, <span class=
         </li>
         
         
-        <li id="section-35">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
-              <p>TODO variables, algebra, scales, statistics, geometry, coordinates, aesthetics, renderer</p>
+              <p>console.log printTree parser.parse testInput</p>
+<p>grammarOfGraphics(relation, expression) -&gt; MarkIterator</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  console.log printTree parser.parse testInput</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="function"><span class="title">grammarOfGraphics</span></span> = (relation, expression) -&gt;
+    tree = parser.parse expression
+    vars = variables tree, relation
+
+  grammarOfGraphics <span class="literal">null</span>, testInput</pre></div></div>
             
         </li>
         
         
-        <li id="section-36">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <h1>Match</h1>
 
@@ -728,11 +790,11 @@ require [<span class="string">'cv/grammarOfGraphics/parser'</span>, <span class=
         </li>
         
         
-        <li id="section-37">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <p>This utility lets us approximate Haskell&#39;s 
 pattern matching syntax in CoffeeScript</p>
@@ -740,7 +802,7 @@ pattern matching syntax in CoffeeScript</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>define [], -&gt;
-  <span class="function"><span class="title">match</span></span> = (property, fns, fnName = <span class="string">'obj'</span>) -&gt;
+  <span class="function"><span class="title">match</span></span> = (property, fnName, fns) -&gt;
     (obj) -&gt;
       key = obj[property]
       fn = fns[key]

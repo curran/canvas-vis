@@ -29,7 +29,6 @@ cd examples
 coffee -o js -cm ./
 cd ../
 
-
 echo Generating Grammar of Graphics parser from PEG.js grammar
 cd src/grammarOfGraphics
 bash generateParser.sh
@@ -38,9 +37,11 @@ mv src/grammarOfGraphics/parser.js js/grammarOfGraphics
 
 echo Building docs
 cat src/*.coffee > canvas-vis.coffee
+cat src/grammarOfGraphics/*.coffee > grammarOfGraphics.coffee
 cat examples/*.coffee > examples.coffee
 docco *.coffee
 rm canvas-vis.coffee
+rm grammarOfGraphics.coffee
 mv examples.coffee docs
 
 echo Done.

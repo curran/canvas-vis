@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>printTree</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="canvas-vis.html">
+                canvas-vis.coffee
+              </a>
+            
+              
+              <a class="source" href="examples.html">
+                examples.coffee
+              </a>
+            
+              
+              <a class="source" href="grammarOfGraphics.html">
+                grammarOfGraphics.coffee
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h1">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <h1>printTree</h1>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Extracts the tree structure to a string.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>define [<span class="string">'cv/match'</span>], (match) -&gt;
+  <span class="function"><span class="title">line</span></span> = (str) -&gt; str + <span class="string">'\n'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>printTree(tree) -&gt; String</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="function"><span class="title">printTree</span></span> = (tree) -&gt;
+    p = match <span class="string">'type'</span>, <span class="string">'printTree'</span>,
+      <span class="string">'statements'</span>: (statements, indent) -&gt;
+        [ss, i] = [statements.statements, indent]
+        line(i+<span class="string">'statements'</span>)+
+          ((p s, i+<span class="string">'  '</span>) <span class="keyword">for</span> s <span class="keyword">in</span> ss).join <span class="string">''</span>
+      <span class="string">'statement'</span>: (stmt, indent) -&gt;
+        line indent+<span class="string">'statement: '</span>+stmt.statementType
+        p stmt.expr, indent+<span class="string">'  '</span>
+      <span class="string">'name'</span>: (name, indent) -&gt;
+        line indent+<span class="string">'name '</span>+name.name
+      <span class="string">'number'</span>: (number, indent) -&gt;
+        line indent+<span class="string">'number '</span>+number.value
+      <span class="string">'string'</span>: (string, indent) -&gt;
+        line indent+<span class="string">'string '</span>+string.value
+      <span class="string">'cross'</span>: (cross, indent) -&gt;
+        [
+          (line indent+<span class="string">'cross'</span>),
+          (line indent+<span class="string">'  left'</span>),
+          (p cross.left, indent+<span class="string">'    '</span>),
+          (line indent+<span class="string">'  right'</span>),
+          (p cross.right, indent+<span class="string">'    '</span>),
+        ].join <span class="string">''</span>
+      <span class="string">'assignment'</span>: (assignment, indent) -&gt;
+        [
+          (line indent+<span class="string">'assignment'</span>),
+          (line indent+<span class="string">'  left'</span>),
+          (p assignment.left, indent+<span class="string">'    '</span>),
+          (line indent+<span class="string">'  right'</span>),
+          (p assignment.right, indent+<span class="string">'    '</span>),
+        ].join <span class="string">''</span>
+      <span class="string">'function'</span>: (fn, indent) -&gt;
+        [
+          (line indent+<span class="string">'function '</span>+fn.name),
+          (line indent+<span class="string">'  args:'</span>),
+          (<span class="keyword">for</span> arg <span class="keyword">in</span> fn.args
+             p arg, indent+<span class="string">'    '</span>
+          ).join <span class="string">''</span>
+        ].join <span class="string">''</span>
+    p tree, <span class="string">''</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h1">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <h1>step 1: variables</h1>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>The first step in Wilkinson&#39;s Grammar of Graphics pipeline.</p>
+<p>Evaluates all &#39;DATA&#39; statements to extract named variables from the input relation.</p>
+<p>Here, Wilkinson&#39;s notion of a varset is represented using the Relation module.</p>
+<p>variables(tree) -&gt; Relation</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>define [<span class="string">'cv/match'</span>], (match) -&gt;
+  match <span class="string">'type'</span>, <span class="string">'variables'</span>,
+    <span class="string">'statements'</span>: (statements, relation) -&gt;
+      <span class="keyword">for</span> statement <span class="keyword">in</span> statements.statements
+        <span class="keyword">if</span> statement.statementType == <span class="string">'DATA'</span>
+          console.log <span class="string">'here'</span>
+    <span class="string">'statement'</span>: (stmt, indent) -&gt;
+      line indent+<span class="string">'statement: '</span>+stmt.statementType
+      p stmt.expr, indent+<span class="string">'  '</span></pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

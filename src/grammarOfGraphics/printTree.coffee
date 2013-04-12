@@ -1,12 +1,11 @@
-# printTree(tree)
+# printTree
 # ===============
-# Prints the tree structure to the console using indentation.
+# Extracts the tree structure to a string.
 define ['cv/match'], (match) ->
-  byType = (fnName, fns) ->
-    match 'type', fns, fnName
   line = (str) -> str + '\n'
+# printTree(tree) -> String
   printTree = (tree) ->
-    p = byType 'printTree',
+    p = match 'type', 'printTree',
       'statements': (statements, indent) ->
         [ss, i] = [statements.statements, indent]
         line(i+'statements')+

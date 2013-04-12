@@ -3,7 +3,7 @@
 # This utility lets us approximate Haskell's 
 # pattern matching syntax in CoffeeScript
 define [], ->
-  match = (property, fns, fnName = 'obj') ->
+  match = (property, fnName, fns) ->
     (obj) ->
       key = obj[property]
       fn = fns[key]
