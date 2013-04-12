@@ -43,24 +43,15 @@
       select: function(test) {
         var result;
         result = new Relation;
-        this.attributes.each(function(attr) {
-          return result.addAttribute(attr.name);
-        });
-        result.tuples.add(this.tuples.filter(function(tuple) {
-          return test(tuple.values);
-        }));
+        result.attributes = this.attributes;
+        result.tuples.add(this.tuples.filter(test));
         return result;
       },
-      project: function(attrNames) {
-        var name, result, _i, _len;
+      project: function(attributes) {
+        var result;
         result = new Relation;
-        for (_i = 0, _len = attrNames.length; _i < _len; _i++) {
-          name = attrNames[_i];
-          result.addAttribute(name);
-        }
-        this.tuples.each(function(tuple) {
-          return result.addTuple(_.pick(tuple.values, attrNames));
-        });
+        result.attributes.add(attributes);
+        result.tuples = this.tuples;
         return result;
       }
     });

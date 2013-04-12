@@ -26,5 +26,34 @@ define(["cv/Relation", "cv/readCSV"],
       expect(attrA.max).toEqual(6);
       expect(attrB.min).toEqual(1);
     });
+
+    it("should compute projection", function(){
+      rel2 = rel.project([attrA])
+      expect(rel2.attributes.length).toEqual(1);
+      expect(rel2.attributes.at(0)).toEqual(attrA);
+      expect(rel2.tuples.at(1).value(attrA)).toEqual(3);
+
+      rel3 = rel.project([attrA, attrC])
+      expect(rel3.attributes.length).toEqual(2);
+      expect(rel3.attributes.at(1)).toEqual(attrC);
+      expect(rel3.tuples.at(1).value(attrA)).toEqual(3);
+      expect(rel3.tuples.at(1).value(attrC)).toEqual(5);
+    });
+
+    it("should compute selection", function(){
+      rel4 = rel.select(function(tuple){
+        return tuple.value(attrA) > 0;
+      })
+      expect(rel4.attributes.length).toEqual(3);
+      expect(rel4.tuples.length).toEqual(2);
+      expect(rel4.tuples.at(0).value(attrA)).toEqual(3);
+      expect(rel4.tuples.at(1).value(attrA)).toEqual(6);
+
+      rel3 = rel.project([attrA, attrC])
+      expect(rel3.attributes.length).toEqual(2);
+      expect(rel3.attributes.at(1)).toEqual(attrC);
+      expect(rel3.tuples.at(1).value(attrA)).toEqual(3);
+      expect(rel3.tuples.at(1).value(attrC)).toEqual(5);
+    });
   });
 });

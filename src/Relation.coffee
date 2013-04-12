@@ -26,19 +26,15 @@ define ['cv/expose'], (expose) ->
         if minTuple != Infinity
           attr.min = minTuple.value attr
           attr.max = maxTuple.value attr
-    # TODO test select and project
     select: (test) ->
       result = new Relation
-      @attributes.each (attr) ->
-        result.addAttribute attr.name
-      result.tuples.add @tuples.filter (tuple) ->
-        test tuple.values
+      result.attributes = @attributes
+      result.tuples.add @tuples.filter test
       return result
-    project: (attrNames) ->
+    project: (attributes) ->
       result = new Relation
-      result.addAttribute name for name in attrNames
-      @tuples.each (tuple) ->
-        result.addTuple _.pick tuple.values, attrNames
+      result.attributes.add attributes
+      result.tuples = @tuples
       return result
 
 # Relation.Tuple
