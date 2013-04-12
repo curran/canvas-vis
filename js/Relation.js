@@ -53,6 +53,19 @@
         result.attributes.add(attributes);
         result.tuples = this.tuples;
         return result;
+      },
+      renameAttribute: function(oldName, newName) {
+        var result;
+        result = new Relation;
+        this.attributes.each(function(attribute) {
+          if (attribute.name === oldName) {
+            return result.attributes.add(attribute.rename(newName));
+          } else {
+            return result.attributes.add(attribute);
+          }
+        });
+        result.tuples = this.tuples;
+        return result;
       }
     });
     Tuple = Backbone.Model.extend({
@@ -66,6 +79,14 @@
     Attribute = Backbone.Model.extend({
       initialize: function() {
         return expose(this, 'name', 'min', 'max', 'index');
+      },
+      rename: function(newName) {
+        return new Attribute({
+          name: newName,
+          min: this.min,
+          max: this.max,
+          index: this.index
+        });
       }
     });
     Relation.Attribute = Attribute;

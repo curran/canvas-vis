@@ -146,19 +146,20 @@
               <p>The first step in Wilkinson&#39;s Grammar of Graphics pipeline.</p>
 <p>Evaluates all &#39;DATA&#39; statements to extract named variables from the input relation.</p>
 <p>Here, Wilkinson&#39;s notion of a varset is represented using the Relation module.</p>
-<p>variables(tree) -&gt; Relation</p>
+<p>variables(tree, relation) -&gt; Relation</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>define [<span class="string">'cv/match'</span>], (match) -&gt;
+            <div class="content"><div class='highlight'><pre>define [<span class="string">'cv/match'</span>, <span class="string">'cv/grammarOfGraphics/printTree'</span>]
+     , (match, printTree) -&gt;
   match <span class="string">'type'</span>, <span class="string">'variables'</span>,
     <span class="string">'statements'</span>: (statements, relation) -&gt;
-      <span class="keyword">for</span> statement <span class="keyword">in</span> statements.statements
-        <span class="keyword">if</span> statement.statementType == <span class="string">'DATA'</span>
-          console.log <span class="string">'here'</span>
-    <span class="string">'statement'</span>: (stmt, indent) -&gt;
-      line indent+<span class="string">'statement: '</span>+stmt.statementType
-      p stmt.expr, indent+<span class="string">'  '</span></pre></div></div>
+      stmts = statements.statements
+      dataStmts = _.filter stmts, (stmt) -&gt;
+        stmt.statementType == <span class="string">'DATA'</span>
+      <span class="keyword">for</span> dataStmt <span class="keyword">in</span> dataStmts
+        console.log printTree dataStmt.expr
+      relation</pre></div></div>
             
         </li>
         

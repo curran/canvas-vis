@@ -28,12 +28,12 @@ define(["cv/Relation", "cv/readCSV"],
     });
 
     it("should compute projection", function(){
-      rel2 = rel.project([attrA])
+      var rel2 = rel.project([attrA])
       expect(rel2.attributes.length).toEqual(1);
       expect(rel2.attributes.at(0)).toEqual(attrA);
       expect(rel2.tuples.at(1).value(attrA)).toEqual(3);
 
-      rel3 = rel.project([attrA, attrC])
+      var rel3 = rel.project([attrA, attrC])
       expect(rel3.attributes.length).toEqual(2);
       expect(rel3.attributes.at(1)).toEqual(attrC);
       expect(rel3.tuples.at(1).value(attrA)).toEqual(3);
@@ -41,19 +41,30 @@ define(["cv/Relation", "cv/readCSV"],
     });
 
     it("should compute selection", function(){
-      rel4 = rel.select(function(tuple){
+      var rel4 = rel.select(function(tuple){
         return tuple.value(attrA) > 0;
-      })
+      });
       expect(rel4.attributes.length).toEqual(3);
       expect(rel4.tuples.length).toEqual(2);
       expect(rel4.tuples.at(0).value(attrA)).toEqual(3);
       expect(rel4.tuples.at(1).value(attrA)).toEqual(6);
 
-      rel3 = rel.project([attrA, attrC])
-      expect(rel3.attributes.length).toEqual(2);
-      expect(rel3.attributes.at(1)).toEqual(attrC);
-      expect(rel3.tuples.at(1).value(attrA)).toEqual(3);
-      expect(rel3.tuples.at(1).value(attrC)).toEqual(5);
+      var rel5 = rel.project([attrA, attrC])
+      expect(rel5.attributes.length).toEqual(2);
+      expect(rel5.attributes.at(1)).toEqual(attrC);
+      expect(rel5.tuples.at(1).value(attrA)).toEqual(3);
+      expect(rel5.tuples.at(1).value(attrC)).toEqual(5);
+    });
+
+    it("should rename attributes", function(){
+      var rel6 = rel.renameAttribute('A', 'D');
+      var attrD = rel6.attributes.at(0)
+      expect(rel6.attributes.length).toEqual(3);
+      expect(attrD.name).toEqual('D');
+      expect(attrD.index).toEqual(attrA.index);
+      expect(attrD.min).toEqual(attrA.min);
+      expect(attrD.max).toEqual(attrA.max);
+      expect(rel6.tuples.at(1).value(attrD)).toEqual(3);
     });
   });
 });

@@ -308,6 +308,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>      <span class="property">@tuples</span>     = <span class="keyword">new</span> Backbone.Collection
+      
       <span class="property">@attrCounter</span> = <span class="number">0</span></pre></div></div>
             
         </li>
@@ -425,8 +426,33 @@ performs a relational algebra &#39;project&#39; operation</li>
         <li id="section-22">
             <div class="annotation">
               
-              <div class="pilwrap for-h2">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <ul>
+<li>renameAttributes: (oldName:String, newName:String) -&gt; Relation, returns a new relation with a single attribute renamed</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    renameAttribute: (oldName, newName) -&gt;
+      result = <span class="keyword">new</span> Relation
+      <span class="property">@attributes</span>.each (attribute) -&gt;
+        <span class="keyword">if</span> attribute.name == oldName
+          result.attributes.add attribute.rename newName
+        <span class="keyword">else</span>
+          result.attributes.add attribute
+      result.tuples = <span class="property">@tuples</span>
+      <span class="keyword">return</span> result</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <h2>Relation.Tuple</h2>
 
@@ -435,11 +461,11 @@ performs a relational algebra &#39;project&#39; operation</li>
         </li>
         
         
-        <li id="section-23">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <ul>
 <li>values: an object mapping attribute names to their values.</li>
@@ -454,11 +480,11 @@ performs a relational algebra &#39;project&#39; operation</li>
         </li>
         
         
-        <li id="section-24">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap for-h2">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <h2>Relation.Attribute</h2>
 
@@ -467,22 +493,29 @@ performs a relational algebra &#39;project&#39; operation</li>
         </li>
         
         
-        <li id="section-25">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <ul>
 <li><code>name</code>: String</li>
 <li><code>min</code>: Number</li>
 <li><code>max</code>: Number</li>
+<li><code>index</code>: Number</li>
 </ul>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>  Attribute = Backbone.Model.extend
     initialize: -&gt; expose @, <span class="string">'name'</span>, <span class="string">'min'</span>, <span class="string">'max'</span>, <span class="string">'index'</span>
+    rename: (newName) -&gt;
+      <span class="keyword">new</span> Attribute
+        name: newName
+        min: <span class="property">@min</span>
+        max: <span class="property">@max</span>
+        index: <span class="property">@index</span>
 
   Relation.Attribute = Attribute
   Relation.Tuple = Tuple
@@ -491,11 +524,11 @@ performs a relational algebra &#39;project&#39; operation</li>
         </li>
         
         
-        <li id="section-26">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <h1>Viewport</h1>
 
@@ -504,11 +537,11 @@ performs a relational algebra &#39;project&#39; operation</li>
         </li>
         
         
-        <li id="section-27">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <ul>
 <li>src: Rectangle</li>
@@ -532,11 +565,11 @@ performs a relational algebra &#39;project&#39; operation</li>
         </li>
         
         
-        <li id="section-28">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <h1>ViewportContainer</h1>
 
@@ -545,11 +578,11 @@ performs a relational algebra &#39;project&#39; operation</li>
         </li>
         
         
-        <li id="section-29">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p>TODO replace this code with newer version from <code>all.coffee</code></p>
 
@@ -578,11 +611,11 @@ performs a relational algebra &#39;project&#39; operation</li>
         </li>
         
         
-        <li id="section-30">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <h1>bindToCanvas</h1>
 
@@ -591,11 +624,11 @@ performs a relational algebra &#39;project&#39; operation</li>
         </li>
         
         
-        <li id="section-31">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p>Binds a Component to a Canvas.</p>
 <p>The component is re-rendered on the Canvas whenever it fires a &#39;graphicsDirty&#39; event.</p>
@@ -632,11 +665,11 @@ performs a relational algebra &#39;project&#39; operation</li>
         </li>
         
         
-        <li id="section-32">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <h1>expose</h1>
 
@@ -645,11 +678,11 @@ performs a relational algebra &#39;project&#39; operation</li>
         </li>
         
         
-        <li id="section-33">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <p>Exposes properties of Backbone models using JS setters and getters.</p>
 
@@ -664,11 +697,11 @@ performs a relational algebra &#39;project&#39; operation</li>
         </li>
         
         
-        <li id="section-34">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <pre><code> if !(model.get p) then throw Error &quot;&quot;&quot;
    Missing expected property &#39;#{p}&#39; &quot;&quot;&quot;</code></pre>
@@ -681,11 +714,11 @@ performs a relational algebra &#39;project&#39; operation</li>
         </li>
         
         
-        <li id="section-35">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <h1>grammarOfGraphics</h1>
 
@@ -694,11 +727,11 @@ performs a relational algebra &#39;project&#39; operation</li>
         </li>
         
         
-        <li id="section-36">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p>The top level module exposing Grammar of Graphics functionality.</p>
 <p>For inner modules, check out <a href="grammarOfGraphics.html">grammarOfGraphics docs</a></p>
@@ -713,11 +746,11 @@ performs a relational algebra &#39;project&#39; operation</li>
         </li>
         
         
-        <li id="section-37">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <p> &#39;cv/grammarOfGraphics/step2_variables&#39;,
  &#39;cv/grammarOfGraphics/step3_algebra&#39;,
@@ -732,36 +765,23 @@ performs a relational algebra &#39;project&#39; operation</li>
             
             <div class="content"><div class='highlight'><pre>], (parser, printTree, variables) -&gt;
   
-  testInput0 = <span class="string">"""
+  testExpr0 = <span class="string">"""
     DATA: response = response
     DATA: gender = Gender
     SCALE: cat(dim(1), values("Rarely", "Infrequently"))
     SCALE: cat(dim(2), values("Female", "Male"))
     COORD: rect(dim(2),polar.theta(dim(1)))
     ELEMENT: interval.stack(position(summary.proportion(response * gender)), label(response), color(response))
-  """</span>
-
-  testInput = <span class="string">"""
-    DATA: x = x*y
-    DATA: y = y
-    TRANS: x = x
-    TRANS: y = y
-    SCALE: linear(dim(1))
-    SCALE: linear(dim(2))
-    COORD: rect(dim(1, 2))
-    GUIDE: axis(dim(1))
-    GUIDE: axis(dim(2))
-    ELEMENT: point(position(x*y))
   """</span></pre></div></div>
             
         </li>
         
         
-        <li id="section-38">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <p>console.log printTree parser.parse testInput</p>
 <p>grammarOfGraphics(relation, expression) -&gt; MarkIterator</p>
@@ -770,22 +790,7 @@ performs a relational algebra &#39;project&#39; operation</li>
             
             <div class="content"><div class='highlight'><pre>  <span class="function"><span class="title">grammarOfGraphics</span></span> = (relation, expression) -&gt;
     tree = parser.parse expression
-    vars = variables tree, relation
-
-  grammarOfGraphics <span class="literal">null</span>, testInput</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-39">
-            <div class="annotation">
-              
-              <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-39">&#182;</a>
-              </div>
-              <h1>Match</h1>
-
-            </div>
+    vars = variables tree, relation</pre></div></div>
             
         </li>
         
@@ -795,6 +800,37 @@ performs a relational algebra &#39;project&#39; operation</li>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-40">&#182;</a>
+              </div>
+              <p>grammarOfGraphics null, testInput</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  grammarOfGraphics.testExpr = testExpr
+
+
+  <span class="keyword">return</span> grammarOfGraphics</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h1">
+                <a class="pilcrow" href="#section-41">&#182;</a>
+              </div>
+              <h1>Match</h1>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
               <p>This utility lets us approximate Haskell&#39;s 
 pattern matching syntax in CoffeeScript</p>

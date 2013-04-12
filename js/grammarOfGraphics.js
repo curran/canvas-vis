@@ -3,15 +3,15 @@
 (function() {
 
   require(['cv/grammarOfGraphics/parser', 'cv/grammarOfGraphics/printTree', 'cv/grammarOfGraphics/step1_variables'], function(parser, printTree, variables) {
-    var grammarOfGraphics, testInput, testInput0;
-    testInput0 = "DATA: response = response\nDATA: gender = Gender\nSCALE: cat(dim(1), values(\"Rarely\", \"Infrequently\"))\nSCALE: cat(dim(2), values(\"Female\", \"Male\"))\nCOORD: rect(dim(2),polar.theta(dim(1)))\nELEMENT: interval.stack(position(summary.proportion(response * gender)), label(response), color(response))";
-    testInput = "DATA: x = x*y\nDATA: y = y\nTRANS: x = x\nTRANS: y = y\nSCALE: linear(dim(1))\nSCALE: linear(dim(2))\nCOORD: rect(dim(1, 2))\nGUIDE: axis(dim(1))\nGUIDE: axis(dim(2))\nELEMENT: point(position(x*y))";
+    var grammarOfGraphics, testExpr0;
+    testExpr0 = "DATA: response = response\nDATA: gender = Gender\nSCALE: cat(dim(1), values(\"Rarely\", \"Infrequently\"))\nSCALE: cat(dim(2), values(\"Female\", \"Male\"))\nCOORD: rect(dim(2),polar.theta(dim(1)))\nELEMENT: interval.stack(position(summary.proportion(response * gender)), label(response), color(response))";
     grammarOfGraphics = function(relation, expression) {
       var tree, vars;
       tree = parser.parse(expression);
       return vars = variables(tree, relation);
     };
-    return grammarOfGraphics(null, testInput);
+    grammarOfGraphics.testExpr = testExpr;
+    return grammarOfGraphics;
   });
 
 }).call(this);
