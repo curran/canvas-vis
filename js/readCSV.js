@@ -5,24 +5,19 @@
   define(['jquery.csv', 'cv/Relation'], function(csv, Relation) {
     return function(fileName, callback) {
       return $.get(fileName, function(data) {
-        var attrNames, n, name, relation, table, tupleArrays, _i, _len;
+        var attrNames, name, relation, table, tuple, tuples, _i, _j, _len, _len1;
         table = $.csv.toArrays(data);
         attrNames = _.first(table);
-        tupleArrays = _.rest(table);
+        tuples = _.rest(table);
         relation = new Relation;
         for (_i = 0, _len = attrNames.length; _i < _len; _i++) {
           name = attrNames[_i];
           relation.addAttribute(name);
         }
-        n = attrNames.length;
-        _.each(tupleArrays, function(tupleArr) {
-          var i, tuple, _j;
-          tuple = {};
-          for (i = _j = 0; 0 <= n ? _j < n : _j > n; i = 0 <= n ? ++_j : --_j) {
-            tuple[attrNames[i]] = tupleArr[i];
-          }
-          return relation.addTuple(tuple);
-        });
+        for (_j = 0, _len1 = tuples.length; _j < _len1; _j++) {
+          tuple = tuples[_j];
+          relation.addTuple(tuple);
+        }
         relation.computeMinMax();
         return callback(null, relation);
       });

@@ -22,8 +22,8 @@
         paint: function(ctx, bounds) {
           viewport.dest.copy(bounds);
           return relation.tuples.each(function(tuple) {
-            srcPt.x = tuple.values[xAttr.name];
-            srcPt.y = tuple.values[yAttr.name];
+            srcPt.x = tuple.value(xAttr);
+            srcPt.y = tuple.value(yAttr);
             viewport.srcToDest(srcPt, destPt);
             return ctx.fillRect(destPt.x, destPt.y, 5, 5);
           });

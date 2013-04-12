@@ -7,12 +7,17 @@
     Relation = Backbone.Model.extend({
       initialize: function() {
         this.attributes = new Backbone.Collection;
-        return this.tuples = new Backbone.Collection;
+        this.tuples = new Backbone.Collection;
+        return this.attrCounter = 0;
       },
       addAttribute: function(name) {
-        return this.attributes.add(new Attribute({
-          name: name
-        }));
+        var attribute;
+        attribute = new Attribute({
+          name: name,
+          index: this.attrCounter++
+        });
+        this.attributes.add(attribute);
+        return attribute;
       },
       addTuple: function(values) {
         return this.tuples.add(new Tuple({
@@ -21,17 +26,18 @@
       },
       computeMinMax: function() {
         var _this = this;
-        return this.attributes.each(function(attribute) {
-          var maxTuple, minTuple, name, _ref, _ref1;
-          name = attribute.name;
+        return this.attributes.each(function(attr) {
+          var maxTuple, minTuple;
           minTuple = _this.tuples.min(function(tuple) {
-            return tuple.values[name];
+            return tuple.value(attr);
           });
-          attribute.min = (_ref = minTuple.values) != null ? _ref[name] : void 0;
           maxTuple = _this.tuples.max(function(tuple) {
-            return tuple.values[name];
+            return tuple.value(attr);
           });
-          return attribute.max = (_ref1 = maxTuple.values) != null ? _ref1[name] : void 0;
+          if (minTuple !== Infinity) {
+            attr.min = minTuple.value(attr);
+            return attr.max = maxTuple.value(attr);
+          }
         });
       },
       select: function(test) {
@@ -61,11 +67,14 @@
     Tuple = Backbone.Model.extend({
       initialize: function() {
         return expose(this, 'values');
+      },
+      value: function(attr) {
+        return this.values[attr.index];
       }
     });
     Attribute = Backbone.Model.extend({
       initialize: function() {
-        return expose(this, 'name', 'min', 'max');
+        return expose(this, 'name', 'min', 'max', 'index');
       }
     });
     Relation.Attribute = Attribute;

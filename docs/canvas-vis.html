@@ -275,12 +275,19 @@
     initialize: -&gt;
       <span class="property">@attributes</span> = <span class="keyword">new</span> Backbone.Collection
       <span class="property">@tuples</span>     = <span class="keyword">new</span> Backbone.Collection
-    addAttribute: (name) -&gt; <span class="property">@attributes</span>.add <span class="keyword">new</span> Attribute {name}
-    addTuple:   (values) -&gt; <span class="property">@tuples</span>.add <span class="keyword">new</span> Tuple {values}
+      <span class="property">@attrCounter</span> = <span class="number">0</span>
+    addAttribute: (name) -&gt;
+      attribute = <span class="keyword">new</span> Attribute
+        name: name
+        index: <span class="property">@attrCounter</span>++
+      <span class="property">@attributes</span>.add attribute
+      <span class="keyword">return</span> attribute
+    addTuple:   (values) -&gt;
+      <span class="property">@tuples</span>.add <span class="keyword">new</span> Tuple {values}
     computeMinMax: -&gt;
-      <span class="property">@attributes</span>.each (attribute) =&gt;
-        name = attribute.name
-        minTuple = <span class="property">@tuples</span>.min (tuple) -&gt; tuple.values[name]</pre></div></div>
+      <span class="property">@attributes</span>.each (attr) =&gt;
+        minTuple = <span class="property">@tuples</span>.min (tuple) -&gt; tuple.value attr
+        maxTuple = <span class="property">@tuples</span>.max (tuple) -&gt; tuple.value attr</pre></div></div>
             
         </li>
         
@@ -291,13 +298,13 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p>minTuple gets Infinity when there are no numbers</p>
+              <p>min/maxTuple gets Infinity when there are no numbers</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        attribute.min = minTuple.values?[name]
-        maxTuple = <span class="property">@tuples</span>.max (tuple) -&gt; tuple.values[name]
-        attribute.max = maxTuple.values?[name]</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">if</span> minTuple != Infinity
+          attr.min = minTuple.value attr
+          attr.max = maxTuple.value attr</pre></div></div>
             
         </li>
         
@@ -314,8 +321,10 @@
             
             <div class="content"><div class='highlight'><pre>    select: (test) -&gt;
       result = <span class="keyword">new</span> Relation
-      <span class="property">@attributes</span>.each (attr) -&gt; result.addAttribute attr.name
-      result.tuples.add <span class="property">@tuples</span>.filter (tuple) -&gt; test tuple.values
+      <span class="property">@attributes</span>.each (attr) -&gt;
+        result.addAttribute attr.name
+      result.tuples.add <span class="property">@tuples</span>.filter (tuple) -&gt;
+        test tuple.values
       <span class="keyword">return</span> result
     project: (attrNames) -&gt;
       result = <span class="keyword">new</span> Relation
@@ -353,7 +362,8 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>  Tuple = Backbone.Model.extend
-    initialize: -&gt; expose @, <span class="string">'values'</span></pre></div></div>
+    initialize: -&gt; expose @, <span class="string">'values'</span>
+    value: (attr) -&gt; @.values[attr.index]</pre></div></div>
             
         </li>
         
@@ -386,7 +396,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>  Attribute = Backbone.Model.extend
-    initialize: -&gt; expose @, <span class="string">'name'</span>, <span class="string">'min'</span>, <span class="string">'max'</span>
+    initialize: -&gt; expose @, <span class="string">'name'</span>, <span class="string">'min'</span>, <span class="string">'max'</span>, <span class="string">'index'</span>
 
   Relation.Attribute = Attribute
   Relation.Tuple = Tuple
@@ -705,32 +715,11 @@ define [<span class="string">'jquery.csv'</span>, <span class="string">'cv/Relat
     $.get fileName, (data) -&gt;
       table = $.csv.toArrays data
       attrNames = _.first table
-      tupleArrays = _.rest table
+      tuples = _.rest table
 
       relation = <span class="keyword">new</span> Relation
-
-      relation.addAttribute name <span class="keyword">for</span> name <span class="keyword">in</span> attrNames</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-33">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
-              </div>
-              <p>Construct tuple objects from tuple arrays.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>      n = attrNames.length
-      _.each tupleArrays, (tupleArr) -&gt;
-        tuple = {}
-        <span class="keyword">for</span> i <span class="keyword">in</span> [<span class="number">0.</span>..n]
-          tuple[attrNames[i]] = tupleArr[i]
-        relation.addTuple tuple
-
+      relation.addAttribute name <span class="keyword">for</span> name <span class="keyword">in</span> attrNames
+      relation.addTuple tuple <span class="keyword">for</span> tuple <span class="keyword">in</span> tuples
       relation.computeMinMax()
 
       callback <span class="literal">null</span>, relation</pre></div></div>

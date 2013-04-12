@@ -9,21 +9,30 @@ define ['cv/expose'], (expose) ->
     initialize: ->
       @attributes = new Backbone.Collection
       @tuples     = new Backbone.Collection
-    addAttribute: (name) -> @attributes.add new Attribute {name}
-    addTuple:   (values) -> @tuples.add new Tuple {values}
+      @attrCounter = 0
+    addAttribute: (name) ->
+      attribute = new Attribute
+        name: name
+        index: @attrCounter++
+      @attributes.add attribute
+      return attribute
+    addTuple:   (values) ->
+      @tuples.add new Tuple {values}
     computeMinMax: ->
-      @attributes.each (attribute) =>
-        name = attribute.name
-        minTuple = @tuples.min (tuple) -> tuple.values[name]
-        # minTuple gets Infinity when there are no numbers
-        attribute.min = minTuple.values?[name]
-        maxTuple = @tuples.max (tuple) -> tuple.values[name]
-        attribute.max = maxTuple.values?[name]
+      @attributes.each (attr) =>
+        minTuple = @tuples.min (tuple) -> tuple.value attr
+        maxTuple = @tuples.max (tuple) -> tuple.value attr
+        # min/maxTuple gets Infinity when there are no numbers
+        if minTuple != Infinity
+          attr.min = minTuple.value attr
+          attr.max = maxTuple.value attr
     # TODO test select and project
     select: (test) ->
       result = new Relation
-      @attributes.each (attr) -> result.addAttribute attr.name
-      result.tuples.add @tuples.filter (tuple) -> test tuple.values
+      @attributes.each (attr) ->
+        result.addAttribute attr.name
+      result.tuples.add @tuples.filter (tuple) ->
+        test tuple.values
       return result
     project: (attrNames) ->
       result = new Relation
@@ -38,6 +47,7 @@ define ['cv/expose'], (expose) ->
 #   * values: an object mapping attribute names to their values.
   Tuple = Backbone.Model.extend
     initialize: -> expose @, 'values'
+    value: (attr) -> @.values[attr.index]
 
 # Relation.Attribute
 # ------------------
@@ -46,7 +56,7 @@ define ['cv/expose'], (expose) ->
 #   * `min`: Number
 #   * `max`: Number
   Attribute = Backbone.Model.extend
-    initialize: -> expose @, 'name', 'min', 'max'
+    initialize: -> expose @, 'name', 'min', 'max', 'index'
 
   Relation.Attribute = Attribute
   Relation.Tuple = Tuple

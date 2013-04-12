@@ -8,8 +8,9 @@
 
   <script src="../lib/underscore.js"></script>
   <script src="../lib/backbone.js"></script>
+
   <!-- Load the Require.js configuration -->
-  <script src="requireJSConfig.js"></script>
+  <script src="../requireConfig.js"></script>
 
   <!-- Load Require.js, which will use the loaded configuration. -->
   <script src="../lib/require-jquery.js"></script>
@@ -22,7 +23,8 @@
         // Include all specs to be run here
         'spec/Libs',
         'spec/Viewport',
-        'spec/Container'
+        'spec/Container',
+        'spec/Relation'
       ],
       // This runs the specs once they are loaded.
       function() {

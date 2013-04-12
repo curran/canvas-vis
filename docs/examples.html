@@ -55,7 +55,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>This docrment is a collection of examples that use the Canvas-vis library. This file is built from <code>examples.coffee</code> in <code>buildDocs.sh</code>, which uses <a href="http://jashkenas.github.io/docco/">Docco</a>. Because Docco supports <a href="http://daringfireball.net/projects/markdown/">Markdown</a> with inline HTML in comments, it is possible to execute <code>examples.coffee</code> within this document, producing running examples right next to their source code. Enjoy! --Curran Kelleher, April 2013</p>
+              <p>This docrment is a collection of examples that use the Canvas-vis library. This file is built from <code>examples.coffee</code> in <code>build.sh</code>, which uses <a href="http://jashkenas.github.io/docco/">Docco</a>. Because Docco supports <a href="http://daringfireball.net/projects/markdown/">Markdown</a> with inline HTML in comments, it is possible to execute <code>examples.coffee</code> within this document, producing running examples right next to their source code. Enjoy! --Curran Kelleher, April 2013</p>
 <h2><a href="../examples/01_coloredCanvas.html">Colored Canvas</a></h2>
 
             </div>
@@ -144,8 +144,8 @@
       paint: (ctx, bounds) -&gt;
         viewport.dest.copy bounds
         relation.tuples.each (tuple) -&gt;
-          srcPt.x = tuple.values[xAttr.name]
-          srcPt.y = tuple.values[yAttr.name]
+          srcPt.x = tuple.value(xAttr)
+          srcPt.y = tuple.value(yAttr)
           viewport.srcToDest srcPt, destPt
           ctx.fillRect destPt.x, destPt.y, <span class="number">5</span>, <span class="number">5</span>
 

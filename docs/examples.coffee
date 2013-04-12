@@ -1,7 +1,7 @@
 # Canvas-Vis Examples
 # ===================
 #
-# This docrment is a collection of examples that use the Canvas-vis library. This file is built from `examples.coffee` in `buildDocs.sh`, which uses [Docco](http://jashkenas.github.io/docco/). Because Docco supports [Markdown](http://daringfireball.net/projects/markdown/) with inline HTML in comments, it is possible to execute `examples.coffee` within this document, producing running examples right next to their source code. Enjoy! --Curran Kelleher, April 2013
+# This docrment is a collection of examples that use the Canvas-vis library. This file is built from `examples.coffee` in `build.sh`, which uses [Docco](http://jashkenas.github.io/docco/). Because Docco supports [Markdown](http://daringfireball.net/projects/markdown/) with inline HTML in comments, it is possible to execute `examples.coffee` within this document, producing running examples right next to their source code. Enjoy! --Curran Kelleher, April 2013
 #
 # [Colored Canvas](../examples/01_coloredCanvas.html)
 # --------------
@@ -52,8 +52,8 @@ require ['cv/Component', 'cv/bindToCanvas', 'cv/readCSV',
       paint: (ctx, bounds) ->
         viewport.dest.copy bounds
         relation.tuples.each (tuple) ->
-          srcPt.x = tuple.values[xAttr.name]
-          srcPt.y = tuple.values[yAttr.name]
+          srcPt.x = tuple.value(xAttr)
+          srcPt.y = tuple.value(yAttr)
           viewport.srcToDest srcPt, destPt
           ctx.fillRect destPt.x, destPt.y, 5, 5
 

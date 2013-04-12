@@ -24,8 +24,8 @@ require ['cv/Component', 'cv/bindToCanvas', 'cv/readCSV',
       paint: (ctx, bounds) ->
         viewport.dest.copy bounds
         relation.tuples.each (tuple) ->
-          srcPt.x = tuple.values[xAttr.name]
-          srcPt.y = tuple.values[yAttr.name]
+          srcPt.x = tuple.value(xAttr)
+          srcPt.y = tuple.value(yAttr)
           viewport.srcToDest srcPt, destPt
           ctx.fillRect destPt.x, destPt.y, 5, 5
 
