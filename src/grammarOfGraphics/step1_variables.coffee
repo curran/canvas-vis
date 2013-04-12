@@ -10,11 +10,27 @@
 # variables(tree, relation) -> Relation
 define ['cv/match', 'cv/grammarOfGraphics/printTree']
      , (match, printTree) ->
-  match 'type', 'variables',
+  variables = match 'type', 'variables',
     'statements': (statements, relation) ->
-      stmts = statements.statements
-      dataStmts = _.filter stmts, (stmt) ->
-        stmt.statementType == 'DATA'
-      for dataStmt in dataStmts
-        console.log printTree dataStmt.expr
-      relation
+      nameReplacements = []
+      for stmt in statements.statements
+        if stmt.statementType == 'DATA'
+          nameReplacements.push nameReplacement stmt.expr
+
+      attrs = []
+      for [oldName, newName] in nameReplacements
+        [relation, attr] =
+          relation.renameAttribute oldName, newName
+        attrs.push attr
+
+      return relation.project attrs
+
+  nameReplacement = (expr) ->
+    if expr.type == 'assignment'
+      if expr.left.type == 'name'
+        newName = expr.left.name
+        if expr.right.type == 'string'
+          oldName = expr.right.value
+          [oldName, newName]
+
+  return variables

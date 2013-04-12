@@ -437,13 +437,15 @@ performs a relational algebra &#39;project&#39; operation</li>
             
             <div class="content"><div class='highlight'><pre>    renameAttribute: (oldName, newName) -&gt;
       result = <span class="keyword">new</span> Relation
+      attr = <span class="literal">null</span>
       <span class="property">@attributes</span>.each (attribute) -&gt;
         <span class="keyword">if</span> attribute.name == oldName
-          result.attributes.add attribute.rename newName
+          attr = attribute.rename newName
+          result.attributes.add attr
         <span class="keyword">else</span>
           result.attributes.add attribute
       result.tuples = <span class="property">@tuples</span>
-      <span class="keyword">return</span> result</pre></div></div>
+      <span class="keyword">return</span> [result, attr]</pre></div></div>
             
         </li>
         

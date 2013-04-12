@@ -32,32 +32,18 @@ define( [
 
     it("should compute step 1: variables", function(){
       var tree = parser.parse(testExpr);
-      var varset = variables(tree, rel)
+      var varset = variables(tree, rel);
+      window.varset = varset;
       var attrX = varset.attributes.at(0);
-//      var attrY = varset.attributes.at(1);
-//
-//      expect(varset.attributes.length).toEqual(2);
-//      expect(attrX.name).toEqual('x');
-//      expect(attrY.name).toEqual('y');
+      var attrY = varset.attributes.at(1);
 
-//      expect(varset.tuples.at(1).value(attrX)).toEqual(3);
-//      expect(varset.tuples.at(1).value(attrY)).toEqual(5);
+      expect(varset.attributes.length).toEqual(2);
+      expect(attrX.name).toEqual('x');
+      expect(attrY.name).toEqual('y');
+
+      expect(varset.tuples.at(1).value(attrX)).toEqual(3);
+      expect(varset.tuples.at(1).value(attrY)).toEqual(5);
     });
 
-    it("should compute selection", function(){
-      rel4 = rel.select(function(tuple){
-        return tuple.value(attrA) > 0;
-      })
-      expect(rel4.attributes.length).toEqual(3);
-      expect(rel4.tuples.length).toEqual(2);
-      expect(rel4.tuples.at(0).value(attrA)).toEqual(3);
-      expect(rel4.tuples.at(1).value(attrA)).toEqual(6);
-
-      rel3 = rel.project([attrA, attrC])
-      expect(rel3.attributes.length).toEqual(2);
-      expect(rel3.attributes.at(1)).toEqual(attrC);
-      expect(rel3.tuples.at(1).value(attrA)).toEqual(3);
-      expect(rel3.tuples.at(1).value(attrC)).toEqual(5);
-    });
   });
 });

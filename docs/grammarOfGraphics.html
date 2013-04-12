@@ -152,14 +152,30 @@
             
             <div class="content"><div class='highlight'><pre>define [<span class="string">'cv/match'</span>, <span class="string">'cv/grammarOfGraphics/printTree'</span>]
      , (match, printTree) -&gt;
-  match <span class="string">'type'</span>, <span class="string">'variables'</span>,
+  variables = match <span class="string">'type'</span>, <span class="string">'variables'</span>,
     <span class="string">'statements'</span>: (statements, relation) -&gt;
-      stmts = statements.statements
-      dataStmts = _.filter stmts, (stmt) -&gt;
-        stmt.statementType == <span class="string">'DATA'</span>
-      <span class="keyword">for</span> dataStmt <span class="keyword">in</span> dataStmts
-        console.log printTree dataStmt.expr
-      relation</pre></div></div>
+      nameReplacements = []
+      <span class="keyword">for</span> stmt <span class="keyword">in</span> statements.statements
+        <span class="keyword">if</span> stmt.statementType == <span class="string">'DATA'</span>
+          nameReplacements.push nameReplacement stmt.expr
+
+      attrs = []
+      <span class="keyword">for</span> [oldName, newName] <span class="keyword">in</span> nameReplacements
+        [relation, attr] =
+          relation.renameAttribute oldName, newName
+        attrs.push attr
+
+      <span class="keyword">return</span> relation.project attrs
+
+  <span class="function"><span class="title">nameReplacement</span></span> = (expr) -&gt;
+    <span class="keyword">if</span> expr.type == <span class="string">'assignment'</span>
+      <span class="keyword">if</span> expr.left.type == <span class="string">'name'</span>
+        newName = expr.left.name
+        <span class="keyword">if</span> expr.right.type == <span class="string">'string'</span>
+          oldName = expr.right.value
+          [oldName, newName]
+
+  <span class="keyword">return</span> variables</pre></div></div>
             
         </li>
         

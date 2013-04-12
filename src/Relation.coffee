@@ -56,13 +56,15 @@ define ['cv/expose'], (expose) ->
 #   * renameAttributes: (oldName:String, newName:String) -> Relation, returns a new relation with a single attribute renamed
     renameAttribute: (oldName, newName) ->
       result = new Relation
+      attr = null
       @attributes.each (attribute) ->
         if attribute.name == oldName
-          result.attributes.add attribute.rename newName
+          attr = attribute.rename newName
+          result.attributes.add attr
         else
           result.attributes.add attribute
       result.tuples = @tuples
-      return result
+      return [result, attr]
 
 # Relation.Tuple
 # --------------

@@ -55,17 +55,19 @@
         return result;
       },
       renameAttribute: function(oldName, newName) {
-        var result;
+        var attr, result;
         result = new Relation;
+        attr = null;
         this.attributes.each(function(attribute) {
           if (attribute.name === oldName) {
-            return result.attributes.add(attribute.rename(newName));
+            attr = attribute.rename(newName);
+            return result.attributes.add(attr);
           } else {
             return result.attributes.add(attribute);
           }
         });
         result.tuples = this.tuples;
-        return result;
+        return [result, attr];
       }
     });
     Tuple = Backbone.Model.extend({

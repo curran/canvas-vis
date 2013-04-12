@@ -57,7 +57,8 @@ define(["cv/Relation", "cv/readCSV"],
     });
 
     it("should rename attributes", function(){
-      var rel6 = rel.renameAttribute('A', 'D');
+      var rename = rel.renameAttribute('A', 'D');
+      var rel6 = rename[0]
       var attrD = rel6.attributes.at(0)
       expect(rel6.attributes.length).toEqual(3);
       expect(attrD.name).toEqual('D');

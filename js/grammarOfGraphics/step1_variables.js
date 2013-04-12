@@ -3,20 +3,40 @@
 (function() {
 
   define(['cv/match', 'cv/grammarOfGraphics/printTree'], function(match, printTree) {
-    return match('type', 'variables', {
+    var nameReplacement, variables;
+    variables = match('type', 'variables', {
       'statements': function(statements, relation) {
-        var dataStmt, dataStmts, stmts, _i, _len;
-        stmts = statements.statements;
-        dataStmts = _.filter(stmts, function(stmt) {
-          return stmt.statementType === 'DATA';
-        });
-        for (_i = 0, _len = dataStmts.length; _i < _len; _i++) {
-          dataStmt = dataStmts[_i];
-          console.log(printTree(dataStmt.expr));
+        var attr, attrs, nameReplacements, newName, oldName, stmt, _i, _j, _len, _len1, _ref, _ref1, _ref2;
+        nameReplacements = [];
+        _ref = statements.statements;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          stmt = _ref[_i];
+          if (stmt.statementType === 'DATA') {
+            nameReplacements.push(nameReplacement(stmt.expr));
+          }
         }
-        return relation;
+        attrs = [];
+        for (_j = 0, _len1 = nameReplacements.length; _j < _len1; _j++) {
+          _ref1 = nameReplacements[_j], oldName = _ref1[0], newName = _ref1[1];
+          _ref2 = relation.renameAttribute(oldName, newName), relation = _ref2[0], attr = _ref2[1];
+          attrs.push(attr);
+        }
+        return relation.project(attrs);
       }
     });
+    nameReplacement = function(expr) {
+      var newName, oldName;
+      if (expr.type === 'assignment') {
+        if (expr.left.type === 'name') {
+          newName = expr.left.name;
+          if (expr.right.type === 'string') {
+            oldName = expr.right.value;
+            return [oldName, newName];
+          }
+        }
+      }
+    };
+    return variables;
   });
 
 }).call(this);
