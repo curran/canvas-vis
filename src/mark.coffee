@@ -10,11 +10,12 @@
 # An API for Jaque Bertin's notion of visualization "marks".
 define ['cv/Rectangle', 'cv/Point']
      , (Rectangle, Point) ->
+
   mark = ->
     _.extend p, defaults
     return singleton
 
-  # p = p
+  # p means properties
   p = {}
 
   defaults =
@@ -28,8 +29,6 @@ define ['cv/Rectangle', 'cv/Point']
     # Chainable property setter functions
     shape:     (   shape   ) -> p.shape = shape;            @
     fillStyle: (cssColorStr) -> p.fillStyle = cssColorStr;  @
-#    bounds:    (x, y, w, h ) -> p.bounds.setAll x, y, w, h; @
-#    position:  (   x, y    ) -> p.bounds.position.set x, y; @
     size:      (  w, h = w ) ->
       p.bounds.w = w; p.bounds.h = h;                       @
     x:         (     x     ) -> p.bounds.x = x;             @
@@ -50,23 +49,19 @@ define ['cv/Rectangle', 'cv/Point']
     shapes[p.shape]
 
 
-  # TODO change this, remove these temp points
-  srcPt = new Point
-  destPt = new Point
-
   shapes =
     square:
       bounds: -> p.bounds.clone()
       render: (ctx, viewport) ->
         ctx.fillStyle = p.fillStyle
-        srcPt.x = p.bounds.x
-        srcPt.y = p.bounds.y
-        viewport.srcToDest srcPt, destPt
-# TODO update this to use p.bounds.(w, h)
+        viewport.srcToDestRect p.bounds, destRect
         ctx.fillRect(
-          destPt.x,
-          destPt.y,
-          5, 5
+          destRect.x,
+          destRect.y,
+          destRect.w,
+          destRect.h
         )
+
+  destRect = new Point
 
   return mark

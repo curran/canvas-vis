@@ -4,11 +4,9 @@
 
   require(['cv/Component', 'cv/bindToCanvas', 'cv/readCSV', 'cv/Viewport', 'cv/Rectangle', 'cv/Point', 'cv/mark'], function(Component, bindToCanvas, readCSV, Viewport, Rectangle, Point, mark) {
     return readCSV('../data/iris.csv', function(err, relation) {
-      var ScatterPlot, destPt, srcPt, viewport, xAttr, yAttr;
+      var ScatterPlot, viewport, xAttr, yAttr;
       xAttr = relation.attributes.at(0);
       yAttr = relation.attributes.at(1);
-      srcPt = new Point;
-      destPt = new Point;
       viewport = new Viewport({
         src: new Rectangle({
           x: xAttr.min,
@@ -22,7 +20,7 @@
         paint: function(ctx, bounds) {
           viewport.dest.copy(bounds);
           return relation.tuples.each(function(tuple) {
-            return mark().x(tuple.value(xAttr)).y(tuple.value(yAttr)).size(0.1).render(ctx, viewport);
+            return mark().x(tuple.value(xAttr)).y(tuple.value(yAttr)).size(0.1).fillStyle('rgba(0,0,0,0.2)').render(ctx, viewport);
           });
         }
       });

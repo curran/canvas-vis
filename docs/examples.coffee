@@ -38,9 +38,6 @@ require ['cv/Component', 'cv/bindToCanvas', 'cv/readCSV',
     xAttr = relation.attributes.at 0
     yAttr = relation.attributes.at 1
 
-    srcPt = new Point
-    destPt = new Point
-
     viewport = new Viewport
       src: new Rectangle
         x: xAttr.min
@@ -56,6 +53,7 @@ require ['cv/Component', 'cv/bindToCanvas', 'cv/readCSV',
             .x(tuple.value xAttr)
             .y(tuple.value yAttr)
             .size(0.1)
+            .fillStyle('rgba(0,0,0,0.2)')
             .render ctx, viewport
 
     bindToCanvas 'scatterPlot', new ScatterPlot

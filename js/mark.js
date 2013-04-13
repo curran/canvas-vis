@@ -3,7 +3,7 @@
 (function() {
 
   define(['cv/Rectangle', 'cv/Point'], function(Rectangle, Point) {
-    var defaults, destPt, mark, p, shape, shapes, singleton, srcPt;
+    var defaults, destRect, mark, p, shape, shapes, singleton;
     mark = function() {
       _.extend(p, defaults);
       return singleton;
@@ -65,8 +65,6 @@
       }
       return shapes[p.shape];
     };
-    srcPt = new Point;
-    destPt = new Point;
     shapes = {
       square: {
         bounds: function() {
@@ -74,13 +72,12 @@
         },
         render: function(ctx, viewport) {
           ctx.fillStyle = p.fillStyle;
-          srcPt.x = p.bounds.x;
-          srcPt.y = p.bounds.y;
-          viewport.srcToDest(srcPt, destPt);
-          return ctx.fillRect(destPt.x, destPt.y, 5, 5);
+          viewport.srcToDestRect(p.bounds, destRect);
+          return ctx.fillRect(destRect.x, destRect.y, destRect.w, destRect.h);
         }
       }
     };
+    destRect = new Point;
     return mark;
   });
 

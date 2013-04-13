@@ -572,7 +572,13 @@ performs a relational algebra &#39;project&#39; operation</li>
     destToSrc: (inPt, outPt) -&gt;
       s = <span class="property">@src</span>; d = <span class="property">@dest</span>
       outPt.x = (inPt.x - d.x) / d.w * s.w + s.x
-      outPt.y = (inPt.y - d.y) / d.h * s.h + s.y</pre></div></div>
+      outPt.y = (inPt.y - d.y) / d.h * s.h + s.y
+    srcToDestRect: (inRect, outRect) -&gt;
+      s = <span class="property">@src</span>; d = <span class="property">@dest</span>
+      outRect.x = (inRect.x - s.x) / s.w * d.w + d.x
+      outRect.y = (inRect.y - s.y) / s.h * d.h + d.y
+      outRect.w = inRect.w * d.w / s.w
+      outRect.h = inRect.h * d.h / s.h</pre></div></div>
             
         </li>
         
@@ -867,6 +873,7 @@ performs a relational algebra &#39;project&#39; operation</li>
             
             <div class="content"><div class='highlight'><pre>define [<span class="string">'cv/Rectangle'</span>, <span class="string">'cv/Point'</span>]
      , (Rectangle, Point) -&gt;
+
   <span class="function"><span class="title">mark</span></span> = -&gt;
     _.extend p, defaults
     <span class="keyword">return</span> singleton</pre></div></div>
@@ -880,7 +887,7 @@ performs a relational algebra &#39;project&#39; operation</li>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
-              <p>p = p</p>
+              <p>p means properties</p>
 
             </div>
             
@@ -908,23 +915,8 @@ performs a relational algebra &#39;project&#39; operation</li>
             </div>
             
             <div class="content"><div class='highlight'><pre>    shape:     (   shape   ) -&gt; p.shape = shape;            @
-    fillStyle: (cssColorStr) -&gt; p.fillStyle = cssColorStr;  @</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-46">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
-              </div>
-              <p>   bounds:    (x, y, w, h ) -&gt; p.bounds.setAll x, y, w, h; @
-   position:  (   x, y    ) -&gt; p.bounds.position.set x, y; @</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    size:      (  w, h = w ) -&gt;
+    fillStyle: (cssColorStr) -&gt; p.fillStyle = cssColorStr;  @
+    size:      (  w, h = w ) -&gt;
       p.bounds.w = w; p.bounds.h = h;                       @
     x:         (     x     ) -&gt; p.bounds.x = x;             @
     y:         (     y     ) -&gt; p.bounds.y = y;             @
@@ -935,11 +927,11 @@ performs a relational algebra &#39;project&#39; operation</li>
         </li>
         
         
-        <li id="section-47">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
+                <a class="pilcrow" href="#section-46">&#182;</a>
               </div>
               <p>Functions that evaluate the mark</p>
 
@@ -953,7 +945,38 @@ performs a relational algebra &#39;project&#39; operation</li>
   <span class="function"><span class="title">shape</span></span> = -&gt;
     <span class="keyword">if</span> !shapes[p.shape]
       <span class="keyword">throw</span> Error <span class="string">"Unknown shape type '<span class="subst">#{p.shape}</span>'"</span>
-    shapes[p.shape]</pre></div></div>
+    shapes[p.shape]
+
+
+  shapes =
+    square:
+      bounds: -&gt; p.bounds.clone()
+      render: (ctx, viewport) -&gt;
+        ctx.fillStyle = p.fillStyle
+        viewport.srcToDestRect p.bounds, destRect
+        ctx.fillRect(
+          destRect.x,
+          destRect.y,
+          destRect.w,
+          destRect.h
+        )
+
+  destRect = <span class="keyword">new</span> Point
+
+  <span class="keyword">return</span> mark</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h1">
+                <a class="pilcrow" href="#section-47">&#182;</a>
+              </div>
+              <h1>Match</h1>
+
+            </div>
             
         </li>
         
@@ -963,65 +986,6 @@ performs a relational algebra &#39;project&#39; operation</li>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-48">&#182;</a>
-              </div>
-              <p>TODO change this, remove these temp points</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  srcPt = <span class="keyword">new</span> Point
-  destPt = <span class="keyword">new</span> Point
-
-  shapes =
-    square:
-      bounds: -&gt; p.bounds.clone()
-      render: (ctx, viewport) -&gt;
-        ctx.fillStyle = p.fillStyle
-        srcPt.x = p.bounds.x
-        srcPt.y = p.bounds.y
-        viewport.srcToDest srcPt, destPt</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-49">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-49">&#182;</a>
-              </div>
-              <p>TODO update this to use p.bounds.(w, h)</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        ctx.fillRect(
-          destPt.x,
-          destPt.y,
-          <span class="number">5</span>, <span class="number">5</span>
-        )
-
-  <span class="keyword">return</span> mark</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-50">
-            <div class="annotation">
-              
-              <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-50">&#182;</a>
-              </div>
-              <h1>Match</h1>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-51">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-51">&#182;</a>
               </div>
               <p>This utility lets us approximate Haskell&#39;s 
 pattern matching syntax in CoffeeScript</p>

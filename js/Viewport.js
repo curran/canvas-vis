@@ -21,6 +21,15 @@
         d = this.dest;
         outPt.x = (inPt.x - d.x) / d.w * s.w + s.x;
         return outPt.y = (inPt.y - d.y) / d.h * s.h + s.y;
+      },
+      srcToDestRect: function(inRect, outRect) {
+        var d, s;
+        s = this.src;
+        d = this.dest;
+        outRect.x = (inRect.x - s.x) / s.w * d.w + d.x;
+        outRect.y = (inRect.y - s.y) / s.h * d.h + d.y;
+        outRect.w = inRect.w * d.w / s.w;
+        return outRect.h = inRect.h * d.h / s.h;
       }
     });
   });
