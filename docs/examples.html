@@ -87,9 +87,10 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>require [<span class="string">'cv/Component'</span>, <span class="string">'cv/bindToCanvas'</span>], (Component, bindToCanvas) -&gt;
-  window.C = Component
 
   ColoredCanvas = Component.extend
+    initialize: -&gt;
+      setInterval (=&gt; <span class="property">@trigger</span> <span class="string">'graphicsDirty'</span>), <span class="number">1000</span>
     paint: (ctx, bounds) -&gt;
       ctx.fillStyle = randomColor()
       ctx.fillRect bounds.x, bounds.y, bounds.w, bounds.h
@@ -97,9 +98,7 @@
   <span class="function"><span class="title">randomColor</span></span> = -&gt; <span class="string">"rgb(<span class="subst">#{r()}</span>,<span class="subst">#{r()}</span>,<span class="subst">#{r()}</span>)"</span>
   <span class="function"><span class="title">r</span></span> = -&gt; Math.floor(Math.random() * <span class="number">255</span>)
 
-  cc = <span class="keyword">new</span> ColoredCanvas
-  setInterval (-&gt; cc.trigger <span class="string">'graphicsDirty'</span>), <span class="number">1000</span>
-  bindToCanvas <span class="string">'coloredCanvas'</span>, cc</pre></div></div>
+  bindToCanvas <span class="string">'coloredCanvas'</span>, <span class="keyword">new</span> ColoredCanvas</pre></div></div>
             
         </li>
         

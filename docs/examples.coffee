@@ -14,9 +14,10 @@
 #   * Using the `graphicsDirty` event to schedule repainting
 #   * Binding a component to a Canvas
 require ['cv/Component', 'cv/bindToCanvas'], (Component, bindToCanvas) ->
-  window.C = Component
 
   ColoredCanvas = Component.extend
+    initialize: ->
+      setInterval (=> @trigger 'graphicsDirty'), 1000
     paint: (ctx, bounds) ->
       ctx.fillStyle = randomColor()
       ctx.fillRect bounds.x, bounds.y, bounds.w, bounds.h
@@ -24,9 +25,7 @@ require ['cv/Component', 'cv/bindToCanvas'], (Component, bindToCanvas) ->
   randomColor = -> "rgb(#{r()},#{r()},#{r()})"
   r = -> Math.floor(Math.random() * 255)
 
-  cc = new ColoredCanvas
-  setInterval (-> cc.trigger 'graphicsDirty'), 1000
-  bindToCanvas 'coloredCanvas', cc
+  bindToCanvas 'coloredCanvas', new ColoredCanvas
 # [Scatter Plot](../examples/02_ScatterPlot.html)
 # --------------
 # <canvas id="scatterPlot" width="450" height="450"></canvas>

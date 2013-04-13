@@ -3,9 +3,14 @@
 (function() {
 
   require(['cv/Component', 'cv/bindToCanvas'], function(Component, bindToCanvas) {
-    var ColoredCanvas, cc, r, randomColor;
-    window.C = Component;
+    var ColoredCanvas, r, randomColor;
     ColoredCanvas = Component.extend({
+      initialize: function() {
+        var _this = this;
+        return setInterval((function() {
+          return _this.trigger('graphicsDirty');
+        }), 1000);
+      },
       paint: function(ctx, bounds) {
         ctx.fillStyle = randomColor();
         return ctx.fillRect(bounds.x, bounds.y, bounds.w, bounds.h);
@@ -17,11 +22,7 @@
     r = function() {
       return Math.floor(Math.random() * 255);
     };
-    cc = new ColoredCanvas;
-    setInterval((function() {
-      return cc.trigger('graphicsDirty');
-    }), 1000);
-    return bindToCanvas('coloredCanvas', cc);
+    return bindToCanvas('coloredCanvas', new ColoredCanvas);
   });
 
 }).call(this);
