@@ -30,21 +30,12 @@ require ['cv/Component', 'cv/bindToCanvas'], (Component, bindToCanvas) ->
 # --------------
 # <canvas id="scatterPlot" width="450" height="450"></canvas>
 require ['cv/Component', 'cv/bindToCanvas', 'cv/readCSV',
-         'cv/Viewport', 'cv/Rectangle', 'cv/Point', 'cv/mark']
+         'cv/Viewport', 'cv/Rectangle', 'cv/mark']
       , (Component, bindToCanvas, readCSV,
-         Viewport, Rectangle, Point, mark) ->
+         Viewport, Rectangle, mark) ->
 
   readCSV '../data/iris.csv', (err, relation) ->
-    xAttr = relation.attributes.at 0
-    yAttr = relation.attributes.at 1
 
-    viewport = new Viewport
-      src: new Rectangle
-        x: xAttr.min
-        y: yAttr.min
-        w: xAttr.max - xAttr.min
-        h: yAttr.max - yAttr.min
-      dest: new Rectangle
     ScatterPlot = Component.extend
       paint: (ctx, bounds) ->
         viewport.dest.copy bounds
@@ -55,6 +46,17 @@ require ['cv/Component', 'cv/bindToCanvas', 'cv/readCSV',
             .size(0.1)
             .fillStyle('rgba(0,0,0,0.2)')
             .render ctx, viewport
+
+    xAttr = relation.attributes.at 0
+    yAttr = relation.attributes.at 1
+
+    viewport = new Viewport
+      src: new Rectangle
+        x: xAttr.min
+        y: yAttr.min
+        w: xAttr.max - xAttr.min
+        h: yAttr.max - yAttr.min
+      dest: new Rectangle
 
     bindToCanvas 'scatterPlot', new ScatterPlot
 require ['cv/grammarOfGraphics'], (grammarOfGraphics) ->

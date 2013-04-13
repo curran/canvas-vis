@@ -127,21 +127,12 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>require [<span class="string">'cv/Component'</span>, <span class="string">'cv/bindToCanvas'</span>, <span class="string">'cv/readCSV'</span>,
-         <span class="string">'cv/Viewport'</span>, <span class="string">'cv/Rectangle'</span>, <span class="string">'cv/Point'</span>, <span class="string">'cv/mark'</span>]
+         <span class="string">'cv/Viewport'</span>, <span class="string">'cv/Rectangle'</span>, <span class="string">'cv/mark'</span>]
       , (Component, bindToCanvas, readCSV,
-         Viewport, Rectangle, Point, mark) -&gt;
+         Viewport, Rectangle, mark) -&gt;
 
   readCSV <span class="string">'../data/iris.csv'</span>, (err, relation) -&gt;
-    xAttr = relation.attributes.at <span class="number">0</span>
-    yAttr = relation.attributes.at <span class="number">1</span>
 
-    viewport = <span class="keyword">new</span> Viewport
-      src: <span class="keyword">new</span> Rectangle
-        x: xAttr.min
-        y: yAttr.min
-        w: xAttr.max - xAttr.min
-        h: yAttr.max - yAttr.min
-      dest: <span class="keyword">new</span> Rectangle
     ScatterPlot = Component.extend
       paint: (ctx, bounds) -&gt;
         viewport.dest.copy bounds
@@ -152,6 +143,17 @@
             .size(<span class="number">0.1</span>)
             .fillStyle(<span class="string">'rgba(0,0,0,0.2)'</span>)
             .render ctx, viewport
+
+    xAttr = relation.attributes.at <span class="number">0</span>
+    yAttr = relation.attributes.at <span class="number">1</span>
+
+    viewport = <span class="keyword">new</span> Viewport
+      src: <span class="keyword">new</span> Rectangle
+        x: xAttr.min
+        y: yAttr.min
+        w: xAttr.max - xAttr.min
+        h: yAttr.max - yAttr.min
+      dest: <span class="keyword">new</span> Rectangle
 
     bindToCanvas <span class="string">'scatterPlot'</span>, <span class="keyword">new</span> ScatterPlot
 require [<span class="string">'cv/grammarOfGraphics'</span>], (grammarOfGraphics) -&gt;</pre></div></div>
