@@ -152,28 +152,42 @@
             
             <div class="content"><div class='highlight'><pre>define [<span class="string">'cv/match'</span>, <span class="string">'cv/grammarOfGraphics/printTree'</span>]
      , (match, printTree) -&gt;
+  dataStmts = []
   variables = match <span class="string">'type'</span>, <span class="string">'variables'</span>,
-    <span class="string">'statements'</span>: (statements, relation) -&gt;
-      nameReplacements = []
-      <span class="keyword">for</span> stmt <span class="keyword">in</span> statements.statements
-        <span class="keyword">if</span> stmt.statementType == <span class="string">'DATA'</span>
-          nameReplacements.push nameReplacement stmt.expr
+    <span class="string">'statements'</span>: (stmts, relation) -&gt;
 
-      attrs = []
-      <span class="keyword">for</span> [oldName, newName] <span class="keyword">in</span> nameReplacements
+      dataStmts = []
+      variables stmt <span class="keyword">for</span> stmt <span class="keyword">in</span> stmts.statements</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>TODO make this code more readable:</p>
+<p>for d in dataStmts
+  relation = relation.renameAttribute d.oldName, d.newName
+  relation = relation.renameAttribute d.oldName, d.newName
+attrsToProject = []
+for d in dataStmts
+  attr = relation.attribues.findWhere name:d.newName
+  attrsToProject.push attr</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      attrsToProject = []
+      <span class="keyword">for</span> d <span class="keyword">in</span> dataStmts
         [relation, attr] =
-          relation.renameAttribute oldName, newName
-        attrs.push attr
+          relation.renameAttribute d.oldName, d.newName
+        attrsToProject.push attr
 
-      <span class="keyword">return</span> relation.project attrs
-
-  <span class="function"><span class="title">nameReplacement</span></span> = (expr) -&gt;
-    <span class="keyword">if</span> expr.type == <span class="string">'assignment'</span>
-      <span class="keyword">if</span> expr.left.type == <span class="string">'name'</span>
-        newName = expr.left.name
-        <span class="keyword">if</span> expr.right.type == <span class="string">'string'</span>
-          oldName = expr.right.value
-          [oldName, newName]
+      <span class="keyword">return</span> relation.project attrsToProject
+    <span class="string">'data'</span>: (data) -&gt; dataStmts.push data
+    <span class="string">'statement'</span>: -&gt;
 
   <span class="keyword">return</span> variables</pre></div></div>
             

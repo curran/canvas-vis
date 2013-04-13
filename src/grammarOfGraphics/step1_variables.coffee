@@ -10,27 +10,31 @@
 # variables(tree, relation) -> Relation
 define ['cv/match', 'cv/grammarOfGraphics/printTree']
      , (match, printTree) ->
+  dataStmts = []
   variables = match 'type', 'variables',
-    'statements': (statements, relation) ->
-      nameReplacements = []
-      for stmt in statements.statements
-        if stmt.statementType == 'DATA'
-          nameReplacements.push nameReplacement stmt.expr
+    'statements': (stmts, relation) ->
 
-      attrs = []
-      for [oldName, newName] in nameReplacements
+      dataStmts = []
+      variables stmt for stmt in stmts.statements
+
+      # TODO make this code more readable:
+      #
+      # for d in dataStmts
+      #   relation = relation.renameAttribute d.oldName, d.newName
+      #   relation = relation.renameAttribute d.oldName, d.newName
+      # attrsToProject = []
+      # for d in dataStmts
+      #   attr = relation.attribues.findWhere name:d.newName
+      #   attrsToProject.push attr
+      #
+      attrsToProject = []
+      for d in dataStmts
         [relation, attr] =
-          relation.renameAttribute oldName, newName
-        attrs.push attr
+          relation.renameAttribute d.oldName, d.newName
+        attrsToProject.push attr
 
-      return relation.project attrs
-
-  nameReplacement = (expr) ->
-    if expr.type == 'assignment'
-      if expr.left.type == 'name'
-        newName = expr.left.name
-        if expr.right.type == 'string'
-          oldName = expr.right.value
-          [oldName, newName]
+      return relation.project attrsToProject
+    'data': (data) -> dataStmts.push data
+    'statement': ->
 
   return variables

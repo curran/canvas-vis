@@ -4,8 +4,22 @@ start
   = statements:statement* {return {type:"statements", statements:statements}}
 
 statement
-  = statementType:statementType ":" " "* expr:expr "\n"*
+  = data
+  / statementType:statementType ":" " "* expr:expr "\n"*
     {return {type:"statement", statementType:statementType, expr:expr};}
+
+data
+  = "DATA:" " "* da:dataAssignment "\n"* {
+    return {
+      type:"data", 
+      oldName:da.right.value,
+      newName:da.left.name
+    };
+  }
+
+dataAssignment
+  = left:name " "* "=" " "* right:string
+  { return {type:"assignment", left:left, right:right}}
 
 statementType
   = chars:[A-Z]* { return chars.join(""); }
