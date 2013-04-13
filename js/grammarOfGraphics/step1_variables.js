@@ -7,17 +7,23 @@
     dataStmts = [];
     variables = match('type', 'variables', {
       'statements': function(stmts, relation) {
-        var attr, attrsToProject, d, stmt, _i, _j, _len, _len1, _ref, _ref1;
+        var a, attr, attrsToProject, b, d, dataStmt, stmt, _i, _j, _k, _len, _len1, _len2, _ref;
         dataStmts = [];
         _ref = stmts.statements;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           stmt = _ref[_i];
           variables(stmt);
         }
-        attrsToProject = [];
         for (_j = 0, _len1 = dataStmts.length; _j < _len1; _j++) {
-          d = dataStmts[_j];
-          _ref1 = relation.renameAttribute(d.oldName, d.newName), relation = _ref1[0], attr = _ref1[1];
+          dataStmt = dataStmts[_j];
+          a = dataStmt.oldName;
+          b = dataStmt.newName;
+          relation = relation.renameAttribute(a, b);
+        }
+        attrsToProject = [];
+        for (_k = 0, _len2 = dataStmts.length; _k < _len2; _k++) {
+          d = dataStmts[_k];
+          attr = relation.attrByName(d.newName);
           attrsToProject.push(attr);
         }
         return relation.project(attrsToProject);

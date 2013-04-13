@@ -17,20 +17,14 @@ define ['cv/match', 'cv/grammarOfGraphics/printTree']
       dataStmts = []
       variables stmt for stmt in stmts.statements
 
-      # TODO make this code more readable:
-      #
-      # for d in dataStmts
-      #   relation = relation.renameAttribute d.oldName, d.newName
-      #   relation = relation.renameAttribute d.oldName, d.newName
-      # attrsToProject = []
-      # for d in dataStmts
-      #   attr = relation.attribues.findWhere name:d.newName
-      #   attrsToProject.push attr
-      #
+      for dataStmt in dataStmts
+        a = dataStmt.oldName
+        b = dataStmt.newName
+        relation = relation.renameAttribute a, b
+
       attrsToProject = []
       for d in dataStmts
-        [relation, attr] =
-          relation.renameAttribute d.oldName, d.newName
+        attr = relation.attrByName d.newName
         attrsToProject.push attr
 
       return relation.project attrsToProject

@@ -331,7 +331,9 @@
         name: name
         index: <span class="property">@attrCounter</span>++
       <span class="property">@attributes</span>.add attribute
-      <span class="keyword">return</span> attribute</pre></div></div>
+      <span class="keyword">return</span> attribute
+    attrByName: (name) -&gt;
+      <span class="property">@attributes</span>.find (attr) -&gt; attr.name == name</pre></div></div>
             
         </li>
         
@@ -393,10 +395,10 @@ performs a relational algebra &#39;select&#39; operation</li>
             </div>
             
             <div class="content"><div class='highlight'><pre>    select: (test) -&gt;
-      result = <span class="keyword">new</span> Relation
-      result.attributes = <span class="property">@attributes</span>
-      result.tuples.add <span class="property">@tuples</span>.filter test
-      <span class="keyword">return</span> result</pre></div></div>
+      newRelation = <span class="keyword">new</span> Relation
+      newRelation.attributes = <span class="property">@attributes</span>
+      newRelation.tuples.add <span class="property">@tuples</span>.filter test
+      <span class="keyword">return</span> newRelation</pre></div></div>
             
         </li>
         
@@ -415,10 +417,10 @@ performs a relational algebra &#39;project&#39; operation</li>
             </div>
             
             <div class="content"><div class='highlight'><pre>    project: (attributes) -&gt;
-      result = <span class="keyword">new</span> Relation
-      result.attributes.add attributes
-      result.tuples = <span class="property">@tuples</span>
-      <span class="keyword">return</span> result</pre></div></div>
+      newRelation = <span class="keyword">new</span> Relation
+      newRelation.attributes.add attributes
+      newRelation.tuples = <span class="property">@tuples</span>
+      <span class="keyword">return</span> newRelation</pre></div></div>
             
         </li>
         
@@ -436,16 +438,15 @@ performs a relational algebra &#39;project&#39; operation</li>
             </div>
             
             <div class="content"><div class='highlight'><pre>    renameAttribute: (oldName, newName) -&gt;
-      result = <span class="keyword">new</span> Relation
-      attr = <span class="literal">null</span>
+      newRelation = <span class="keyword">new</span> Relation
       <span class="property">@attributes</span>.each (attribute) -&gt;
         <span class="keyword">if</span> attribute.name == oldName
-          attr = attribute.rename newName
-          result.attributes.add attr
+          newAttr = attribute.rename newName
+          newRelation.attributes.add newAttr
         <span class="keyword">else</span>
-          result.attributes.add attribute
-      result.tuples = <span class="property">@tuples</span>
-      <span class="keyword">return</span> [result, attr]</pre></div></div>
+          newRelation.attributes.add attribute
+      newRelation.tuples = <span class="property">@tuples</span>
+      <span class="keyword">return</span> newRelation</pre></div></div>
             
         </li>
         

@@ -21,6 +21,8 @@ define ['cv/expose'], (expose) ->
         index: @attrCounter++
       @attributes.add attribute
       return attribute
+    attrByName: (name) ->
+      @attributes.find (attr) -> attr.name == name
 
 #   * addTuple(values:Array[Numbers or Strings]), 
 #   the order of values in the `values` array should
@@ -40,31 +42,30 @@ define ['cv/expose'], (expose) ->
 #   * select(test:f(tuple)->Boolean) -> Relation,
 #     performs a relational algebra 'select' operation
     select: (test) ->
-      result = new Relation
-      result.attributes = @attributes
-      result.tuples.add @tuples.filter test
-      return result
+      newRelation = new Relation
+      newRelation.attributes = @attributes
+      newRelation.tuples.add @tuples.filter test
+      return newRelation
 
 #   * project: (attributes:Array<Relation.Attribute>) -> Relation,
 #     performs a relational algebra 'project' operation
     project: (attributes) ->
-      result = new Relation
-      result.attributes.add attributes
-      result.tuples = @tuples
-      return result
+      newRelation = new Relation
+      newRelation.attributes.add attributes
+      newRelation.tuples = @tuples
+      return newRelation
 
 #   * renameAttributes: (oldName:String, newName:String) -> Relation, returns a new relation with a single attribute renamed
     renameAttribute: (oldName, newName) ->
-      result = new Relation
-      attr = null
+      newRelation = new Relation
       @attributes.each (attribute) ->
         if attribute.name == oldName
-          attr = attribute.rename newName
-          result.attributes.add attr
+          newAttr = attribute.rename newName
+          newRelation.attributes.add newAttr
         else
-          result.attributes.add attribute
-      result.tuples = @tuples
-      return [result, attr]
+          newRelation.attributes.add attribute
+      newRelation.tuples = @tuples
+      return newRelation
 
 # Relation.Tuple
 # --------------

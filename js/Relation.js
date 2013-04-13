@@ -19,6 +19,11 @@
         this.attributes.add(attribute);
         return attribute;
       },
+      attrByName: function(name) {
+        return this.attributes.find(function(attr) {
+          return attr.name === name;
+        });
+      },
       addTuple: function(values) {
         return this.tuples.add(new Tuple({
           values: values
@@ -41,33 +46,33 @@
         });
       },
       select: function(test) {
-        var result;
-        result = new Relation;
-        result.attributes = this.attributes;
-        result.tuples.add(this.tuples.filter(test));
-        return result;
+        var newRelation;
+        newRelation = new Relation;
+        newRelation.attributes = this.attributes;
+        newRelation.tuples.add(this.tuples.filter(test));
+        return newRelation;
       },
       project: function(attributes) {
-        var result;
-        result = new Relation;
-        result.attributes.add(attributes);
-        result.tuples = this.tuples;
-        return result;
+        var newRelation;
+        newRelation = new Relation;
+        newRelation.attributes.add(attributes);
+        newRelation.tuples = this.tuples;
+        return newRelation;
       },
       renameAttribute: function(oldName, newName) {
-        var attr, result;
-        result = new Relation;
-        attr = null;
+        var newRelation;
+        newRelation = new Relation;
         this.attributes.each(function(attribute) {
+          var newAttr;
           if (attribute.name === oldName) {
-            attr = attribute.rename(newName);
-            return result.attributes.add(attr);
+            newAttr = attribute.rename(newName);
+            return newRelation.attributes.add(newAttr);
           } else {
-            return result.attributes.add(attribute);
+            return newRelation.attributes.add(attribute);
           }
         });
-        result.tuples = this.tuples;
-        return [result, attr];
+        newRelation.tuples = this.tuples;
+        return newRelation;
       }
     });
     Tuple = Backbone.Model.extend({
