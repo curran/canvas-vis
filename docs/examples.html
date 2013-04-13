@@ -127,9 +127,9 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>require [<span class="string">'cv/Component'</span>, <span class="string">'cv/bindToCanvas'</span>, <span class="string">'cv/readCSV'</span>,
-         <span class="string">'cv/Viewport'</span>, <span class="string">'cv/Rectangle'</span>, <span class="string">'cv/Point'</span>]
+         <span class="string">'cv/Viewport'</span>, <span class="string">'cv/Rectangle'</span>, <span class="string">'cv/Point'</span>, <span class="string">'cv/mark'</span>]
       , (Component, bindToCanvas, readCSV,
-         Viewport, Rectangle, Point) -&gt;
+         Viewport, Rectangle, Point, mark) -&gt;
 
   readCSV <span class="string">'../data/iris.csv'</span>, (err, relation) -&gt;
     xAttr = relation.attributes.at <span class="number">0</span>
@@ -149,10 +149,11 @@
       paint: (ctx, bounds) -&gt;
         viewport.dest.copy bounds
         relation.tuples.each (tuple) -&gt;
-          srcPt.x = tuple.value(xAttr)
-          srcPt.y = tuple.value(yAttr)
-          viewport.srcToDest srcPt, destPt
-          ctx.fillRect destPt.x, destPt.y, <span class="number">5</span>, <span class="number">5</span>
+          mark()
+            .x(tuple.value xAttr)
+            .y(tuple.value yAttr)
+            .size(<span class="number">0.1</span>)
+            .render ctx, viewport
 
     bindToCanvas <span class="string">'scatterPlot'</span>, component
 require [<span class="string">'cv/grammarOfGraphics'</span>], (grammarOfGraphics) -&gt;</pre></div></div>

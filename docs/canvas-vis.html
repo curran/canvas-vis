@@ -822,7 +822,7 @@ performs a relational algebra &#39;project&#39; operation</li>
               <div class="pilwrap for-h1">
                 <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
-              <h1>Match</h1>
+              <h1>MarkIterator</h1>
 
             </div>
             
@@ -834,6 +834,185 @@ performs a relational algebra &#39;project&#39; operation</li>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-42">&#182;</a>
+              </div>
+              <ul>
+<li><code>hasNext</code>: -&gt; Boolean</li>
+<li><code>next</code>: -&gt; Mark</li>
+</ul>
+<h1>mark</h1>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-43">&#182;</a>
+              </div>
+              <p>An API for Jaque Bertin&#39;s notion of visualization &quot;marks&quot;.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>define [<span class="string">'cv/Rectangle'</span>, <span class="string">'cv/Point'</span>]
+     , (Rectangle, Point) -&gt;
+  <span class="function"><span class="title">mark</span></span> = -&gt;
+    _.extend p, defaults
+    <span class="keyword">return</span> singleton</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-44">&#182;</a>
+              </div>
+              <p>p = p</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  p = {}
+
+  defaults =
+    bounds: <span class="keyword">new</span> Rectangle
+    fillStyle: <span class="string">'black'</span>
+    shape: <span class="string">'square'</span>
+    rotation: <span class="number">0</span>
+
+  singleton =</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-45">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-45">&#182;</a>
+              </div>
+              <p>Chainable property setter functions</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    shape:     (   shape   ) -&gt; p.shape = shape;            @
+    fillStyle: (cssColorStr) -&gt; p.fillStyle = cssColorStr;  @</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-46">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-46">&#182;</a>
+              </div>
+              <p>   bounds:    (x, y, w, h ) -&gt; p.bounds.setAll x, y, w, h; @
+   position:  (   x, y    ) -&gt; p.bounds.position.set x, y; @</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    size:      (  w, h = w ) -&gt;
+      p.bounds.w = w; p.bounds.h = h;                       @
+    x:         (     x     ) -&gt; p.bounds.x = x;             @
+    y:         (     y     ) -&gt; p.bounds.y = y;             @
+    w:         (     w     ) -&gt; p.bounds.w = w;             @
+    h:         (     h     ) -&gt; p.bounds.h = h;             @
+    rotation:  (  rotation ) -&gt; p.rotation = rotation;      @</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-47">&#182;</a>
+              </div>
+              <p>Functions that evaluate the mark</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    getBounds: -&gt;
+      shape().bounds()
+    render: (ctx, viewport) -&gt;
+      shape().render(ctx, viewport)
+
+  <span class="function"><span class="title">shape</span></span> = -&gt;
+    <span class="keyword">if</span> !shapes[p.shape]
+      <span class="keyword">throw</span> Error <span class="string">"Unknown shape type '<span class="subst">#{p.shape}</span>'"</span>
+    shapes[p.shape]</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-48">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-48">&#182;</a>
+              </div>
+              <p>TODO change this, remove these temp points</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  srcPt = <span class="keyword">new</span> Point
+  destPt = <span class="keyword">new</span> Point
+
+  shapes =
+    square:
+      bounds: -&gt; p.bounds.clone()
+      render: (ctx, viewport) -&gt;
+        ctx.fillStyle = p.fillStyle
+        srcPt.x = p.bounds.x
+        srcPt.y = p.bounds.y
+        viewport.srcToDest srcPt, destPt</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-49">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-49">&#182;</a>
+              </div>
+              <p>TODO update this to use p.bounds.(w, h)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        ctx.fillRect(
+          destPt.x,
+          destPt.y,
+          <span class="number">5</span>, <span class="number">5</span>
+        )
+
+  <span class="keyword">return</span> mark</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-50">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h1">
+                <a class="pilcrow" href="#section-50">&#182;</a>
+              </div>
+              <h1>Match</h1>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-51">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-51">&#182;</a>
               </div>
               <p>This utility lets us approximate Haskell&#39;s 
 pattern matching syntax in CoffeeScript</p>

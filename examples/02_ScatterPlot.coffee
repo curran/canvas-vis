@@ -2,9 +2,9 @@
 # --------------
 # <canvas id="scatterPlot" width="450" height="450"></canvas>
 require ['cv/Component', 'cv/bindToCanvas', 'cv/readCSV',
-         'cv/Viewport', 'cv/Rectangle', 'cv/Point']
+         'cv/Viewport', 'cv/Rectangle', 'cv/Point', 'cv/mark']
       , (Component, bindToCanvas, readCSV,
-         Viewport, Rectangle, Point) ->
+         Viewport, Rectangle, Point, mark) ->
 
   readCSV '../data/iris.csv', (err, relation) ->
     xAttr = relation.attributes.at 0
@@ -24,9 +24,10 @@ require ['cv/Component', 'cv/bindToCanvas', 'cv/readCSV',
       paint: (ctx, bounds) ->
         viewport.dest.copy bounds
         relation.tuples.each (tuple) ->
-          srcPt.x = tuple.value(xAttr)
-          srcPt.y = tuple.value(yAttr)
-          viewport.srcToDest srcPt, destPt
-          ctx.fillRect destPt.x, destPt.y, 5, 5
+          mark()
+            .x(tuple.value xAttr)
+            .y(tuple.value yAttr)
+            .size(0.1)
+            .render ctx, viewport
 
     bindToCanvas 'scatterPlot', component
