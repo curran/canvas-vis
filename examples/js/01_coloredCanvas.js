@@ -3,8 +3,9 @@
 (function() {
 
   require(['cv/Component', 'cv/bindToCanvas'], function(Component, bindToCanvas) {
-    var component, r, randomColor;
-    component = new Component({
+    var ColoredCanvas, cc, r, randomColor;
+    window.C = Component;
+    ColoredCanvas = Component.extend({
       paint: function(ctx, bounds) {
         ctx.fillStyle = randomColor();
         return ctx.fillRect(bounds.x, bounds.y, bounds.w, bounds.h);
@@ -16,10 +17,11 @@
     r = function() {
       return Math.floor(Math.random() * 255);
     };
+    cc = new ColoredCanvas;
     setInterval((function() {
-      return component.trigger('graphicsDirty');
+      return cc.trigger('graphicsDirty');
     }), 1000);
-    return bindToCanvas('coloredCanvas', component);
+    return bindToCanvas('coloredCanvas', cc);
   });
 
 }).call(this);

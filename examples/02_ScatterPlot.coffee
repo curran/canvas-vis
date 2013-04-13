@@ -20,7 +20,7 @@ require ['cv/Component', 'cv/bindToCanvas', 'cv/readCSV',
         w: xAttr.max - xAttr.min
         h: yAttr.max - yAttr.min
       dest: new Rectangle
-    component = new Component
+    ScatterPlot = Component.extend
       paint: (ctx, bounds) ->
         viewport.dest.copy bounds
         relation.tuples.each (tuple) ->
@@ -30,4 +30,4 @@ require ['cv/Component', 'cv/bindToCanvas', 'cv/readCSV',
             .size(0.1)
             .render ctx, viewport
 
-    bindToCanvas 'scatterPlot', component
+    bindToCanvas 'scatterPlot', new ScatterPlot

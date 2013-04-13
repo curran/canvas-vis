@@ -80,14 +80,18 @@
               </div>
               <p>Renders to a Canvas, responds to events.</p>
 <ul>
-<li>paint: (ctx, bounds:Rectangle) -&gt;</li>
+<li>paint(ctx:CanvasContext, bounds:Rectangle),
+renders to a Canvas within the <code>bounds</code> rectangle.</li>
+<li>&#39;graphicsDirty&#39; event fired when repaint needed<ul>
+<li>`component.on &#39;graphicsDirty&#39;, -&gt; (do stuff)</li>
+<li>`component.trigger &#39;graphicsDirty&#39;</li>
+</ul>
+</li>
 </ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>define [<span class="string">'cv/expose'</span>], (expose) -&gt;
-  Backbone.Model.extend
-    initialize: -&gt; expose @, <span class="string">'paint'</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>define [], -&gt; Backbone.Model.extend()</pre></div></div>
             
         </li>
         

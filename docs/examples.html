@@ -87,8 +87,9 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>require [<span class="string">'cv/Component'</span>, <span class="string">'cv/bindToCanvas'</span>], (Component, bindToCanvas) -&gt;
+  window.C = Component
 
-  component = <span class="keyword">new</span> Component
+  ColoredCanvas = Component.extend
     paint: (ctx, bounds) -&gt;
       ctx.fillStyle = randomColor()
       ctx.fillRect bounds.x, bounds.y, bounds.w, bounds.h
@@ -96,9 +97,9 @@
   <span class="function"><span class="title">randomColor</span></span> = -&gt; <span class="string">"rgb(<span class="subst">#{r()}</span>,<span class="subst">#{r()}</span>,<span class="subst">#{r()}</span>)"</span>
   <span class="function"><span class="title">r</span></span> = -&gt; Math.floor(Math.random() * <span class="number">255</span>)
 
-  setInterval (-&gt; component.trigger <span class="string">'graphicsDirty'</span>), <span class="number">1000</span>
-
-  bindToCanvas <span class="string">'coloredCanvas'</span>, component</pre></div></div>
+  cc = <span class="keyword">new</span> ColoredCanvas
+  setInterval (-&gt; cc.trigger <span class="string">'graphicsDirty'</span>), <span class="number">1000</span>
+  bindToCanvas <span class="string">'coloredCanvas'</span>, cc</pre></div></div>
             
         </li>
         
@@ -145,7 +146,7 @@
         w: xAttr.max - xAttr.min
         h: yAttr.max - yAttr.min
       dest: <span class="keyword">new</span> Rectangle
-    component = <span class="keyword">new</span> Component
+    ScatterPlot = Component.extend
       paint: (ctx, bounds) -&gt;
         viewport.dest.copy bounds
         relation.tuples.each (tuple) -&gt;
@@ -155,7 +156,7 @@
             .size(<span class="number">0.1</span>)
             .render ctx, viewport
 
-    bindToCanvas <span class="string">'scatterPlot'</span>, component
+    bindToCanvas <span class="string">'scatterPlot'</span>, <span class="keyword">new</span> ScatterPlot
 require [<span class="string">'cv/grammarOfGraphics'</span>], (grammarOfGraphics) -&gt;</pre></div></div>
             
         </li>
