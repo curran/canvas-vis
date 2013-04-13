@@ -3,14 +3,13 @@
 (function() {
 
   require(['cv/grammarOfGraphics/parser', 'cv/grammarOfGraphics/printTree', 'cv/grammarOfGraphics/step1_variables'], function(parser, printTree, variables) {
-    var grammarOfGraphics, testExpr0;
-    testExpr0 = "DATA: response = response\nDATA: gender = Gender\nSCALE: cat(dim(1), values(\"Rarely\", \"Infrequently\"))\nSCALE: cat(dim(2), values(\"Female\", \"Male\"))\nCOORD: rect(dim(2),polar.theta(dim(1)))\nELEMENT: interval.stack(position(summary.proportion(response * gender)), label(response), color(response))";
+    var grammarOfGraphics, testInput;
+    testInput = "DATA: response = response\nDATA: gender = Gender\nSCALE: cat(dim(1), values(\"Rarely\", \"Infrequently\"))\nSCALE: cat(dim(2), values(\"Female\", \"Male\"))\nCOORD: rect(dim(2),polar.theta(dim(1)))\nELEMENT: interval.stack(position(summary.proportion(response * gender)), label(response), color(response))";
     grammarOfGraphics = function(relation, expression) {
       var tree, vars;
       tree = parser.parse(expression);
       return vars = variables(tree, relation);
     };
-    grammarOfGraphics.testExpr = testExpr;
     return grammarOfGraphics;
   });
 

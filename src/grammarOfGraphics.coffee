@@ -17,7 +17,7 @@ require [
 #  'cv/grammarOfGraphics/step9_renderer'
 ], (parser, printTree, variables) ->
   
-  testExpr0 = """
+  testInput = """
     DATA: response = response
     DATA: gender = Gender
     SCALE: cat(dim(1), values("Rarely", "Infrequently"))
@@ -26,18 +26,10 @@ require [
     ELEMENT: interval.stack(position(summary.proportion(response * gender)), label(response), color(response))
   """
 
-
-
   #console.log printTree parser.parse testInput
 
-  # grammarOfGraphics(relation, expression) -> MarkIterator
   grammarOfGraphics = (relation, expression) ->
     tree = parser.parse expression
     vars = variables tree, relation
-
-  #grammarOfGraphics null, testInput
-
-  grammarOfGraphics.testExpr = testExpr
-
 
   return grammarOfGraphics

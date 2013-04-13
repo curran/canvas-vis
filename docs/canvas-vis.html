@@ -783,7 +783,7 @@ performs a relational algebra &#39;project&#39; operation</li>
             
             <div class="content"><div class='highlight'><pre>], (parser, printTree, variables) -&gt;
   
-  testExpr0 = <span class="string">"""
+  testInput = <span class="string">"""
     DATA: response = response
     DATA: gender = Gender
     SCALE: cat(dim(1), values("Rarely", "Infrequently"))
@@ -802,13 +802,14 @@ performs a relational algebra &#39;project&#39; operation</li>
                 <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <p>console.log printTree parser.parse testInput</p>
-<p>grammarOfGraphics(relation, expression) -&gt; MarkIterator</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="function"><span class="title">grammarOfGraphics</span></span> = (relation, expression) -&gt;
     tree = parser.parse expression
-    vars = variables tree, relation</pre></div></div>
+    vars = variables tree, relation
+
+  <span class="keyword">return</span> grammarOfGraphics</pre></div></div>
             
         </li>
         
@@ -816,26 +817,8 @@ performs a relational algebra &#39;project&#39; operation</li>
         <li id="section-40">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
-              </div>
-              <p>grammarOfGraphics null, testInput</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  grammarOfGraphics.testExpr = testExpr
-
-
-  <span class="keyword">return</span> grammarOfGraphics</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-41">
-            <div class="annotation">
-              
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <h1>MarkIterator</h1>
 
@@ -844,11 +827,11 @@ performs a relational algebra &#39;project&#39; operation</li>
         </li>
         
         
-        <li id="section-42">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <ul>
 <li><code>hasNext</code>: -&gt; Boolean</li>
@@ -861,11 +844,11 @@ performs a relational algebra &#39;project&#39; operation</li>
         </li>
         
         
-        <li id="section-43">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+                <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
               <p>An API for Jaque Bertin&#39;s notion of visualization &quot;marks&quot;.</p>
 
@@ -881,11 +864,11 @@ performs a relational algebra &#39;project&#39; operation</li>
         </li>
         
         
-        <li id="section-44">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+                <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
               <p>p means properties</p>
 
@@ -904,11 +887,11 @@ performs a relational algebra &#39;project&#39; operation</li>
         </li>
         
         
-        <li id="section-45">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+                <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
               <p>Chainable property setter functions</p>
 
@@ -927,11 +910,11 @@ performs a relational algebra &#39;project&#39; operation</li>
         </li>
         
         
-        <li id="section-46">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
+                <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
               <p>Functions that evaluate the mark</p>
 
@@ -968,11 +951,11 @@ performs a relational algebra &#39;project&#39; operation</li>
         </li>
         
         
-        <li id="section-47">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-47">&#182;</a>
+                <a class="pilcrow" href="#section-46">&#182;</a>
               </div>
               <h1>Match</h1>
 
@@ -981,11 +964,11 @@ performs a relational algebra &#39;project&#39; operation</li>
         </li>
         
         
-        <li id="section-48">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-48">&#182;</a>
+                <a class="pilcrow" href="#section-47">&#182;</a>
               </div>
               <p>This utility lets us approximate Haskell&#39;s 
 pattern matching syntax in CoffeeScript</p>
