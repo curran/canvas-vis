@@ -11,7 +11,7 @@
 define ['cv/match', 'cv/grammarOfGraphics/printTree']
      , (match, printTree) ->
   dataStmts = []
-  variables = match 'type', 'variables',
+  match 'type', 'variables',
     'statements': (stmts, relation) ->
 
       dataStmts = []
@@ -30,5 +30,3 @@ define ['cv/match', 'cv/grammarOfGraphics/printTree']
       return relation.project attrsToProject
     'data': (data) -> dataStmts.push data
     'statement': ->
-
-  return variables
