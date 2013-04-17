@@ -266,20 +266,16 @@ define [], -&gt;
   <span class="class"><span class="keyword">class</span> <span class="title">Varset</span></span>
     constructor: -&gt;
       <span class="property">@_orderedKeys</span> = []
+      <span class="property">@_orderedTuples</span> = []
       <span class="property">@_keysToTuples</span> = {}
     insert: (key, tuple) -&gt;
       <span class="property">@_orderedKeys</span>.push key
+      <span class="property">@_orderedTuples</span>.push tuple
       <span class="property">@_keysToTuples</span>[key] = tuple
     keys: -&gt; <span class="property">@_orderedKeys</span>
+    tuples: -&gt; <span class="property">@_orderedTuples</span>
     tuple: (key) -&gt; <span class="property">@_keysToTuples</span>[key]
-    type: <span class="string">'varset'</span> <span class="comment">#for use in AST</span>
-
-  Varset.<span class="function"><span class="title">fromVariable</span></span> = (variable) -&gt;
-    result = <span class="keyword">new</span> Varset
-    <span class="keyword">for</span> key <span class="keyword">in</span> variable.keys()
-      tuple = [variable.value key]
-      result.insert key, tuple
-    <span class="keyword">return</span> result</pre></div></div>
+    type: <span class="string">'varset'</span> <span class="comment">#for use in AST</span></pre></div></div>
             
         </li>
         
@@ -289,6 +285,34 @@ define [], -&gt;
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>   iterator: -&gt;
+     i = 0
+     n = keys.length
+     keys = varset.keys()
+     key = keys[i]</p>
+<pre><code> hasNext: -&gt; i &lt; n
+ next: -&gt; key = keys[i++]
+ key: -&gt; key
+ tuple: -&gt; varset.tuple key</code></pre>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  Varset.<span class="function"><span class="title">fromVariable</span></span> = (variable) -&gt;
+    result = <span class="keyword">new</span> Varset
+    <span class="keyword">for</span> key <span class="keyword">in</span> variable.keys()
+      tuple = [variable.value key]
+      result.insert key, tuple
+    <span class="keyword">return</span> result</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <p>cross(Varset a, Varset b)
 TODO handle missing data</p>
@@ -308,11 +332,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <h1>Viewport</h1>
 
@@ -321,11 +345,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <ul>
 <li>src: Rectangle</li>
@@ -355,11 +379,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <h1>ViewportContainer</h1>
 
@@ -368,11 +392,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p>TODO replace this code with newer version from <code>all.coffee</code></p>
 
@@ -401,11 +425,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <h1>bindToCanvas</h1>
 
@@ -414,11 +438,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>Binds a Component to a Canvas.</p>
 <p>The component is re-rendered on the Canvas whenever it fires a &#39;graphicsDirty&#39; event.</p>
@@ -455,11 +479,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <h1>expose</h1>
 
@@ -468,11 +492,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-21">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>Exposes properties of Backbone models using JS setters and getters.</p>
 
@@ -487,11 +511,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-22">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <pre><code> if !(model.get p) then throw Error &quot;&quot;&quot;
    Missing expected property &#39;#{p}&#39; &quot;&quot;&quot;</code></pre>
@@ -504,34 +528,15 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-23">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <h1>grammarOfGraphics</h1>
 
             </div>
-            
-        </li>
-        
-        
-        <li id="section-24">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
-              </div>
-              <p>The top level module exposing Grammar of Graphics functionality.</p>
-<p>For inner modules, check out <a href="grammarOfGraphics.html">grammarOfGraphics docs</a></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>require [
-  <span class="string">'cv/grammarOfGraphics/parser'</span>,
-  <span class="string">'cv/grammarOfGraphics/printTree'</span>,
-  <span class="string">'cv/grammarOfGraphics/step1_variables'</span></pre></div></div>
             
         </li>
         
@@ -542,27 +547,15 @@ TODO handle missing data</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
-              <p> &#39;cv/grammarOfGraphics/step2_variables&#39;,
- &#39;cv/grammarOfGraphics/step3_algebra&#39;,
- &#39;cv/grammarOfGraphics/step4_scales&#39;,
- &#39;cv/grammarOfGraphics/step5_statistics&#39;,
- &#39;cv/grammarOfGraphics/step6_geometry&#39;,
- &#39;cv/grammarOfGraphics/step7_coordinates&#39;,
- &#39;cv/grammarOfGraphics/step8_aesthetics&#39;,
- &#39;cv/grammarOfGraphics/step9_renderer&#39;</p>
+              <p>The top level module exposing Grammar of Graphics functionality.</p>
+<p>For inner modules, check out <a href="grammarOfGraphics.html">grammarOfGraphics docs</a></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>], (parser, printTree, step1) -&gt;
-  
-  testInput = <span class="string">"""
-    DATA: response = response
-    DATA: gender = Gender
-    SCALE: cat(dim(1), values("Rarely", "Infrequently"))
-    SCALE: cat(dim(2), values("Female", "Male"))
-    COORD: rect(dim(2),polar.theta(dim(1)))
-    ELEMENT: interval.stack(position(summary.proportion(response * gender)), label(response), color(response))
-  """</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>define [
+  <span class="string">'cv/grammarOfGraphics/parser'</span>,
+  <span class="string">'cv/grammarOfGraphics/step1_variables'</span>,
+  <span class="string">'cv/grammarOfGraphics/step2_algebra'</span></pre></div></div>
             
         </li>
         
@@ -573,16 +566,20 @@ TODO handle missing data</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
-              <p>console.log printTree parser.parse testInput</p>
+              <p> &#39;cv/grammarOfGraphics/step3_scales&#39;,
+ &#39;cv/grammarOfGraphics/step4_statistics&#39;,
+ &#39;cv/grammarOfGraphics/step5_geometry&#39;,
+ &#39;cv/grammarOfGraphics/step6_coordinates&#39;,
+ &#39;cv/grammarOfGraphics/step7_aesthetics&#39;,
+ &#39;cv/grammarOfGraphics/step8_renderer&#39;</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="function"><span class="title">grammarOfGraphics</span></span> = (variables, expression) -&gt;
+            <div class="content"><div class='highlight'><pre>], (parser, step1, step2) -&gt;
+  (variables, expression) -&gt;
     tree = parser.parse expression
     variables = step1 tree, variables
-    tree = step2 tree, variables
-
-  <span class="keyword">return</span> grammarOfGraphics</pre></div></div>
+    step2 tree, variables</pre></div></div>
             
         </li>
         

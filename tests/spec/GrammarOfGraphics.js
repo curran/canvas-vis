@@ -69,6 +69,14 @@ define( [
       expect(petalLength).toEqual(tuple[0]);
       expect(sepalLength).toEqual(tuple[1]);
 
+//  testInput = """
+//    DATA: response = response
+//    DATA: gender = Gender
+//    SCALE: cat(dim(1), values("Rarely", "Infrequently"))
+//    SCALE: cat(dim(2), values("Female", "Male"))
+//    COORD: rect(dim(2),polar.theta(dim(1)))
+//    ELEMENT: interval.stack(position(summary.proportion(response * gender)), label(response), color(response))
+//  """
     });
   });
 });

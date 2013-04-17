@@ -1,15 +1,6 @@
 
 
 varsetIterator = (varset) ->
-  i = 0
-  n = keys.length
-  keys = varset.keys()
-  key = keys[i]
-  
-  hasNext: -> i < n
-  next: -> key = keys[i++]
-  key: -> key
-  tuple: -> varset.tuple key
 
 # varsetForEach(Varset, callback(tuple, key) -> ) ->
 varsetForEach = (varset, callback) ->

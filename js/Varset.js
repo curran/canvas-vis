@@ -8,16 +8,22 @@
 
       function Varset() {
         this._orderedKeys = [];
+        this._orderedTuples = [];
         this._keysToTuples = {};
       }
 
       Varset.prototype.insert = function(key, tuple) {
         this._orderedKeys.push(key);
+        this._orderedTuples.push(tuple);
         return this._keysToTuples[key] = tuple;
       };
 
       Varset.prototype.keys = function() {
         return this._orderedKeys;
+      };
+
+      Varset.prototype.tuples = function() {
+        return this._orderedTuples;
       };
 
       Varset.prototype.tuple = function(key) {

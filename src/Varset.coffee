@@ -2,13 +2,26 @@ define [], ->
   class Varset
     constructor: ->
       @_orderedKeys = []
+      @_orderedTuples = []
       @_keysToTuples = {}
     insert: (key, tuple) ->
       @_orderedKeys.push key
+      @_orderedTuples.push tuple
       @_keysToTuples[key] = tuple
     keys: -> @_orderedKeys
+    tuples: -> @_orderedTuples
     tuple: (key) -> @_keysToTuples[key]
     type: 'varset' #for use in AST
+#    iterator: ->
+#      i = 0
+#      n = keys.length
+#      keys = varset.keys()
+#      key = keys[i]
+#      
+#      hasNext: -> i < n
+#      next: -> key = keys[i++]
+#      key: -> key
+#      tuple: -> varset.tuple key
 
   Varset.fromVariable = (variable) ->
     result = new Varset

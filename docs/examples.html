@@ -160,8 +160,7 @@
         h: yMax - yMin
       dest: <span class="keyword">new</span> Rectangle
 
-    bindToCanvas <span class="string">'scatterPlot'</span>, <span class="keyword">new</span> ScatterPlot
-require [<span class="string">'cv/grammarOfGraphics'</span>], (grammarOfGraphics) -&gt;</pre></div></div>
+    bindToCanvas <span class="string">'scatterPlot'</span>, <span class="keyword">new</span> ScatterPlot</pre></div></div>
             
         </li>
         
@@ -169,10 +168,10 @@ require [<span class="string">'cv/grammarOfGraphics'</span>], (grammarOfGraphics
         <li id="section-6">
             <div class="annotation">
               
-              <div class="pilwrap for-h1">
+              <div class="pilwrap for-h2">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <h1>Roadmap</h1>
+              <h2><a href="../examples/03_GrammarOfGraphics.html">Grammar of Graphics</a></h2>
 
             </div>
             
@@ -184,6 +183,100 @@ require [<span class="string">'cv/grammarOfGraphics'</span>], (grammarOfGraphics
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <canvas id="grammarOfGraphics" width="450" height="450"></canvas>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>require [<span class="string">'cv/Component'</span>, <span class="string">'cv/bindToCanvas'</span>, <span class="string">'cv/readCSV'</span>,
+         <span class="string">'cv/Viewport'</span>, <span class="string">'cv/Rectangle'</span>, <span class="string">'cv/mark'</span>,<span class="string">'cv/grammarOfGraphics'</span>]
+      , (Component, bindToCanvas, readCSV,
+         Viewport, Rectangle, mark, grammarOfGraphics) -&gt;
+
+  expr = <span class="string">"""
+    DATA: x = "petal length"
+    DATA: y = "sepal length"
+    TRANS: x = x
+    TRANS: y = y
+    SCALE: linear(dim(1))
+    SCALE: linear(dim(2))
+    COORD: rect(dim(1, 2))
+    GUIDE: axis(dim(1))
+    GUIDE: axis(dim(2))
+    ELEMENT: point(position(x*y))
+  """</span>
+
+  readCSV <span class="string">'../data/iris.csv'</span>, (err, variables) -&gt;
+    tree = grammarOfGraphics variables, expr</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>TODO this is a hack</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    varset = _.last(tree.statements).args[<span class="number">0</span>].args[<span class="number">0</span>]
+    window.varset = varset
+
+    xs = _.map varset.tuples(), (tuple) -&gt; tuple[<span class="number">0</span>]
+    ys = _.map varset.tuples(), (tuple) -&gt; tuple[<span class="number">1</span>]
+
+    xMin = _.min xs
+    xMax = _.max xs
+    yMin = _.min ys
+    yMax = _.max ys
+
+    console.log {xMin, xMax, yMin, yMax}
+
+    viewport = <span class="keyword">new</span> Viewport
+      src: <span class="keyword">new</span> Rectangle
+        x: xMin
+        y: yMin
+        w: xMax - xMin
+        h: yMax - yMin
+      dest: <span class="keyword">new</span> Rectangle
+
+    GGComponent = Component.extend
+      paint: (ctx, bounds) -&gt;
+        viewport.dest.copy bounds
+        <span class="keyword">for</span> tuple <span class="keyword">in</span> varset.tuples()
+          mark()
+            .x(tuple[<span class="number">0</span>])
+            .y(tuple[<span class="number">1</span>])
+            .size(<span class="number">0.1</span>)
+            .fillStyle(<span class="string">'rgba(0,0,0,0.2)'</span>)
+            .render ctx, viewport
+
+    bindToCanvas <span class="string">'grammarOfGraphics'</span>, <span class="keyword">new</span> GGComponent</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h1">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <h1>Roadmap</h1>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
               <ul>
 <li>Bertin example from p.43</li>
