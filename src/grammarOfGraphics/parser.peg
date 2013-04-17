@@ -1,12 +1,12 @@
 // See Wilkinson's Grammar of Graphics p. 38
 
 start
-  = statements:statement* {return {type:"statements", statements:statements}}
+  = statements:statement+ {return {type:"statements", statements:statements}}
 
 statement
   = data
-  / statementType:statementType ":" " "* expr:expr "\n"*
-    {return {type:"statement", statementType:statementType, expr:expr};}
+  / statementType:statementType ":" " "* expr:expr "\n"* {
+    return {type:"statement", statementType:statementType, expr:expr};}
 
 data
   = "DATA:" " "* left:name " "* "=" " "* right:string "\n"* {

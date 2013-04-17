@@ -8,7 +8,8 @@
     return readCSV('../data/iris.csv', function(err, variables) {
       var GGComponent, tree, varset, viewport, xMax, xMin, xs, yMax, yMin, ys;
       tree = grammarOfGraphics(variables, expr);
-      varset = _.last(tree.statements).args[0].args[0];
+      window.tree = tree;
+      varset = _.last(tree.statements).expr.args[0].args[0];
       window.varset = varset;
       xs = _.map(varset.tuples(), function(tuple) {
         return tuple[0];
@@ -20,12 +21,6 @@
       xMax = _.max(xs);
       yMin = _.min(ys);
       yMax = _.max(ys);
-      console.log({
-        xMin: xMin,
-        xMax: xMax,
-        yMin: yMin,
-        yMax: yMax
-      });
       viewport = new Viewport({
         src: new Rectangle({
           x: xMin,

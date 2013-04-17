@@ -24,8 +24,7 @@
           })()).join('');
         },
         statement: function(stmt, indent) {
-          line(indent + 'statement: ' + stmt.statementType);
-          return p(stmt.expr, indent + '  ');
+          return [line(indent + 'statement: ' + stmt.statementType), p(stmt.expr, indent + '  ')].join('');
         },
         data: function(data, indent) {
           return line(indent + ("statement: DATA " + data.newName + " = \"" + data.oldName + "\""));

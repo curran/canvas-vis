@@ -7,27 +7,29 @@ define ['cv/match'], (match) ->
   printTree = (tree) ->
     p = match 'type', 'printTree',
       statements: (statements, indent) ->
-       [ss, i] = [statements.statements, indent]
-       line(i+'statements')+
-         ((p s, i+'  ') for s in ss).join ''
+        [ss, i] = [statements.statements, indent]
+        line(i+'statements')+
+          ((p s, i+'  ') for s in ss).join ''
       statement: (stmt, indent) ->
-       line indent+'statement: '+stmt.statementType
-       p stmt.expr, indent+'  '
+        [
+          (line indent+'statement: '+stmt.statementType),
+          (p stmt.expr, indent+'  ')
+        ].join ''
       data: (data, indent) ->
-       line indent+"statement: DATA #{data.newName} = \"#{data.oldName}\""
+        line indent+"statement: DATA #{data.newName} = \"#{data.oldName}\""
       name: (name, indent) ->
-       line indent+'name '+name.name
+        line indent+'name '+name.name
       number: (number, indent) ->
-       line indent+'number '+number.value
+        line indent+'number '+number.value
       string: (string, indent) ->
-       line indent+'string '+string.value
+        line indent+'string '+string.value
       cross: (cross, indent) ->
         [
           (line indent+'cross'),
           (line indent+'  left'),
           (p cross.left, indent+'    '),
           (line indent+'  right'),
-          (p cross.right, indent+'    '),
+          (p cross.right, indent+'    ')
         ].join ''
       assignment: (assignment, indent) ->
         [
@@ -35,7 +37,7 @@ define ['cv/match'], (match) ->
           (line indent+'  left'),
           (p assignment.left, indent+'    '),
           (line indent+'  right'),
-          (p assignment.right, indent+'    '),
+          (p assignment.right, indent+'    ')
         ].join ''
       function: (fn, indent) ->
         [

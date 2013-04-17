@@ -222,7 +222,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    varset = _.last(tree.statements).args[<span class="number">0</span>].args[<span class="number">0</span>]
+            <div class="content"><div class='highlight'><pre>    window.tree = tree
+    varset = _.last(tree.statements).expr.args[<span class="number">0</span>].args[<span class="number">0</span>]
     window.varset = varset
 
     xs = _.map varset.tuples(), (tuple) -&gt; tuple[<span class="number">0</span>]
@@ -232,8 +233,6 @@
     xMax = _.max xs
     yMin = _.min ys
     yMax = _.max ys
-
-    console.log {xMin, xMax, yMin, yMax}
 
     viewport = <span class="keyword">new</span> Viewport
       src: <span class="keyword">new</span> Rectangle

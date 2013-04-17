@@ -12,7 +12,10 @@ define ['cv/match', 'cv/grammarOfGraphics/printTree', 'cv/Varset']
       statements: (step2 stmt, vars for stmt in stmts.statements)
     'data': (data, vars) -> data
     'statement': match 'statementType', 'step2',
-      ELEMENT: (stmt, vars) -> step2 stmt.expr, vars
+      ELEMENT: (stmt, vars) ->
+        type: 'statement'
+        statementType: 'ELEMENT'
+        expr: step2 stmt.expr, vars
       TRANS: (stmt, vars) -> stmt
       SCALE: (stmt, vars) -> stmt
       COORD: (stmt, vars) -> stmt

@@ -111,11 +111,15 @@ parser = (function(){
         var pos0;
         
         pos0 = pos;
-        result0 = [];
         result1 = parse_statement();
-        while (result1 !== null) {
-          result0.push(result1);
-          result1 = parse_statement();
+        if (result1 !== null) {
+          result0 = [];
+          while (result1 !== null) {
+            result0.push(result1);
+            result1 = parse_statement();
+          }
+        } else {
+          result0 = null;
         }
         if (result0 !== null) {
           result0 = (function(offset, statements) {return {type:"statements", statements:statements}})(pos0, result0);
@@ -216,7 +220,8 @@ parser = (function(){
             pos = pos1;
           }
           if (result0 !== null) {
-            result0 = (function(offset, statementType, expr) {return {type:"statement", statementType:statementType, expr:expr};})(pos0, result0[0], result0[3]);
+            result0 = (function(offset, statementType, expr) {
+              return {type:"statement", statementType:statementType, expr:expr};})(pos0, result0[0], result0[3]);
           }
           if (result0 === null) {
             pos = pos0;

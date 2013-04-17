@@ -23,7 +23,8 @@ require ['cv/Component', 'cv/bindToCanvas', 'cv/readCSV',
     tree = grammarOfGraphics variables, expr
 
 #TODO this is a hack
-    varset = _.last(tree.statements).args[0].args[0]
+    window.tree = tree
+    varset = _.last(tree.statements).expr.args[0].args[0]
     window.varset = varset
 
     xs = _.map varset.tuples(), (tuple) -> tuple[0]
@@ -33,8 +34,6 @@ require ['cv/Component', 'cv/bindToCanvas', 'cv/readCSV',
     xMax = _.max xs
     yMin = _.min ys
     yMax = _.max ys
-
-    console.log {xMin, xMax, yMin, yMax}
 
     viewport = new Viewport
       src: new Rectangle

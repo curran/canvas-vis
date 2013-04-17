@@ -26,7 +26,11 @@
       },
       'statement': match('statementType', 'step2', {
         ELEMENT: function(stmt, vars) {
-          return step2(stmt.expr, vars);
+          return {
+            type: 'statement',
+            statementType: 'ELEMENT',
+            expr: step2(stmt.expr, vars)
+          };
         },
         TRANS: function(stmt, vars) {
           return stmt;

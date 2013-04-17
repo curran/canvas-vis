@@ -83,27 +83,29 @@
             <div class="content"><div class='highlight'><pre>  <span class="function"><span class="title">printTree</span></span> = (tree) -&gt;
     p = match <span class="string">'type'</span>, <span class="string">'printTree'</span>,
       statements: (statements, indent) -&gt;
-       [ss, i] = [statements.statements, indent]
-       line(i+<span class="string">'statements'</span>)+
-         ((p s, i+<span class="string">'  '</span>) <span class="keyword">for</span> s <span class="keyword">in</span> ss).join <span class="string">''</span>
+        [ss, i] = [statements.statements, indent]
+        line(i+<span class="string">'statements'</span>)+
+          ((p s, i+<span class="string">'  '</span>) <span class="keyword">for</span> s <span class="keyword">in</span> ss).join <span class="string">''</span>
       statement: (stmt, indent) -&gt;
-       line indent+<span class="string">'statement: '</span>+stmt.statementType
-       p stmt.expr, indent+<span class="string">'  '</span>
+        [
+          (line indent+<span class="string">'statement: '</span>+stmt.statementType),
+          (p stmt.expr, indent+<span class="string">'  '</span>)
+        ].join <span class="string">''</span>
       data: (data, indent) -&gt;
-       line indent+<span class="string">"statement: DATA <span class="subst">#{data.newName}</span> = \"<span class="subst">#{data.oldName}</span>\""</span>
+        line indent+<span class="string">"statement: DATA <span class="subst">#{data.newName}</span> = \"<span class="subst">#{data.oldName}</span>\""</span>
       name: (name, indent) -&gt;
-       line indent+<span class="string">'name '</span>+name.name
+        line indent+<span class="string">'name '</span>+name.name
       number: (number, indent) -&gt;
-       line indent+<span class="string">'number '</span>+number.value
+        line indent+<span class="string">'number '</span>+number.value
       string: (string, indent) -&gt;
-       line indent+<span class="string">'string '</span>+string.value
+        line indent+<span class="string">'string '</span>+string.value
       cross: (cross, indent) -&gt;
         [
           (line indent+<span class="string">'cross'</span>),
           (line indent+<span class="string">'  left'</span>),
           (p cross.left, indent+<span class="string">'    '</span>),
           (line indent+<span class="string">'  right'</span>),
-          (p cross.right, indent+<span class="string">'    '</span>),
+          (p cross.right, indent+<span class="string">'    '</span>)
         ].join <span class="string">''</span>
       assignment: (assignment, indent) -&gt;
         [
@@ -111,7 +113,7 @@
           (line indent+<span class="string">'  left'</span>),
           (p assignment.left, indent+<span class="string">'    '</span>),
           (line indent+<span class="string">'  right'</span>),
-          (p assignment.right, indent+<span class="string">'    '</span>),
+          (p assignment.right, indent+<span class="string">'    '</span>)
         ].join <span class="string">''</span>
       <span class="reserved">function</span>: (fn, indent) -&gt;
         [
@@ -205,7 +207,10 @@
       statements: (step2 stmt, vars <span class="keyword">for</span> stmt <span class="keyword">in</span> stmts.statements)
     <span class="string">'data'</span>: (data, vars) -&gt; data
     <span class="string">'statement'</span>: match <span class="string">'statementType'</span>, <span class="string">'step2'</span>,
-      ELEMENT: (stmt, vars) -&gt; step2 stmt.expr, vars
+      ELEMENT: (stmt, vars) -&gt;
+        type: <span class="string">'statement'</span>
+        statementType: <span class="string">'ELEMENT'</span>
+        expr: step2 stmt.expr, vars
       TRANS: (stmt, vars) -&gt; stmt
       SCALE: (stmt, vars) -&gt; stmt
       COORD: (stmt, vars) -&gt; stmt
@@ -259,8 +264,66 @@
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
               <p>return name</p>
+<h1>Step 3: Scales</h1>
 
             </div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>The third step in Wilkinson&#39;s Grammar of Graphics pipeline.</p>
+<p>Evaluates all SCALE statements.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>define [<span class="string">'cv/match'</span>, <span class="string">'cv/grammarOfGraphics/printTree'</span>, <span class="string">'cv/Varset'</span>]
+     , (match, printTree, Varset) -&gt;
+  step3 = match <span class="string">'type'</span>, <span class="string">'step3'</span>,
+    <span class="string">'statements'</span>: (stmts) -&gt;
+      console.dir stmts.statements
+      scales = (step3 stmt <span class="keyword">for</span> stmt <span class="keyword">in</span> stmts.statements)
+      _.extend.apply <span class="literal">null</span>, scales</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>TODO unify &#39;data&#39; as a &#39;statement&#39;</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="string">'data'</span>: (data) -&gt; {}
+    <span class="string">'statement'</span>: match <span class="string">'statementType'</span>, <span class="string">'step3.statement'</span>,
+      ELEMENT: (stmt) -&gt; {}
+      TRANS: (stmt) -&gt; {}
+      SCALE: (stmt) -&gt; {}<span class="comment">#step3 stmt.expr</span>
+      COORD: (stmt) -&gt; {}
+      GUIDE: (stmt) -&gt; {}
+    <span class="string">'function'</span>: match <span class="string">'name'</span>, <span class="string">'step3.function'</span>,
+      <span class="string">'linear'</span>: (fn) -&gt;
+        <span class="keyword">if</span> fn.args.length != <span class="number">1</span>
+          <span class="keyword">throw</span> Error <span class="string">'linear() expects one argument'</span>
+        dim = step3 fn.args[<span class="number">0</span>]
+        result = {}
+        result[dim] = <span class="string">'linear'</span>
+        result
+      <span class="string">'dim'</span>: (fn) -&gt;
+        <span class="keyword">if</span> fn.args.length != <span class="number">1</span>
+          <span class="keyword">throw</span> Error <span class="string">'dim() expects one argument'</span>
+        <span class="keyword">if</span> fn.args[<span class="number">0</span>].type != <span class="string">'number'</span>
+          <span class="keyword">throw</span> Error <span class="string">'dim() expects a numeric argument'</span>
+        fn.args[<span class="number">0</span>].value</pre></div></div>
             
         </li>
         

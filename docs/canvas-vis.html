@@ -554,8 +554,10 @@ TODO handle missing data</p>
             
             <div class="content"><div class='highlight'><pre>define [
   <span class="string">'cv/grammarOfGraphics/parser'</span>,
+  <span class="string">'cv/grammarOfGraphics/printTree'</span>,
   <span class="string">'cv/grammarOfGraphics/step1_variables'</span>,
-  <span class="string">'cv/grammarOfGraphics/step2_algebra'</span></pre></div></div>
+  <span class="string">'cv/grammarOfGraphics/step2_algebra'</span>,
+  <span class="string">'cv/grammarOfGraphics/step3_scales'</span></pre></div></div>
             
         </li>
         
@@ -566,8 +568,7 @@ TODO handle missing data</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
-              <p> &#39;cv/grammarOfGraphics/step3_scales&#39;,
- &#39;cv/grammarOfGraphics/step4_statistics&#39;,
+              <p> &#39;cv/grammarOfGraphics/step4_statistics&#39;,
  &#39;cv/grammarOfGraphics/step5_geometry&#39;,
  &#39;cv/grammarOfGraphics/step6_coordinates&#39;,
  &#39;cv/grammarOfGraphics/step7_aesthetics&#39;,
@@ -575,11 +576,11 @@ TODO handle missing data</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>], (parser, step1, step2) -&gt;
+            <div class="content"><div class='highlight'><pre>], (parser, printTree, step1, step2, step3) -&gt;
   (variables, expression) -&gt;
     tree = parser.parse expression
     variables = step1 tree, variables
-    step2 tree, variables</pre></div></div>
+    tree = step2 tree, variables</pre></div></div>
             
         </li>
         
@@ -587,8 +588,24 @@ TODO handle missing data</p>
         <li id="section-27">
             <div class="annotation">
               
-              <div class="pilwrap for-h1">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>console.log printTree tree
+console.dir (step3 tree, variables)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">return</span> tree</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h1">
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <h1>MarkIterator</h1>
 
@@ -597,11 +614,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-28">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <ul>
 <li><code>hasNext</code>: -&gt; Boolean</li>
@@ -614,11 +631,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-29">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p>An API for Jaque Bertin&#39;s notion of visualization &quot;marks&quot;.</p>
 
@@ -634,11 +651,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-30">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p>p means properties</p>
 
@@ -657,11 +674,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-31">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p>Chainable property setter functions</p>
 
@@ -680,11 +697,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-32">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <p>Functions that evaluate the mark</p>
 
@@ -721,11 +738,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-33">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <h1>Match</h1>
 
@@ -734,11 +751,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-34">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <p>This utility lets us approximate Haskell&#39;s 
 pattern matching syntax in CoffeeScript</p>
@@ -777,11 +794,11 @@ define [<span class="string">'jquery.csv'</span>, <span class="string">'cv/Varia
         </li>
         
         
-        <li id="section-35">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <p>TODO if keyColumn specified then use it</p>
 
