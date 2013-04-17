@@ -45,4 +45,5 @@ define ['cv/match'], (match) ->
              p arg, indent+'    '
           ).join ''
         ].join ''
+      varset: (varset, indent) -> indent+'<varset>'
     p tree, ''

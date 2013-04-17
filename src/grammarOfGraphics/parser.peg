@@ -9,17 +9,13 @@ statement
     {return {type:"statement", statementType:statementType, expr:expr};}
 
 data
-  = "DATA:" " "* da:dataAssignment "\n"* {
+  = "DATA:" " "* left:name " "* "=" " "* right:string "\n"* {
     return {
       type:"data", 
-      oldName:da.right.value,
-      newName:da.left.name
+      oldName:right.value,
+      newName:left.name
     };
   }
-
-dataAssignment
-  = left:name " "* "=" " "* right:string
-  { return {type:"assignment", left:left, right:right}}
 
 statementType
   = chars:[A-Z]* { return chars.join(""); }

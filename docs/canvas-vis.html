@@ -261,7 +261,25 @@ define [], -&gt;
       <span class="property">@_keysToValues</span>[key] = value
     keys: -&gt; _.keys <span class="property">@_keysToValues</span>
     values: -&gt; _.values <span class="property">@_keysToValues</span>
-    value: (key) -&gt; <span class="property">@_keysToValues</span>[key]</pre></div></div>
+    value: (key) -&gt; <span class="property">@_keysToValues</span>[key]
+define [], -&gt;
+  <span class="class"><span class="keyword">class</span> <span class="title">Varset</span></span>
+    constructor: -&gt;
+      <span class="property">@_orderedKeys</span> = []
+      <span class="property">@_keysToTuples</span> = {}
+    insert: (key, tuple) -&gt;
+      <span class="property">@_orderedKeys</span>.push key
+      <span class="property">@_keysToTuples</span>[key] = tuple
+    keys: -&gt; <span class="property">@_orderedKeys</span>
+    tuple: (key) -&gt; <span class="property">@_keysToTuples</span>[key]
+    type: <span class="string">'varset'</span> <span class="comment">#for use in AST</span>
+
+  Varset.<span class="function"><span class="title">fromVariable</span></span> = (variable) -&gt;
+    result = <span class="keyword">new</span> Varset
+    <span class="keyword">for</span> key <span class="keyword">in</span> variable.keys()
+      tuple = [variable.value key]
+      result.insert key, tuple
+    <span class="keyword">return</span> result</pre></div></div>
             
         </li>
         
@@ -269,8 +287,32 @@ define [], -&gt;
         <li id="section-13">
             <div class="annotation">
               
-              <div class="pilwrap for-h1">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>cross(Varset a, Varset b)
+TODO handle missing data</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  Varset.<span class="function"><span class="title">cross</span></span> = (a, b) -&gt;
+    result = <span class="keyword">new</span> Varset
+    keys = _.union a.keys(), b.keys()
+    <span class="keyword">for</span> key <span class="keyword">in</span> keys
+      tuple = (a.tuple key).concat (b.tuple key)
+      result.insert key, tuple
+    <span class="keyword">return</span> result
+
+  <span class="keyword">return</span> Varset</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h1">
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <h1>Viewport</h1>
 
@@ -279,11 +321,11 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <ul>
 <li>src: Rectangle</li>
@@ -313,11 +355,11 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <h1>ViewportContainer</h1>
 
@@ -326,11 +368,11 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <p>TODO replace this code with newer version from <code>all.coffee</code></p>
 
@@ -359,11 +401,11 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <h1>bindToCanvas</h1>
 
@@ -372,11 +414,11 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>Binds a Component to a Canvas.</p>
 <p>The component is re-rendered on the Canvas whenever it fires a &#39;graphicsDirty&#39; event.</p>
@@ -413,11 +455,11 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <h1>expose</h1>
 
@@ -426,11 +468,11 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>Exposes properties of Backbone models using JS setters and getters.</p>
 
@@ -445,11 +487,11 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-21">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <pre><code> if !(model.get p) then throw Error &quot;&quot;&quot;
    Missing expected property &#39;#{p}&#39; &quot;&quot;&quot;</code></pre>
@@ -462,11 +504,11 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-22">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <h1>grammarOfGraphics</h1>
 
@@ -475,11 +517,11 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-23">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p>The top level module exposing Grammar of Graphics functionality.</p>
 <p>For inner modules, check out <a href="grammarOfGraphics.html">grammarOfGraphics docs</a></p>
@@ -494,11 +536,11 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-24">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p> &#39;cv/grammarOfGraphics/step2_variables&#39;,
  &#39;cv/grammarOfGraphics/step3_algebra&#39;,
@@ -525,11 +567,11 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-25">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p>console.log printTree parser.parse testInput</p>
 
@@ -545,11 +587,11 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-26">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <h1>MarkIterator</h1>
 
@@ -558,11 +600,11 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-27">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <ul>
 <li><code>hasNext</code>: -&gt; Boolean</li>
@@ -575,11 +617,11 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-28">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <p>An API for Jaque Bertin&#39;s notion of visualization &quot;marks&quot;.</p>
 
@@ -595,11 +637,11 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-29">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p>p means properties</p>
 
@@ -618,11 +660,11 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-30">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p>Chainable property setter functions</p>
 
@@ -641,11 +683,11 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-31">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p>Functions that evaluate the mark</p>
 
@@ -682,11 +724,11 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-32">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <h1>Match</h1>
 
@@ -695,11 +737,11 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-33">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <p>This utility lets us approximate Haskell&#39;s 
 pattern matching syntax in CoffeeScript</p>
@@ -715,7 +757,8 @@ pattern matching syntax in CoffeeScript</p>
         fn.apply <span class="literal">null</span>, arguments
       <span class="keyword">else</span>
         <span class="keyword">throw</span> Error <span class="string">"""
-          no match for <span class="subst">#{fnName}</span>.<span class="subst">#{property}</span> = <span class="subst">#{key}</span>
+          no match for <span class="subst">#{fnName}</span>.<span class="subst">#{property}</span> = <span class="subst">#{key}</span>.
+          Object = <span class="subst">#{obj}</span>
         """</span>
 define [<span class="string">'jquery.csv'</span>, <span class="string">'cv/Variable'</span>], (csv, Variable) -&gt;
   (fileName, callback) -&gt;
@@ -737,11 +780,11 @@ define [<span class="string">'jquery.csv'</span>, <span class="string">'cv/Varia
         </li>
         
         
-        <li id="section-34">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <p>TODO if keyColumn specified then use it</p>
 

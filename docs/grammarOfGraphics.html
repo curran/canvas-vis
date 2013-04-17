@@ -121,6 +121,7 @@
              p arg, indent+<span class="string">'    '</span>
           ).join <span class="string">''</span>
         ].join <span class="string">''</span>
+      varset: (varset, indent) -&gt; indent+<span class="string">'&lt;varset&gt;'</span>
     p tree, <span class="string">''</span></pre></div></div>
             
         </li>
@@ -196,13 +197,70 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>define [<span class="string">'cv/match'</span>, <span class="string">'cv/grammarOfGraphics/printTree'</span>]
-     , (match, printTree) -&gt;
+            <div class="content"><div class='highlight'><pre>define [<span class="string">'cv/match'</span>, <span class="string">'cv/grammarOfGraphics/printTree'</span>, <span class="string">'cv/Varset'</span>]
+     , (match, printTree, Varset) -&gt;
   step2 = match <span class="string">'type'</span>, <span class="string">'step2'</span>,
-    <span class="string">'statements'</span>: (stmts, variables) -&gt;
-      (step2 stmt, variables <span class="keyword">for</span> stmt <span class="keyword">in</span> stmts.statements)
-    <span class="string">'data'</span>: (data) -&gt; data
-    <span class="string">'statement'</span>: (stmt) -&gt; stmt</pre></div></div>
+    <span class="string">'statements'</span>: (stmts, vars) -&gt;
+      type: <span class="string">'statements'</span>
+      statements: (step2 stmt, vars <span class="keyword">for</span> stmt <span class="keyword">in</span> stmts.statements)
+    <span class="string">'data'</span>: (data, vars) -&gt; data
+    <span class="string">'statement'</span>: match <span class="string">'statementType'</span>, <span class="string">'step2'</span>,
+      ELEMENT: (stmt, vars) -&gt; step2 stmt.expr, vars
+      TRANS: (stmt, vars) -&gt; stmt
+      SCALE: (stmt, vars) -&gt; stmt
+      COORD: (stmt, vars) -&gt; stmt
+      GUIDE: (stmt, vars) -&gt; stmt
+    <span class="string">'function'</span>: (fn, vars) -&gt;
+      type: <span class="string">'function'</span>
+      name: fn.name
+      args: (step2 arg, vars <span class="keyword">for</span> arg <span class="keyword">in</span> fn.args)
+    <span class="string">'cross'</span>: (cross, vars) -&gt;
+      left = step2 cross.left, vars
+      right = step2 cross.right, vars
+      Varset.cross left, right</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>return cross</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="string">'name'</span>: (name, vars) -&gt;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>TODO have step1 generate Varsets rather than Variables</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      Varset.fromVariable vars[name.name]</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>return name</p>
+
+            </div>
             
         </li>
         

@@ -59,6 +59,9 @@
               return _results;
             })()).join('')
           ].join('');
+        },
+        varset: function(varset, indent) {
+          return indent + '<varset>';
         }
       });
       return p(tree, '');

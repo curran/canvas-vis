@@ -11,5 +11,6 @@ define [], ->
         fn.apply null, arguments
       else
         throw Error """
-          no match for #{fnName}.#{property} = #{key}
+          no match for #{fnName}.#{property} = #{key}.
+          Object = #{obj}
         """

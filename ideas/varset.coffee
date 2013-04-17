@@ -1,13 +1,4 @@
 
-class Varset
-  constructor: ->
-    @_orderedKeys = []
-    @_keysToTuples = {}
-  insert: (key, tuple) ->
-    @_orderedKeys.push key
-    @_keysToTuples[key] = tuple
-  keys: -> @_orderedKeys
-  tuple: (key) -> @_keysToTuples[key]
 
 varsetIterator = (varset) ->
   i = 0

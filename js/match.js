@@ -12,7 +12,7 @@
         if (fn) {
           return fn.apply(null, arguments);
         } else {
-          throw Error("no match for " + fnName + "." + property + " = " + key);
+          throw Error("no match for " + fnName + "." + property + " = " + key + ".\nObject = " + obj);
         }
       };
     };

@@ -54,8 +54,20 @@ define( [
     it("should compute step 2: algebra", function(){
       var tree = parser.parse(testExpr);
       var variables = step1(tree, csvColumns);
-      console.log(printTree(tree));
       tree = step2(tree, variables);
+      var varset = _.last(tree.statements).args[0].args[0];
+      expect(varset.type).toEqual('varset');
+
+//      console.log(printTree(tree));
+//      window.varset = varset;
+
+      var key = Math.round(Math.random() * 50);
+      var petalLength = csvColumns['petal length'].value(key);
+      var sepalLength = csvColumns['sepal length'].value(key);
+      var tuple = varset.tuple(key);
+      expect(petalLength).toEqual(tuple[0]);
+      expect(sepalLength).toEqual(tuple[1]);
+
     });
   });
 });
