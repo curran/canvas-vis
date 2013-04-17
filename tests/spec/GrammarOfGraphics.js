@@ -3,11 +3,25 @@ define( [
   'cv/grammarOfGraphics',
   'cv/grammarOfGraphics/parser',
   'cv/grammarOfGraphics/printTree',
-  'cv/grammarOfGraphics/step1_variables'
-], function(readCSV, gg, parser, printTree, step1){
+  'cv/grammarOfGraphics/step1_variables',
+  'cv/grammarOfGraphics/step2_algebra'
+], function(readCSV, gg, parser, printTree, 
+   step1, step2){
+  var csvLoaded = false, csvColumns;
+  var testExpr = [
+    'DATA: x = "petal length"',
+    'DATA: y = "sepal length"',
+    'TRANS: x = x',
+    'TRANS: y = y',
+    'SCALE: linear(dim(1))',
+    'SCALE: linear(dim(2))',
+    'COORD: rect(dim(1, 2))',
+    'GUIDE: axis(dim(1))',
+    'GUIDE: axis(dim(2))',
+    'ELEMENT: point(position(x*y))',
+  ].join('\n');
   describe("Grammar of Graphics", function() {
     it("should compute step 1: variables", function(){
-      var csvLoaded = false, csvColumns;
 
       waitsFor(function() {
         return csvLoaded;
@@ -21,18 +35,6 @@ define( [
       runs( function(){
 //        var xVar = csvColumns['petal length'];
 //        var yVar = csvColumns['sepal length'];
-        var testExpr = [
-          'DATA: x = "petal length"',
-          'DATA: y = "sepal length"',
-          'TRANS: x = x',
-          'TRANS: y = y',
-          'SCALE: linear(dim(1))',
-          'SCALE: linear(dim(2))',
-          'COORD: rect(dim(1, 2))',
-          'GUIDE: axis(dim(1))',
-          'GUIDE: axis(dim(2))',
-          'ELEMENT: point(position(x*y))',
-        ].join('\n');
 
 //ELEMENT: point(position(pop1980))
 
@@ -48,6 +50,12 @@ define( [
         var variableVal = variables.x.value(key);
         expect(columnVal).toEqual(variableVal);
       });
+    });
+    it("should compute step 2: algebra", function(){
+      var tree = parser.parse(testExpr);
+      var variables = step1(tree, csvColumns);
+      console.log(printTree(tree));
+      tree = step2(tree, variables);
     });
   });
 });

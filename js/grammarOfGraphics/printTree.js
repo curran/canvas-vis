@@ -10,7 +10,7 @@
     return printTree = function(tree) {
       var p;
       p = match('type', 'printTree', {
-        'statements': function(statements, indent) {
+        statements: function(statements, indent) {
           var i, s, ss, _ref;
           _ref = [statements.statements, indent], ss = _ref[0], i = _ref[1];
           return line(i + 'statements') + ((function() {
@@ -23,26 +23,29 @@
             return _results;
           })()).join('');
         },
-        'statement': function(stmt, indent) {
+        statement: function(stmt, indent) {
           line(indent + 'statement: ' + stmt.statementType);
           return p(stmt.expr, indent + '  ');
         },
-        'name': function(name, indent) {
+        data: function(data, indent) {
+          return line(indent + ("statement: DATA " + data.newName + " = \"" + data.oldName + "\""));
+        },
+        name: function(name, indent) {
           return line(indent + 'name ' + name.name);
         },
-        'number': function(number, indent) {
+        number: function(number, indent) {
           return line(indent + 'number ' + number.value);
         },
-        'string': function(string, indent) {
+        string: function(string, indent) {
           return line(indent + 'string ' + string.value);
         },
-        'cross': function(cross, indent) {
+        cross: function(cross, indent) {
           return [line(indent + 'cross'), line(indent + '  left'), p(cross.left, indent + '    '), line(indent + '  right'), p(cross.right, indent + '    ')].join('');
         },
-        'assignment': function(assignment, indent) {
+        assignment: function(assignment, indent) {
           return [line(indent + 'assignment'), line(indent + '  left'), p(assignment.left, indent + '    '), line(indent + '  right'), p(assignment.right, indent + '    ')].join('');
         },
-        'function': function(fn, indent) {
+        "function": function(fn, indent) {
           var arg;
           return [
             line(indent + 'function ' + fn.name), line(indent + '  args:'), ((function() {

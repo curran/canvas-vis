@@ -6,20 +6,22 @@ define ['cv/match'], (match) ->
 # printTree(tree) -> String
   printTree = (tree) ->
     p = match 'type', 'printTree',
-      'statements': (statements, indent) ->
-        [ss, i] = [statements.statements, indent]
-        line(i+'statements')+
-          ((p s, i+'  ') for s in ss).join ''
-      'statement': (stmt, indent) ->
-        line indent+'statement: '+stmt.statementType
-        p stmt.expr, indent+'  '
-      'name': (name, indent) ->
-        line indent+'name '+name.name
-      'number': (number, indent) ->
-        line indent+'number '+number.value
-      'string': (string, indent) ->
-        line indent+'string '+string.value
-      'cross': (cross, indent) ->
+      statements: (statements, indent) ->
+       [ss, i] = [statements.statements, indent]
+       line(i+'statements')+
+         ((p s, i+'  ') for s in ss).join ''
+      statement: (stmt, indent) ->
+       line indent+'statement: '+stmt.statementType
+       p stmt.expr, indent+'  '
+      data: (data, indent) ->
+       line indent+"statement: DATA #{data.newName} = \"#{data.oldName}\""
+      name: (name, indent) ->
+       line indent+'name '+name.name
+      number: (number, indent) ->
+       line indent+'number '+number.value
+      string: (string, indent) ->
+       line indent+'string '+string.value
+      cross: (cross, indent) ->
         [
           (line indent+'cross'),
           (line indent+'  left'),
@@ -27,7 +29,7 @@ define ['cv/match'], (match) ->
           (line indent+'  right'),
           (p cross.right, indent+'    '),
         ].join ''
-      'assignment': (assignment, indent) ->
+      assignment: (assignment, indent) ->
         [
           (line indent+'assignment'),
           (line indent+'  left'),
@@ -35,7 +37,7 @@ define ['cv/match'], (match) ->
           (line indent+'  right'),
           (p assignment.right, indent+'    '),
         ].join ''
-      'function': (fn, indent) ->
+      function: (fn, indent) ->
         [
           (line indent+'function '+fn.name),
           (line indent+'  args:'),

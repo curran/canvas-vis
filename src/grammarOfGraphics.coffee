@@ -31,8 +31,6 @@ require [
   grammarOfGraphics = (variables, expression) ->
     tree = parser.parse expression
     variables = step1 tree, variables
-    printTree tree
     tree = step2 tree, variables
-    #printTree tree
 
   return grammarOfGraphics

@@ -9,7 +9,6 @@
       var tree;
       tree = parser.parse(expression);
       variables = step1(tree, variables);
-      printTree(tree);
       return tree = step2(tree, variables);
     };
     return grammarOfGraphics;

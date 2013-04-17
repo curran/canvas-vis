@@ -82,20 +82,22 @@
             
             <div class="content"><div class='highlight'><pre>  <span class="function"><span class="title">printTree</span></span> = (tree) -&gt;
     p = match <span class="string">'type'</span>, <span class="string">'printTree'</span>,
-      <span class="string">'statements'</span>: (statements, indent) -&gt;
-        [ss, i] = [statements.statements, indent]
-        line(i+<span class="string">'statements'</span>)+
-          ((p s, i+<span class="string">'  '</span>) <span class="keyword">for</span> s <span class="keyword">in</span> ss).join <span class="string">''</span>
-      <span class="string">'statement'</span>: (stmt, indent) -&gt;
-        line indent+<span class="string">'statement: '</span>+stmt.statementType
-        p stmt.expr, indent+<span class="string">'  '</span>
-      <span class="string">'name'</span>: (name, indent) -&gt;
-        line indent+<span class="string">'name '</span>+name.name
-      <span class="string">'number'</span>: (number, indent) -&gt;
-        line indent+<span class="string">'number '</span>+number.value
-      <span class="string">'string'</span>: (string, indent) -&gt;
-        line indent+<span class="string">'string '</span>+string.value
-      <span class="string">'cross'</span>: (cross, indent) -&gt;
+      statements: (statements, indent) -&gt;
+       [ss, i] = [statements.statements, indent]
+       line(i+<span class="string">'statements'</span>)+
+         ((p s, i+<span class="string">'  '</span>) <span class="keyword">for</span> s <span class="keyword">in</span> ss).join <span class="string">''</span>
+      statement: (stmt, indent) -&gt;
+       line indent+<span class="string">'statement: '</span>+stmt.statementType
+       p stmt.expr, indent+<span class="string">'  '</span>
+      data: (data, indent) -&gt;
+       line indent+<span class="string">"statement: DATA <span class="subst">#{data.newName}</span> = \"<span class="subst">#{data.oldName}</span>\""</span>
+      name: (name, indent) -&gt;
+       line indent+<span class="string">'name '</span>+name.name
+      number: (number, indent) -&gt;
+       line indent+<span class="string">'number '</span>+number.value
+      string: (string, indent) -&gt;
+       line indent+<span class="string">'string '</span>+string.value
+      cross: (cross, indent) -&gt;
         [
           (line indent+<span class="string">'cross'</span>),
           (line indent+<span class="string">'  left'</span>),
@@ -103,7 +105,7 @@
           (line indent+<span class="string">'  right'</span>),
           (p cross.right, indent+<span class="string">'    '</span>),
         ].join <span class="string">''</span>
-      <span class="string">'assignment'</span>: (assignment, indent) -&gt;
+      assignment: (assignment, indent) -&gt;
         [
           (line indent+<span class="string">'assignment'</span>),
           (line indent+<span class="string">'  left'</span>),
@@ -111,7 +113,7 @@
           (line indent+<span class="string">'  right'</span>),
           (p assignment.right, indent+<span class="string">'    '</span>),
         ].join <span class="string">''</span>
-      <span class="string">'function'</span>: (fn, indent) -&gt;
+      <span class="reserved">function</span>: (fn, indent) -&gt;
         [
           (line indent+<span class="string">'function '</span>+fn.name),
           (line indent+<span class="string">'  args:'</span>),
