@@ -1,13 +1,9 @@
-# step 1: variables
+# Step 1: Variables
 # =========
 #
 # The first step in Wilkinson's Grammar of Graphics pipeline.
 #
 # Evaluates all 'DATA' statements to extract named variables from the input relation.
-#
-# Here, Wilkinson's notion of a varset is represented using the Relation module.
-#
-# variables(tree, relation) -> Relation
 define ['cv/match', 'cv/grammarOfGraphics/printTree']
      , (match, printTree) ->
   dataStmts = []

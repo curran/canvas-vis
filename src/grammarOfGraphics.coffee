@@ -15,7 +15,7 @@ require [
 #  'cv/grammarOfGraphics/step7_coordinates',
 #  'cv/grammarOfGraphics/step8_aesthetics',
 #  'cv/grammarOfGraphics/step9_renderer'
-], (parser, printTree, variables) ->
+], (parser, printTree, step1) ->
   
   testInput = """
     DATA: response = response
@@ -28,8 +28,11 @@ require [
 
   #console.log printTree parser.parse testInput
 
-  grammarOfGraphics = (relation, expression) ->
+  grammarOfGraphics = (variables, expression) ->
     tree = parser.parse expression
-    vars = variables tree, relation
+    variables = step1 tree, variables
+    printTree tree
+    tree = step2 tree, variables
+    #printTree tree
 
   return grammarOfGraphics

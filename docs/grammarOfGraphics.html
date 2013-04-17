@@ -130,7 +130,7 @@
               <div class="pilwrap for-h1">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <h1>step 1: variables</h1>
+              <h1>Step 1: Variables</h1>
 
             </div>
             
@@ -145,8 +145,6 @@
               </div>
               <p>The first step in Wilkinson&#39;s Grammar of Graphics pipeline.</p>
 <p>Evaluates all &#39;DATA&#39; statements to extract named variables from the input relation.</p>
-<p>Here, Wilkinson&#39;s notion of a varset is represented using the Relation module.</p>
-<p>variables(tree, relation) -&gt; Relation</p>
 
             </div>
             
@@ -168,6 +166,41 @@
       <span class="keyword">return</span> variables
     <span class="string">'data'</span>: (data) -&gt; dataStmts.push data
     <span class="string">'statement'</span>: -&gt;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h1">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <h1>Step 2: Algebra</h1>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>The second step in Wilkinson&#39;s Grammar of Graphics pipeline.</p>
+<p>Evaluates all variables and expressions involving cross, nest, or blend.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>define [<span class="string">'cv/match'</span>, <span class="string">'cv/grammarOfGraphics/printTree'</span>]
+     , (match, printTree) -&gt;
+  step2 = match <span class="string">'type'</span>, <span class="string">'step2'</span>,
+    <span class="string">'statements'</span>: (stmts, variables) -&gt;
+      (step2 stmt, variables <span class="keyword">for</span> stmt <span class="keyword">in</span> stmts.statements)
+    <span class="string">'data'</span>: (data) -&gt; data
+    <span class="string">'statement'</span>: (stmt) -&gt; stmt</pre></div></div>
             
         </li>
         

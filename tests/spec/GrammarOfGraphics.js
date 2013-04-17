@@ -34,6 +34,8 @@ define( [
           'ELEMENT: point(position(x*y))',
         ].join('\n');
 
+//ELEMENT: point(position(pop1980))
+
         var tree = parser.parse(testExpr);
         var variables = step1(tree, csvColumns);
 

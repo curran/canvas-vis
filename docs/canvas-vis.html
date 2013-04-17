@@ -252,286 +252,7 @@ renders to a Canvas within the <code>bounds</code> rectangle.</li>
       <span class="property">@x</span> = rectangle.x
       <span class="property">@y</span> = rectangle.y
       <span class="property">@w</span> = rectangle.w
-      <span class="property">@h</span> = rectangle.h</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-13">
-            <div class="annotation">
-              
-              <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-13">&#182;</a>
-              </div>
-              <h1>Relation</h1>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-14">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
-              </div>
-              <p><a href="http://jsperf.com/relations">benchmark of object tuples vs. array tuples</a></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>define [<span class="string">'cv/expose'</span>], (expose) -&gt;
-  Relation = Backbone.Model.extend
-    initialize: -&gt;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
-              </div>
-              <ul>
-<li>attributes:Collection[Relation.Attribute]</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>      <span class="property">@attributes</span> = <span class="keyword">new</span> Backbone.Collection</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
-              </div>
-              <ul>
-<li>tuples:Collection[Relation.Tuple]</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>      <span class="property">@tuples</span>     = <span class="keyword">new</span> Backbone.Collection
-      
-      <span class="property">@attrCounter</span> = <span class="number">0</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
-              </div>
-              <ul>
-<li>addAttribute(name:String) -&gt; Attribute</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    addAttribute: (name) -&gt;
-      attribute = <span class="keyword">new</span> Attribute
-        name: name
-        index: <span class="property">@attrCounter</span>++
-      <span class="property">@attributes</span>.add attribute
-      <span class="keyword">return</span> attribute
-    attrByName: (name) -&gt;
-      <span class="property">@attributes</span>.find (attr) -&gt; attr.name == name</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
-              </div>
-              <ul>
-<li>addTuple(values:Array[Numbers or Strings]), 
-the order of values in the <code>values</code> array should
-correspond to the order that attributes were added.</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    addTuple:   (values) -&gt;
-      <span class="property">@tuples</span>.add <span class="keyword">new</span> Tuple {values}</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
-              </div>
-              <ul>
-<li>computeMinMax(), sets .min and .max on each Attribute</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    computeMinMax: -&gt;
-      <span class="property">@attributes</span>.each (attr) =&gt;
-        minTuple = <span class="property">@tuples</span>.min (tuple) -&gt; tuple.value attr
-        maxTuple = <span class="property">@tuples</span>.max (tuple) -&gt; tuple.value attr
-        <span class="keyword">if</span> minTuple != Infinity
-          attr.min = minTuple.value attr
-          attr.max = maxTuple.value attr</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
-              </div>
-              <ul>
-<li>select(test:f(tuple)-&gt;Boolean) -&gt; Relation,
-performs a relational algebra &#39;select&#39; operation</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    select: (test) -&gt;
-      newRelation = <span class="keyword">new</span> Relation
-      newRelation.attributes = <span class="property">@attributes</span>
-      newRelation.tuples.add <span class="property">@tuples</span>.filter test
-      <span class="keyword">return</span> newRelation</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-21">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
-              </div>
-              <ul>
-<li>project: (attributes:Array<Relation.Attribute>) -&gt; Relation,
-performs a relational algebra &#39;project&#39; operation</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    project: (attributes) -&gt;
-      newRelation = <span class="keyword">new</span> Relation
-      newRelation.attributes.add attributes
-      newRelation.tuples = <span class="property">@tuples</span>
-      <span class="keyword">return</span> newRelation</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-22">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
-              </div>
-              <ul>
-<li>renameAttributes: (oldName:String, newName:String) -&gt; Relation, returns a new relation with a single attribute renamed</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    renameAttribute: (oldName, newName) -&gt;
-      newRelation = <span class="keyword">new</span> Relation
-      <span class="property">@attributes</span>.each (attribute) -&gt;
-        <span class="keyword">if</span> attribute.name == oldName
-          newAttr = attribute.rename newName
-          newRelation.attributes.add newAttr
-        <span class="keyword">else</span>
-          newRelation.attributes.add attribute
-      newRelation.tuples = <span class="property">@tuples</span>
-      <span class="keyword">return</span> newRelation</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-23">
-            <div class="annotation">
-              
-              <div class="pilwrap for-h2">
-                <a class="pilcrow" href="#section-23">&#182;</a>
-              </div>
-              <h2>Relation.Tuple</h2>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-24">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
-              </div>
-              <ul>
-<li>values: an object mapping attribute names to their values.</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  Tuple = Backbone.Model.extend
-    initialize: -&gt; expose @, <span class="string">'values'</span>
-    value: (attr) -&gt; @.values[attr.index]</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-25">
-            <div class="annotation">
-              
-              <div class="pilwrap for-h2">
-                <a class="pilcrow" href="#section-25">&#182;</a>
-              </div>
-              <h2>Relation.Attribute</h2>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-26">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
-              </div>
-              <ul>
-<li><code>name</code>: String</li>
-<li><code>min</code>: Number</li>
-<li><code>max</code>: Number</li>
-<li><code>index</code>: Number</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  Attribute = Backbone.Model.extend
-    initialize: -&gt; expose @, <span class="string">'name'</span>, <span class="string">'min'</span>, <span class="string">'max'</span>, <span class="string">'index'</span>
-    rename: (newName) -&gt;
-      <span class="keyword">new</span> Attribute
-        name: newName
-        min: <span class="property">@min</span>
-        max: <span class="property">@max</span>
-        index: <span class="property">@index</span>
-
-  Relation.Attribute = Attribute
-  Relation.Tuple = Tuple
-  <span class="keyword">return</span> Relation
+      <span class="property">@h</span> = rectangle.h
 define [], -&gt;
   <span class="class"><span class="keyword">class</span> <span class="title">Variable</span></span>
     constructor: -&gt;
@@ -545,11 +266,11 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-27">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
               <h1>Viewport</h1>
 
@@ -558,11 +279,11 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-28">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <ul>
 <li>src: Rectangle</li>
@@ -592,11 +313,11 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-29">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <h1>ViewportContainer</h1>
 
@@ -605,11 +326,11 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-30">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <p>TODO replace this code with newer version from <code>all.coffee</code></p>
 
@@ -638,11 +359,11 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-31">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <h1>bindToCanvas</h1>
 
@@ -651,11 +372,11 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-32">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p>Binds a Component to a Canvas.</p>
 <p>The component is re-rendered on the Canvas whenever it fires a &#39;graphicsDirty&#39; event.</p>
@@ -692,11 +413,11 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-33">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <h1>expose</h1>
 
@@ -705,11 +426,11 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-34">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>Exposes properties of Backbone models using JS setters and getters.</p>
 
@@ -724,11 +445,11 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-35">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <pre><code> if !(model.get p) then throw Error &quot;&quot;&quot;
    Missing expected property &#39;#{p}&#39; &quot;&quot;&quot;</code></pre>
@@ -741,11 +462,11 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-36">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <h1>grammarOfGraphics</h1>
 
@@ -754,11 +475,11 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-37">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p>The top level module exposing Grammar of Graphics functionality.</p>
 <p>For inner modules, check out <a href="grammarOfGraphics.html">grammarOfGraphics docs</a></p>
@@ -773,11 +494,11 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-38">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p> &#39;cv/grammarOfGraphics/step2_variables&#39;,
  &#39;cv/grammarOfGraphics/step3_algebra&#39;,
@@ -790,7 +511,7 @@ define [], -&gt;
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>], (parser, printTree, variables) -&gt;
+            <div class="content"><div class='highlight'><pre>], (parser, printTree, step1) -&gt;
   
   testInput = <span class="string">"""
     DATA: response = response
@@ -804,30 +525,45 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-39">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p>console.log printTree parser.parse testInput</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="function"><span class="title">grammarOfGraphics</span></span> = (relation, expression) -&gt;
+            <div class="content"><div class='highlight'><pre>  <span class="function"><span class="title">grammarOfGraphics</span></span> = (variables, expression) -&gt;
     tree = parser.parse expression
-    vars = variables tree, relation
-
-  <span class="keyword">return</span> grammarOfGraphics</pre></div></div>
+    variables = step1 tree, variables
+    printTree tree
+    tree = step2 tree, variables</pre></div></div>
             
         </li>
         
         
-        <li id="section-40">
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>printTree tree</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">return</span> grammarOfGraphics</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <h1>MarkIterator</h1>
 
@@ -836,11 +572,11 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-41">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <ul>
 <li><code>hasNext</code>: -&gt; Boolean</li>
@@ -853,11 +589,11 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-42">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <p>An API for Jaque Bertin&#39;s notion of visualization &quot;marks&quot;.</p>
 
@@ -873,11 +609,11 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-43">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p>p means properties</p>
 
@@ -896,11 +632,11 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-44">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p>Chainable property setter functions</p>
 
@@ -919,11 +655,11 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-45">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p>Functions that evaluate the mark</p>
 
@@ -960,11 +696,11 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-46">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-46">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <h1>Match</h1>
 
@@ -973,11 +709,11 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-47">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <p>This utility lets us approximate Haskell&#39;s 
 pattern matching syntax in CoffeeScript</p>
@@ -1015,11 +751,11 @@ define [<span class="string">'jquery.csv'</span>, <span class="string">'cv/Varia
         </li>
         
         
-        <li id="section-48">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-48">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <p>TODO if keyColumn specified then use it</p>
 
