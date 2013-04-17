@@ -55,7 +55,7 @@ define( [
       var tree = parser.parse(testExpr);
       var variables = step1(tree, csvColumns);
       tree = step2(tree, variables);
-      var varset = _.last(tree.statements).args[0].args[0];
+      var varset = _.last(tree.statements).expr.args[0].args[0];
       expect(varset.type).toEqual('varset');
 
 // For debugging:

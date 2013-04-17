@@ -8,6 +8,7 @@
       tree = parser.parse(expression);
       variables = step1(tree, variables);
       tree = step2(tree, variables);
+      console.dir(step3(tree, variables));
       return tree;
     };
   });

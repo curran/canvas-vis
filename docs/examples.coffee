@@ -89,7 +89,6 @@ require ['cv/Component', 'cv/bindToCanvas', 'cv/readCSV',
     tree = grammarOfGraphics variables, expr
 
 #TODO this is a hack
-    window.tree = tree
     varset = _.last(tree.statements).expr.args[0].args[0]
     window.varset = varset
 

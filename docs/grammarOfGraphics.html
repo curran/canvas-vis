@@ -286,7 +286,6 @@
      , (match, printTree, Varset) -&gt;
   step3 = match <span class="string">'type'</span>, <span class="string">'step3'</span>,
     <span class="string">'statements'</span>: (stmts) -&gt;
-      console.dir stmts.statements
       scales = (step3 stmt <span class="keyword">for</span> stmt <span class="keyword">in</span> stmts.statements)
       _.extend.apply <span class="literal">null</span>, scales</pre></div></div>
             
@@ -307,7 +306,7 @@
     <span class="string">'statement'</span>: match <span class="string">'statementType'</span>, <span class="string">'step3.statement'</span>,
       ELEMENT: (stmt) -&gt; {}
       TRANS: (stmt) -&gt; {}
-      SCALE: (stmt) -&gt; {}<span class="comment">#step3 stmt.expr</span>
+      SCALE: (stmt) -&gt; step3 stmt.expr
       COORD: (stmt) -&gt; {}
       GUIDE: (stmt) -&gt; {}
     <span class="string">'function'</span>: match <span class="string">'name'</span>, <span class="string">'step3.function'</span>,
@@ -316,7 +315,7 @@
           <span class="keyword">throw</span> Error <span class="string">'linear() expects one argument'</span>
         dim = step3 fn.args[<span class="number">0</span>]
         result = {}
-        result[dim] = <span class="string">'linear'</span>
+        result[dim] = type: <span class="string">'linear'</span>
         result
       <span class="string">'dim'</span>: (fn) -&gt;
         <span class="keyword">if</span> fn.args.length != <span class="number">1</span>

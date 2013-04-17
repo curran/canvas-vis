@@ -20,5 +20,5 @@ define [
     variables = step1 tree, variables
     tree = step2 tree, variables
     #console.log printTree tree
-    #console.dir (step3 tree, variables)
+    console.dir (step3 tree, variables)
     return tree
