@@ -3,24 +3,33 @@
 (function() {
 
   require(['cv/Component', 'cv/bindToCanvas', 'cv/readCSV', 'cv/Viewport', 'cv/Rectangle', 'cv/mark'], function(Component, bindToCanvas, readCSV, Viewport, Rectangle, mark) {
-    return readCSV('../data/iris.csv', function(err, relation) {
-      var ScatterPlot, viewport, xAttr, yAttr;
+    return readCSV('../data/iris.csv', function(err, variables) {
+      var ScatterPlot, viewport, xMax, xMin, xVar, yMax, yMin, yVar;
+      xVar = variables['petal length'];
+      yVar = variables['sepal length'];
       ScatterPlot = Component.extend({
         paint: function(ctx, bounds) {
+          var key, keys, _i, _len, _results;
           viewport.dest.copy(bounds);
-          return relation.tuples.each(function(tuple) {
-            return mark().x(tuple.value(xAttr)).y(tuple.value(yAttr)).size(0.1).fillStyle('rgba(0,0,0,0.2)').render(ctx, viewport);
-          });
+          keys = xVar.keys();
+          _results = [];
+          for (_i = 0, _len = keys.length; _i < _len; _i++) {
+            key = keys[_i];
+            _results.push(mark().x(xVar.value(key)).y(yVar.value(key)).size(0.1).fillStyle('rgba(0,0,0,0.2)').render(ctx, viewport));
+          }
+          return _results;
         }
       });
-      xAttr = relation.attributes.at(0);
-      yAttr = relation.attributes.at(1);
+      xMin = _.min(xVar.values());
+      xMax = _.max(xVar.values());
+      yMin = _.min(yVar.values());
+      yMax = _.max(yVar.values());
       viewport = new Viewport({
         src: new Rectangle({
-          x: xAttr.min,
-          y: yAttr.min,
-          w: xAttr.max - xAttr.min,
-          h: yAttr.max - yAttr.min
+          x: xMin,
+          y: yMin,
+          w: xMax - xMin,
+          h: yMax - yMin
         }),
         dest: new Rectangle
       });

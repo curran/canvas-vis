@@ -131,28 +131,33 @@
       , (Component, bindToCanvas, readCSV,
          Viewport, Rectangle, mark) -&gt;
 
-  readCSV <span class="string">'../data/iris.csv'</span>, (err, relation) -&gt;
+  readCSV <span class="string">'../data/iris.csv'</span>, (err, variables) -&gt;
+    xVar = variables[<span class="string">'petal length'</span>]
+    yVar = variables[<span class="string">'sepal length'</span>]
 
     ScatterPlot = Component.extend
       paint: (ctx, bounds) -&gt;
         viewport.dest.copy bounds
-        relation.tuples.each (tuple) -&gt;
+        keys = xVar.keys()
+        <span class="keyword">for</span> key <span class="keyword">in</span> keys
           mark()
-            .x(tuple.value xAttr)
-            .y(tuple.value yAttr)
+            .x(xVar.value key)
+            .y(yVar.value key)
             .size(<span class="number">0.1</span>)
             .fillStyle(<span class="string">'rgba(0,0,0,0.2)'</span>)
             .render ctx, viewport
 
-    xAttr = relation.attributes.at <span class="number">0</span>
-    yAttr = relation.attributes.at <span class="number">1</span>
+    xMin = _.min xVar.values()
+    xMax = _.max xVar.values()
+    yMin = _.min yVar.values()
+    yMax = _.max yVar.values()
 
     viewport = <span class="keyword">new</span> Viewport
       src: <span class="keyword">new</span> Rectangle
-        x: xAttr.min
-        y: yAttr.min
-        w: xAttr.max - xAttr.min
-        h: yAttr.max - yAttr.min
+        x: xMin
+        y: yMin
+        w: xMax - xMin
+        h: yMax - yMin
       dest: <span class="keyword">new</span> Rectangle
 
     bindToCanvas <span class="string">'scatterPlot'</span>, <span class="keyword">new</span> ScatterPlot

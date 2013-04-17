@@ -34,28 +34,33 @@ require ['cv/Component', 'cv/bindToCanvas', 'cv/readCSV',
       , (Component, bindToCanvas, readCSV,
          Viewport, Rectangle, mark) ->
 
-  readCSV '../data/iris.csv', (err, relation) ->
+  readCSV '../data/iris.csv', (err, variables) ->
+    xVar = variables['petal length']
+    yVar = variables['sepal length']
 
     ScatterPlot = Component.extend
       paint: (ctx, bounds) ->
         viewport.dest.copy bounds
-        relation.tuples.each (tuple) ->
+        keys = xVar.keys()
+        for key in keys
           mark()
-            .x(tuple.value xAttr)
-            .y(tuple.value yAttr)
+            .x(xVar.value key)
+            .y(yVar.value key)
             .size(0.1)
             .fillStyle('rgba(0,0,0,0.2)')
             .render ctx, viewport
 
-    xAttr = relation.attributes.at 0
-    yAttr = relation.attributes.at 1
+    xMin = _.min xVar.values()
+    xMax = _.max xVar.values()
+    yMin = _.min yVar.values()
+    yMax = _.max yVar.values()
 
     viewport = new Viewport
       src: new Rectangle
-        x: xAttr.min
-        y: yAttr.min
-        w: xAttr.max - xAttr.min
-        h: yAttr.max - yAttr.min
+        x: xMin
+        y: yMin
+        w: xMax - xMin
+        h: yMax - yMin
       dest: new Rectangle
 
     bindToCanvas 'scatterPlot', new ScatterPlot

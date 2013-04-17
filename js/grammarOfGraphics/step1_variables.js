@@ -5,7 +5,7 @@
   define(['cv/match', 'cv/grammarOfGraphics/printTree'], function(match, printTree) {
     var dataStmts, variables;
     dataStmts = [];
-    variables = match('type', 'variables', {
+    return variables = match('type', 'variables', {
       'statements': function(stmts, relation) {
         var a, attr, attrsToProject, b, d, dataStmt, stmt, _i, _j, _k, _len, _len1, _len2, _ref;
         dataStmts = [];
@@ -33,7 +33,6 @@
       },
       'statement': function() {}
     });
-    return variables;
   });
 
 }).call(this);

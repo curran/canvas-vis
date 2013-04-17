@@ -11,7 +11,7 @@
 define ['cv/match', 'cv/grammarOfGraphics/printTree']
      , (match, printTree) ->
   dataStmts = []
-  match 'type', 'variables',
+  variables = match 'type', 'variables',
     'statements': (stmts, relation) ->
 
       dataStmts = []

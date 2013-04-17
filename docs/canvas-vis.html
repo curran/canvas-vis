@@ -531,7 +531,16 @@ performs a relational algebra &#39;project&#39; operation</li>
 
   Relation.Attribute = Attribute
   Relation.Tuple = Tuple
-  <span class="keyword">return</span> Relation</pre></div></div>
+  <span class="keyword">return</span> Relation
+define [], -&gt;
+  <span class="class"><span class="keyword">class</span> <span class="title">Variable</span></span>
+    constructor: -&gt;
+      <span class="property">@_keysToValues</span> = {}
+    addEntry: (key, value) -&gt;
+      <span class="property">@_keysToValues</span>[key] = value
+    keys: -&gt; _.keys <span class="property">@_keysToValues</span>
+    values: -&gt; _.values <span class="property">@_keysToValues</span>
+    value: (key) -&gt; <span class="property">@_keysToValues</span>[key]</pre></div></div>
             
         </li>
         
@@ -986,19 +995,59 @@ pattern matching syntax in CoffeeScript</p>
         <span class="keyword">throw</span> Error <span class="string">"""
           no match for <span class="subst">#{fnName}</span>.<span class="subst">#{property}</span> = <span class="subst">#{key}</span>
         """</span>
-define [<span class="string">'jquery.csv'</span>, <span class="string">'cv/Relation'</span>], (csv, Relation) -&gt;
+define [<span class="string">'jquery.csv'</span>, <span class="string">'cv/Variable'</span>], (csv, Variable) -&gt;
   (fileName, callback) -&gt;
     $.get fileName, (data) -&gt;
       table = $.csv.toArrays data
-      attrNames = _.first table
+      columnNames = _.first table
+      m = columnNames.length
       tuples = _.rest table
+      key = <span class="number">0</span>
 
-      relation = <span class="keyword">new</span> Relation
-      relation.addAttribute name <span class="keyword">for</span> name <span class="keyword">in</span> attrNames
-      relation.addTuple tuple <span class="keyword">for</span> tuple <span class="keyword">in</span> tuples
-      relation.computeMinMax()
+      variables = {}
+      variablesArr = []
+      key = <span class="number">0</span>
+      <span class="keyword">for</span> name <span class="keyword">in</span> columnNames
+        variablesArr.push( variables[name] = <span class="keyword">new</span> Variable )
+      <span class="keyword">for</span> tuple <span class="keyword">in</span> tuples
+        <span class="keyword">for</span> i <span class="keyword">in</span> [<span class="number">0.</span>..m]</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-48">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-48">&#182;</a>
+              </div>
+              <p>TODO if keyColumn specified then use it</p>
 
-      callback <span class="literal">null</span>, relation</pre></div></div>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          variable = variablesArr[i]
+          variable.addEntry key, tuple[i]
+        key++
+
+      callback <span class="literal">null</span>, variables</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-49">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-49">&#182;</a>
+              </div>
+              <pre><code> relation = new Relation
+ relation.addAttribute name for name in attrNames
+ relation.addTuple tuple for tuple in tuples
+ relation.computeMinMax()
+
+ callback null, relation</code></pre>
+
+            </div>
             
         </li>
         
