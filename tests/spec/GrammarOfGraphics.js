@@ -58,6 +58,7 @@ define( [
       var varset = _.last(tree.statements).args[0].args[0];
       expect(varset.type).toEqual('varset');
 
+// For debugging:
 //      console.log(printTree(tree));
 //      window.varset = varset;
 
