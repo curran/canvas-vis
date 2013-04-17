@@ -20,10 +20,3 @@ define ['jquery.csv', 'cv/Variable'], (csv, Variable) ->
         key++
 
       callback null, variables
-
-#      relation = new Relation
-#      relation.addAttribute name for name in attrNames
-#      relation.addTuple tuple for tuple in tuples
-#      relation.computeMinMax()
-#
-#      callback null, relation
