@@ -11,22 +11,18 @@
 define ['cv/match', 'cv/grammarOfGraphics/printTree']
      , (match, printTree) ->
   dataStmts = []
-  variables = match 'type', 'variables',
-    'statements': (stmts, relation) ->
+  step1 = match 'type', 'step1',
+    'statements': (stmts, variables) ->
 
       dataStmts = []
-      variables stmt for stmt in stmts.statements
+      step1 stmt for stmt in stmts.statements
 
       for dataStmt in dataStmts
-        a = dataStmt.oldName
-        b = dataStmt.newName
-        relation = relation.renameAttribute a, b
+        oldName = dataStmt.oldName
+        newName = dataStmt.newName
 
-      attrsToProject = []
-      for d in dataStmts
-        attr = relation.attrByName d.newName
-        attrsToProject.push attr
+        variables[newName] = variables[oldName]
 
-      return relation.project attrsToProject
+      return variables
     'data': (data) -> dataStmts.push data
     'statement': ->

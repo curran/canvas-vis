@@ -153,23 +153,19 @@
             <div class="content"><div class='highlight'><pre>define [<span class="string">'cv/match'</span>, <span class="string">'cv/grammarOfGraphics/printTree'</span>]
      , (match, printTree) -&gt;
   dataStmts = []
-  variables = match <span class="string">'type'</span>, <span class="string">'variables'</span>,
-    <span class="string">'statements'</span>: (stmts, relation) -&gt;
+  step1 = match <span class="string">'type'</span>, <span class="string">'step1'</span>,
+    <span class="string">'statements'</span>: (stmts, variables) -&gt;
 
       dataStmts = []
-      variables stmt <span class="keyword">for</span> stmt <span class="keyword">in</span> stmts.statements
+      step1 stmt <span class="keyword">for</span> stmt <span class="keyword">in</span> stmts.statements
 
       <span class="keyword">for</span> dataStmt <span class="keyword">in</span> dataStmts
-        a = dataStmt.oldName
-        b = dataStmt.newName
-        relation = relation.renameAttribute a, b
+        oldName = dataStmt.oldName
+        newName = dataStmt.newName
 
-      attrsToProject = []
-      <span class="keyword">for</span> d <span class="keyword">in</span> dataStmts
-        attr = relation.attrByName d.newName
-        attrsToProject.push attr
+        variables[newName] = variables[oldName]
 
-      <span class="keyword">return</span> relation.project attrsToProject
+      <span class="keyword">return</span> variables
     <span class="string">'data'</span>: (data) -&gt; dataStmts.push data
     <span class="string">'statement'</span>: -&gt;</pre></div></div>
             

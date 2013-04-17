@@ -3,30 +3,24 @@
 (function() {
 
   define(['cv/match', 'cv/grammarOfGraphics/printTree'], function(match, printTree) {
-    var dataStmts, variables;
+    var dataStmts, step1;
     dataStmts = [];
-    return variables = match('type', 'variables', {
-      'statements': function(stmts, relation) {
-        var a, attr, attrsToProject, b, d, dataStmt, stmt, _i, _j, _k, _len, _len1, _len2, _ref;
+    return step1 = match('type', 'step1', {
+      'statements': function(stmts, variables) {
+        var dataStmt, newName, oldName, stmt, _i, _j, _len, _len1, _ref;
         dataStmts = [];
         _ref = stmts.statements;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           stmt = _ref[_i];
-          variables(stmt);
+          step1(stmt);
         }
         for (_j = 0, _len1 = dataStmts.length; _j < _len1; _j++) {
           dataStmt = dataStmts[_j];
-          a = dataStmt.oldName;
-          b = dataStmt.newName;
-          relation = relation.renameAttribute(a, b);
+          oldName = dataStmt.oldName;
+          newName = dataStmt.newName;
+          variables[newName] = variables[oldName];
         }
-        attrsToProject = [];
-        for (_k = 0, _len2 = dataStmts.length; _k < _len2; _k++) {
-          d = dataStmts[_k];
-          attr = relation.attrByName(d.newName);
-          attrsToProject.push(attr);
-        }
-        return relation.project(attrsToProject);
+        return variables;
       },
       'data': function(data) {
         return dataStmts.push(data);
