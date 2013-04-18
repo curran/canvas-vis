@@ -122,48 +122,33 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>require [<span class="string">'cv/Component'</span>, <span class="string">'cv/bindToCanvas'</span>, <span class="string">'cv/readCSV'</span>,
-         <span class="string">'cv/Viewport'</span>, <span class="string">'cv/Rectangle'</span>, <span class="string">'cv/Varset'</span>, <span class="string">'cv/mark'</span>]
+         <span class="string">'cv/Viewport'</span>, <span class="string">'cv/Rectangle'</span>, <span class="string">'cv/Varset'</span>, <span class="string">'cv/Scale'</span>, <span class="string">'cv/mark'</span>]
       , (Component, bindToCanvas, readCSV,
-         Viewport, Rectangle, Varset, mark) -&gt;
+         Viewport, Rectangle, Varset, Scale, mark) -&gt;
 
   readCSV <span class="string">'../data/iris.csv'</span>, (err, columns) -&gt;
     xVar = Varset.fromVariable columns[<span class="string">'petal length'</span>]
     yVar = Varset.fromVariable columns[<span class="string">'sepal length'</span>]
     varset = Varset.cross xVar, yVar
 
-    xs = _.map varset.tuples(), (tuple) -&gt; tuple[<span class="number">0</span>]
-    ys = _.map varset.tuples(), (tuple) -&gt; tuple[<span class="number">1</span>]
-
-    xMin = _.min xs
-    xMax = _.max xs
-    yMin = _.min ys
-    yMax = _.max ys
-    
-    scales = []
-    scales.push
-      dim: <span class="number">1</span>
-      min: xMin
-      max: xMax
-    scales.push
-      dim: <span class="number">2</span>
-      min: yMin
-      max: yMax
-
-    <span class="keyword">for</span> scale <span class="keyword">in</span> scales
-      _.extend scale,
-        value: (tuple) -&gt;
-          (tuple[<span class="property">@dim</span>-<span class="number">1</span>] - <span class="property">@min</span>)/(<span class="property">@max</span> - <span class="property">@min</span>)
+    scales = [<span class="keyword">new</span> Scale(<span class="number">1</span>), <span class="keyword">new</span> Scale(<span class="number">2</span>)]
+    scale.init varset <span class="keyword">for</span> scale <span class="keyword">in</span> scales
 
     ScatterPlot = Component.extend
       paint: (ctx, bounds) -&gt;
         viewport.dest.copy bounds
         <span class="keyword">for</span> tuple <span class="keyword">in</span> varset.tuples()
-          mark()
-            .x(scales[<span class="number">0</span>].value tuple)
-            .y(scales[<span class="number">1</span>].value tuple)
-            .size(<span class="number">0.1</span>)
-            .fillStyle(<span class="string">'rgba(0,0,0,0.2)'</span>)
-            .render ctx, viewport
+          (point position tuple).render ctx, viewport
+
+    <span class="function"><span class="title">position</span></span> = (tuple) -&gt;
+      mark()
+        .x(scales[<span class="number">0</span>].value tuple)
+        .y(scales[<span class="number">1</span>].value tuple)
+
+    <span class="function"><span class="title">point</span></span> = (mark) -&gt;
+      mark.size(<span class="number">0.05</span>)
+          .shape(<span class="string">'circle'</span>)
+          .fillStyle(<span class="string">'rgba(0,0,0,0.2)'</span>)
 
     viewport = <span class="keyword">new</span> Viewport
 

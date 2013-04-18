@@ -75,6 +75,23 @@
           viewport.srcToDestRect(p.bounds, destRect);
           return ctx.fillRect(destRect.x, destRect.y, destRect.w, destRect.h);
         }
+      },
+      circle: {
+        bounds: function() {
+          return p.bounds.clone();
+        },
+        render: function(ctx, viewport) {
+          var r, x, y;
+          ctx.fillStyle = p.fillStyle;
+          viewport.srcToDestRect(p.bounds, destRect);
+          x = destRect.x + destRect.w / 2;
+          y = destRect.y + destRect.h / 2;
+          r = (destRect.w + destRect.h) / 4;
+          ctx.beginPath();
+          ctx.arc(x, y, r, 0, 2 * Math.PI);
+          ctx.fill();
+          return ctx.closePath();
+        }
       }
     };
     destRect = new Point;

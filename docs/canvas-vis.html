@@ -253,6 +253,31 @@ renders to a Canvas within the <code>bounds</code> rectangle.</li>
       <span class="property">@w</span> = rectangle.w
       <span class="property">@h</span> = rectangle.h
 define [], -&gt;
+  <span class="class"><span class="keyword">class</span> <span class="title">Scale</span></span>
+    constructor: (<span class="property">@dim</span>, <span class="property">@min</span> = <span class="literal">undefined</span>, <span class="property">@max</span> = <span class="literal">undefined</span>) -&gt;
+    init: (varset) -&gt;
+      i = <span class="property">@dim</span> - <span class="number">1</span>
+      <span class="keyword">if</span> <span class="property">@min</span> == <span class="literal">undefined</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>TODO avoid creating new arrays to compute min and max</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="property">@min</span> = _.min (_.map varset.tuples(), (tuple) -&gt; tuple[i])
+      <span class="keyword">if</span> <span class="property">@max</span> == <span class="literal">undefined</span>
+        <span class="property">@max</span> = _.max (_.map varset.tuples(), (tuple) -&gt; tuple[i])
+    value: (tuple) -&gt;
+      (tuple[<span class="property">@dim</span>-<span class="number">1</span>] - <span class="property">@min</span>)/(<span class="property">@max</span> - <span class="property">@min</span>)
+define [], -&gt;
   <span class="class"><span class="keyword">class</span> <span class="title">Variable</span></span>
     constructor: -&gt;
       <span class="property">@_keysToValues</span> = {}
@@ -279,11 +304,11 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-13">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <p>   iterator: -&gt;
      i = 0
@@ -307,11 +332,11 @@ define [], -&gt;
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <p>cross(Varset a, Varset b)
 TODO handle missing data</p>
@@ -331,11 +356,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <h1>Viewport</h1>
 
@@ -344,11 +369,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <ul>
 <li>src: Rectangle</li>
@@ -381,11 +406,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <h1>ViewportContainer</h1>
 
@@ -394,11 +419,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>TODO replace this code with newer version from <code>all.coffee</code></p>
 
@@ -427,11 +452,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <h1>bindToCanvas</h1>
 
@@ -440,11 +465,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>Binds a Component to a Canvas.</p>
 <p>The component is re-rendered on the Canvas whenever it fires a &#39;graphicsDirty&#39; event.</p>
@@ -481,11 +506,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-21">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <h1>expose</h1>
 
@@ -494,11 +519,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-22">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p>Exposes properties of Backbone models using JS setters and getters.</p>
 
@@ -513,11 +538,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-23">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <pre><code> if !(model.get p) then throw Error &quot;&quot;&quot;
    Missing expected property &#39;#{p}&#39; &quot;&quot;&quot;</code></pre>
@@ -530,11 +555,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-24">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <h1>grammarOfGraphics</h1>
 
@@ -543,11 +568,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-25">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p>The top level module exposing Grammar of Graphics functionality.</p>
 <p>For inner modules, check out <a href="grammarOfGraphics.html">grammarOfGraphics docs</a></p>
@@ -568,11 +593,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-26">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap for-h2">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <h2>variables</h2>
 
@@ -581,11 +606,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-27">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p>Extracts named variables from DATA expressions</p>
 
@@ -600,11 +625,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-28">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap for-h2">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <h2>algebra</h2>
 
@@ -613,11 +638,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-29">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p>Replaces graphics algebra expressions with varsets in the syntax tree.</p>
 
@@ -650,11 +675,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-30">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p>TODO have variables generate Varsets rather than Variables</p>
 
@@ -665,11 +690,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-31">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap for-h2">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <h2>scales</h2>
 
@@ -678,11 +703,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-32">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <p>Extracts scales from SCALE statements</p>
 
@@ -706,11 +731,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-33">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap for-h2">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <h2>show</h2>
 
@@ -719,11 +744,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-34">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <p>Renders an abstract syntax tree as an expression string</p>
 
@@ -746,11 +771,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-35">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <h1>MarkIterator</h1>
 
@@ -759,11 +784,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-36">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <ul>
 <li><code>hasNext</code>: -&gt; Boolean</li>
@@ -776,11 +801,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-37">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <p>An API for Jaque Bertin&#39;s notion of visualization &quot;marks&quot;.</p>
 
@@ -796,11 +821,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-38">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <p>p means properties</p>
 
@@ -819,11 +844,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-39">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <p>Chainable property setter functions</p>
 
@@ -842,11 +867,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-40">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <p>Functions that evaluate the mark</p>
 
@@ -875,6 +900,18 @@ TODO handle missing data</p>
           destRect.w,
           destRect.h
         )
+    circle:
+      bounds: -&gt; p.bounds.clone()
+      render: (ctx, viewport) -&gt;
+        ctx.fillStyle = p.fillStyle
+        viewport.srcToDestRect p.bounds, destRect
+        x = destRect.x + destRect.w/<span class="number">2</span>
+        y = destRect.y + destRect.h/<span class="number">2</span>
+        r = (destRect.w + destRect.h)/<span class="number">4</span>
+        ctx.beginPath()
+        ctx.arc x, y, r, <span class="number">0</span>, <span class="number">2</span>*Math.PI
+        ctx.fill()
+        ctx.closePath()
 
   destRect = <span class="keyword">new</span> Point
 
@@ -883,11 +920,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-41">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+                <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
               <h1>Match</h1>
 
@@ -896,11 +933,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-42">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+                <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
               <p>This utility lets us approximate Haskell&#39;s 
 pattern matching syntax in CoffeeScript</p>
@@ -939,11 +976,11 @@ define [<span class="string">'jquery.csv'</span>, <span class="string">'cv/Varia
         </li>
         
         
-        <li id="section-43">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+                <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
               <p>TODO if keyColumn specified then use it</p>
 
