@@ -2,16 +2,20 @@
 #=================
 #
 # The module exposing Grammar of Graphics functionality.
-define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset']
-     , (parser, match, Varset) ->
+define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset', 'cv/Scale']
+     , (parser, match, Varset, Scale) ->
 
   execute = (columns, expression) ->
     tree = parser.parse expression
     vars = variables tree, columns
+
+#    [tree, varsets] = algebra tree, vars
     tree = algebra tree, vars
-    scaleObjects = scales tree
-    renderKey = renderer tree, scaleObjects
-    console.log scaleObjects
+#`scales`:Map<dim, Scale>
+    scales = extractScales tree
+    
+    renderKey = renderer tree
+    console.log scales
     return tree
 
   # variables
@@ -51,23 +55,21 @@ define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset']
     'name': (name, vars) ->
       Varset.fromVariable vars[name.name]
 
-  # scales
+  # extractScales
   # ------
   # Extracts scales from SCALE statements
-  scales = match 'type',
+  extractScales = match 'type',
     'statements': (stmts) ->
-      _.filter (scales stmt for stmt in stmts.statements), _.identity
+      _.filter (extractScales stmt for stmt in stmts.statements), _.identity
     'data': (t) ->
-    'statement': (t) -> if t.statementType == 'SCALE' then scales t.expr
+    'statement': (t) ->
+      if t.statementType == 'SCALE'
+        extractScales t.expr
     'function': match 'name',
       'linear': (fn) ->
-        scaleObj = type:'linear'
-        scales arg, scaleObj for arg in fn.args
-        scaleObj
-      'dim': (fn, obj) ->
-        if fn.args.length != 1 then throw Error 'dim() expects one argument'
-        if fn.args[0].type != 'number' then throw Error 'dim() expects a numeric argument'
-        obj.dim = fn.args[0].value
+        dim = fn.args[0].args[0].value
+        console.log 'dim = '+dim
+        new Scale dim
 
   # renderer
   # --------
@@ -120,4 +122,4 @@ define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset']
     function: (t) -> "#{t.name}(#{(show a for a in t.args).join ','})"
     varset: (t) -> '<varset>'
 
-  {execute, variables, algebra, scales, show}
+  {execute, variables, algebra, extractScales, show}

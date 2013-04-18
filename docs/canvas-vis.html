@@ -578,17 +578,12 @@ TODO handle missing data</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>define [ <span class="string">'cv/grammarOfGraphics/parser'</span>, <span class="string">'cv/match'</span>, <span class="string">'cv/Varset'</span>]
-     , (parser, match, Varset) -&gt;
+            <div class="content"><div class='highlight'><pre>define [ <span class="string">'cv/grammarOfGraphics/parser'</span>, <span class="string">'cv/match'</span>, <span class="string">'cv/Varset'</span>, <span class="string">'cv/Scale'</span>]
+     , (parser, match, Varset, Scale) -&gt;
 
   <span class="function"><span class="title">execute</span></span> = (columns, expression) -&gt;
     tree = parser.parse expression
-    vars = variables tree, columns
-    tree = algebra tree, vars
-    scaleObjects = scales tree
-    renderKey = renderer tree, scaleObjects
-    console.log scaleObjects
-    <span class="keyword">return</span> tree</pre></div></div>
+    vars = variables tree, columns</pre></div></div>
             
         </li>
         
@@ -596,12 +591,14 @@ TODO handle missing data</p>
         <li id="section-27">
             <div class="annotation">
               
-              <div class="pilwrap for-h2">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
-              <h2>variables</h2>
+              <p>   [tree, varsets] = algebra tree, vars</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    tree = algebra tree, vars</pre></div></div>
             
         </li>
         
@@ -611,6 +608,38 @@ TODO handle missing data</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p><code>scales</code>:Map<dim, Scale></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    scales = extractScales tree
+    
+    renderKey = renderer tree
+    console.log scales
+    <span class="keyword">return</span> tree</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <h2>variables</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p>Extracts named variables from DATA expressions</p>
 
@@ -625,11 +654,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-29">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap for-h2">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <h2>algebra</h2>
 
@@ -638,11 +667,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-30">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p>Replaces graphics algebra expressions with varsets in the syntax tree.</p>
 
@@ -670,35 +699,8 @@ TODO handle missing data</p>
       left = algebra cross.left, vars
       right = algebra cross.right, vars
       Varset.cross left, right
-    <span class="string">'name'</span>: (name, vars) -&gt;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-31">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
-              </div>
-              <p>TODO have variables generate Varsets rather than Variables</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>      Varset.fromVariable vars[name.name]</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-32">
-            <div class="annotation">
-              
-              <div class="pilwrap for-h2">
-                <a class="pilcrow" href="#section-32">&#182;</a>
-              </div>
-              <h2>scales</h2>
-
-            </div>
+    <span class="string">'name'</span>: (name, vars) -&gt;
+      Varset.fromVariable vars[name.name]</pre></div></div>
             
         </li>
         
@@ -706,27 +708,12 @@ TODO handle missing data</p>
         <li id="section-33">
             <div class="annotation">
               
-              <div class="pilwrap ">
+              <div class="pilwrap for-h2">
                 <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
-              <p>Extracts scales from SCALE statements</p>
+              <h2>extractScales</h2>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>  scales = match <span class="string">'type'</span>,
-    <span class="string">'statements'</span>: (stmts) -&gt;
-      _.filter (scales stmt <span class="keyword">for</span> stmt <span class="keyword">in</span> stmts.statements), _.identity
-    <span class="string">'data'</span>: (t) -&gt;
-    <span class="string">'statement'</span>: (t) -&gt; <span class="keyword">if</span> t.statementType == <span class="string">'SCALE'</span> <span class="keyword">then</span> scales t.expr
-    <span class="string">'function'</span>: match <span class="string">'name'</span>,
-      <span class="string">'linear'</span>: (fn) -&gt;
-        scaleObj = type:<span class="string">'linear'</span>
-        scales arg, scaleObj <span class="keyword">for</span> arg <span class="keyword">in</span> fn.args
-        scaleObj
-      <span class="string">'dim'</span>: (fn, obj) -&gt;
-        <span class="keyword">if</span> fn.args.length != <span class="number">1</span> <span class="keyword">then</span> <span class="keyword">throw</span> Error <span class="string">'dim() expects one argument'</span>
-        <span class="keyword">if</span> fn.args[<span class="number">0</span>].type != <span class="string">'number'</span> <span class="keyword">then</span> <span class="keyword">throw</span> Error <span class="string">'dim() expects a numeric argument'</span>
-        obj.dim = fn.args[<span class="number">0</span>].value</pre></div></div>
             
         </li>
         
@@ -734,8 +721,34 @@ TODO handle missing data</p>
         <li id="section-34">
             <div class="annotation">
               
-              <div class="pilwrap for-h2">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>Extracts scales from SCALE statements</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  extractScales = match <span class="string">'type'</span>,
+    <span class="string">'statements'</span>: (stmts) -&gt;
+      _.filter (extractScales stmt <span class="keyword">for</span> stmt <span class="keyword">in</span> stmts.statements), _.identity
+    <span class="string">'data'</span>: (t) -&gt;
+    <span class="string">'statement'</span>: (t) -&gt;
+      <span class="keyword">if</span> t.statementType == <span class="string">'SCALE'</span>
+        extractScales t.expr
+    <span class="string">'function'</span>: match <span class="string">'name'</span>,
+      <span class="string">'linear'</span>: (fn) -&gt;
+        dim = fn.args[<span class="number">0</span>].args[<span class="number">0</span>].value
+        console.log <span class="string">'dim = '</span>+dim
+        <span class="keyword">new</span> Scale dim</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <h2>renderer</h2>
 
@@ -744,11 +757,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-35">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <p>Generates a function that generates a mark from a key.</p>
 
@@ -763,11 +776,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-36">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p>TODO support multiple ELEMENT statements</p>
 
@@ -780,32 +793,18 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-37">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
-              </div>
-              <p>TODO unify &#39;data&#39; and &#39;statement&#39; types</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="string">'data'</span>: (t) -&gt;</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
-              <p>TODO get rid of fnName arg</p>
+              <p>TODO unify &#39;data&#39; and &#39;statement&#39; types</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="string">'function'</span>: match <span class="string">'name'</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="string">'data'</span>: (t) -&gt;
+    <span class="string">'function'</span>: match <span class="string">'name'</span>,
       <span class="string">'point'</span>: (fn) -&gt;
         argFns = renderer arg <span class="keyword">for</span> arg <span class="keyword">in</span> fn.args
         (key) -&gt;</pre></div></div>
@@ -890,7 +889,7 @@ set properties of the mark</p>
     <span class="reserved">function</span>: (t) -&gt; <span class="string">"<span class="subst">#{t.name}</span>(<span class="subst">#{(show a <span class="keyword">for</span> a <span class="keyword">in</span> t.args).join ','}</span>)"</span>
     varset: (t) -&gt; <span class="string">'&lt;varset&gt;'</span>
 
-  {execute, variables, algebra, scales, show}</pre></div></div>
+  {execute, variables, algebra, extractScales, show}</pre></div></div>
             
         </li>
         
