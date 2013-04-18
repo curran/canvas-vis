@@ -709,7 +709,21 @@ TODO handle missing data</p>
           <span class="keyword">throw</span> Error <span class="string">'dim() expects one argument'</span>
         <span class="keyword">if</span> fn.args[<span class="number">0</span>].type != <span class="string">'number'</span>
           <span class="keyword">throw</span> Error <span class="string">'dim() expects a numeric argument'</span>
-        fn.args[<span class="number">0</span>].value</pre></div></div>
+        fn.args[<span class="number">0</span>].value
+
+  show = match <span class="string">'type'</span>, <span class="string">'show'</span>,
+    statements: (t) -&gt; (show s <span class="keyword">for</span> s <span class="keyword">in</span> t.statements).join <span class="string">'\n'</span>
+    statement: (t) -&gt; <span class="string">"<span class="subst">#{t.statementType}</span>: <span class="subst">#{show t.expr}</span>"</span>
+    data: (t) -&gt; <span class="string">"DATA: <span class="subst">#{t.newName}</span>=\"<span class="subst">#{t.oldName}</span>\""</span>
+    name: (t) -&gt; t.name
+    number: (t) -&gt; t.value
+    string: (t) -&gt; t.value
+    cross: (t) -&gt; <span class="string">"<span class="subst">#{show t.left}</span>*<span class="subst">#{show t.right}</span>"</span>
+    assignment: (t) -&gt; <span class="string">"<span class="subst">#{show t.left}</span>=<span class="subst">#{show t.right}</span>"</span>
+    <span class="reserved">function</span>: (t) -&gt; <span class="string">"<span class="subst">#{t.name}</span>(<span class="subst">#{(show a <span class="keyword">for</span> a <span class="keyword">in</span> t.args).join ','}</span>)"</span>
+    varset: (t) -&gt; <span class="string">'&lt;varset&gt;'</span>
+
+  {execute, variables, algebra, show}</pre></div></div>
             
         </li>
         
@@ -717,69 +731,8 @@ TODO handle missing data</p>
         <li id="section-33">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
-              </div>
-              <p>printTree(tree) -&gt; String</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  <span class="function"><span class="title">printTree</span></span> = (tree) -&gt;
-    p = match <span class="string">'type'</span>, <span class="string">'printTree'</span>,
-      statements: (statements, indent) -&gt;
-        [ss, i] = [statements.statements, indent]
-        line(i+<span class="string">'statements'</span>)+
-          ((p s, i+<span class="string">'  '</span>) <span class="keyword">for</span> s <span class="keyword">in</span> ss).join <span class="string">''</span>
-      statement: (stmt, indent) -&gt;
-        [
-          (line indent+<span class="string">'statement: '</span>+stmt.statementType),
-          (p stmt.expr, indent+<span class="string">'  '</span>)
-        ].join <span class="string">''</span>
-      data: (data, indent) -&gt;
-        line indent+<span class="string">"statement: DATA <span class="subst">#{data.newName}</span> = \"<span class="subst">#{data.oldName}</span>\""</span>
-      name: (name, indent) -&gt;
-        line indent+<span class="string">'name '</span>+name.name
-      number: (number, indent) -&gt;
-        line indent+<span class="string">'number '</span>+number.value
-      string: (string, indent) -&gt;
-        line indent+<span class="string">'string '</span>+string.value
-      cross: (cross, indent) -&gt;
-        [
-          (line indent+<span class="string">'cross'</span>),
-          (line indent+<span class="string">'  left'</span>),
-          (p cross.left, indent+<span class="string">'    '</span>),
-          (line indent+<span class="string">'  right'</span>),
-          (p cross.right, indent+<span class="string">'    '</span>)
-        ].join <span class="string">''</span>
-      assignment: (assignment, indent) -&gt;
-        [
-          (line indent+<span class="string">'assignment'</span>),
-          (line indent+<span class="string">'  left'</span>),
-          (p assignment.left, indent+<span class="string">'    '</span>),
-          (line indent+<span class="string">'  right'</span>),
-          (p assignment.right, indent+<span class="string">'    '</span>)
-        ].join <span class="string">''</span>
-      <span class="reserved">function</span>: (fn, indent) -&gt;
-        [
-          (line indent+<span class="string">'function '</span>+fn.name),
-          (line indent+<span class="string">'  args:'</span>),
-          (<span class="keyword">for</span> arg <span class="keyword">in</span> fn.args
-             p arg, indent+<span class="string">'    '</span>
-          ).join <span class="string">''</span>
-        ].join <span class="string">''</span>
-      varset: (varset, indent) -&gt; indent+<span class="string">'&lt;varset&gt;'</span>
-    p tree, <span class="string">''</span>
-  <span class="function"><span class="title">line</span></span> = (str) -&gt; str + <span class="string">'\n'</span>
-  {execute, variables, algebra}</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-34">
-            <div class="annotation">
-              
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <h1>MarkIterator</h1>
 
@@ -788,11 +741,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-35">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <ul>
 <li><code>hasNext</code>: -&gt; Boolean</li>
@@ -805,11 +758,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-36">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <p>An API for Jaque Bertin&#39;s notion of visualization &quot;marks&quot;.</p>
 
@@ -825,11 +778,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-37">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <p>p means properties</p>
 
@@ -848,11 +801,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-38">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p>Chainable property setter functions</p>
 
@@ -871,11 +824,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-39">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <p>Functions that evaluate the mark</p>
 
@@ -912,11 +865,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-40">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <h1>Match</h1>
 
@@ -925,11 +878,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-41">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <p>This utility lets us approximate Haskell&#39;s 
 pattern matching syntax in CoffeeScript</p>
@@ -968,11 +921,11 @@ define [<span class="string">'jquery.csv'</span>, <span class="string">'cv/Varia
         </li>
         
         
-        <li id="section-42">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <p>TODO if keyColumn specified then use it</p>
 

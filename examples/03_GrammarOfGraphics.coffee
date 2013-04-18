@@ -21,6 +21,7 @@ require ['cv/Component', 'cv/bindToCanvas', 'cv/readCSV',
 
   readCSV '../data/iris.csv', (err, variables) ->
     tree = grammarOfGraphics.execute variables, expr
+    console.log grammarOfGraphics.show tree
 
 #TODO this is a hack
     varset = _.last(tree.statements).expr.args[0].args[0]

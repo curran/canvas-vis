@@ -1,5 +1,6 @@
 #grammarOfGraphics
 #=================
+#
 # The top level module exposing Grammar of Graphics functionality.
 #
 # For inner modules, check out [grammarOfGraphics docs](grammarOfGraphics.html)
@@ -80,51 +81,16 @@ define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset']
           throw Error 'dim() expects a numeric argument'
         fn.args[0].value
 
-# printTree(tree) -> String
-  printTree = (tree) ->
-    p = match 'type', 'printTree',
-      statements: (statements, indent) ->
-        [ss, i] = [statements.statements, indent]
-        line(i+'statements')+
-          ((p s, i+'  ') for s in ss).join ''
-      statement: (stmt, indent) ->
-        [
-          (line indent+'statement: '+stmt.statementType),
-          (p stmt.expr, indent+'  ')
-        ].join ''
-      data: (data, indent) ->
-        line indent+"statement: DATA #{data.newName} = \"#{data.oldName}\""
-      name: (name, indent) ->
-        line indent+'name '+name.name
-      number: (number, indent) ->
-        line indent+'number '+number.value
-      string: (string, indent) ->
-        line indent+'string '+string.value
-      cross: (cross, indent) ->
-        [
-          (line indent+'cross'),
-          (line indent+'  left'),
-          (p cross.left, indent+'    '),
-          (line indent+'  right'),
-          (p cross.right, indent+'    ')
-        ].join ''
-      assignment: (assignment, indent) ->
-        [
-          (line indent+'assignment'),
-          (line indent+'  left'),
-          (p assignment.left, indent+'    '),
-          (line indent+'  right'),
-          (p assignment.right, indent+'    ')
-        ].join ''
-      function: (fn, indent) ->
-        [
-          (line indent+'function '+fn.name),
-          (line indent+'  args:'),
-          (for arg in fn.args
-             p arg, indent+'    '
-          ).join ''
-        ].join ''
-      varset: (varset, indent) -> indent+'<varset>'
-    p tree, ''
-  line = (str) -> str + '\n'
-  {execute, variables, algebra}
+  show = match 'type', 'show',
+    statements: (t) -> (show s for s in t.statements).join '\n'
+    statement: (t) -> "#{t.statementType}: #{show t.expr}"
+    data: (t) -> "DATA: #{t.newName}=\"#{t.oldName}\""
+    name: (t) -> t.name
+    number: (t) -> t.value
+    string: (t) -> t.value
+    cross: (t) -> "#{show t.left}*#{show t.right}"
+    assignment: (t) -> "#{show t.left}=#{show t.right}"
+    function: (t) -> "#{t.name}(#{(show a for a in t.args).join ','})"
+    varset: (t) -> '<varset>'
+
+  {execute, variables, algebra, show}

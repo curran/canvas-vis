@@ -3,7 +3,7 @@
 (function() {
 
   define(['cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset'], function(parser, match, Varset) {
-    var algebra, execute, line, printTree, step3, variables;
+    var algebra, execute, show, step3, variables;
     execute = function(columns, expression) {
       var scales, tree, vars;
       tree = parser.parse(expression);
@@ -152,71 +152,63 @@
         }
       })
     });
-    printTree = function(tree) {
-      var p;
-      p = match('type', 'printTree', {
-        statements: function(statements, indent) {
-          var i, s, ss, _ref;
-          _ref = [statements.statements, indent], ss = _ref[0], i = _ref[1];
-          return line(i + 'statements') + ((function() {
-            var _i, _len, _results;
-            _results = [];
-            for (_i = 0, _len = ss.length; _i < _len; _i++) {
-              s = ss[_i];
-              _results.push(p(s, i + '  '));
-            }
-            return _results;
-          })()).join('');
-        },
-        statement: function(stmt, indent) {
-          return [line(indent + 'statement: ' + stmt.statementType), p(stmt.expr, indent + '  ')].join('');
-        },
-        data: function(data, indent) {
-          return line(indent + ("statement: DATA " + data.newName + " = \"" + data.oldName + "\""));
-        },
-        name: function(name, indent) {
-          return line(indent + 'name ' + name.name);
-        },
-        number: function(number, indent) {
-          return line(indent + 'number ' + number.value);
-        },
-        string: function(string, indent) {
-          return line(indent + 'string ' + string.value);
-        },
-        cross: function(cross, indent) {
-          return [line(indent + 'cross'), line(indent + '  left'), p(cross.left, indent + '    '), line(indent + '  right'), p(cross.right, indent + '    ')].join('');
-        },
-        assignment: function(assignment, indent) {
-          return [line(indent + 'assignment'), line(indent + '  left'), p(assignment.left, indent + '    '), line(indent + '  right'), p(assignment.right, indent + '    ')].join('');
-        },
-        "function": function(fn, indent) {
-          var arg;
-          return [
-            line(indent + 'function ' + fn.name), line(indent + '  args:'), ((function() {
-              var _i, _len, _ref, _results;
-              _ref = fn.args;
-              _results = [];
-              for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-                arg = _ref[_i];
-                _results.push(p(arg, indent + '    '));
-              }
-              return _results;
-            })()).join('')
-          ].join('');
-        },
-        varset: function(varset, indent) {
-          return indent + '<varset>';
-        }
-      });
-      return p(tree, '');
-    };
-    line = function(str) {
-      return str + '\n';
-    };
+    show = match('type', 'show', {
+      statements: function(t) {
+        var s;
+        return ((function() {
+          var _i, _len, _ref, _results;
+          _ref = t.statements;
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            s = _ref[_i];
+            _results.push(show(s));
+          }
+          return _results;
+        })()).join('\n');
+      },
+      statement: function(t) {
+        return "" + t.statementType + ": " + (show(t.expr));
+      },
+      data: function(t) {
+        return "DATA: " + t.newName + "=\"" + t.oldName + "\"";
+      },
+      name: function(t) {
+        return t.name;
+      },
+      number: function(t) {
+        return t.value;
+      },
+      string: function(t) {
+        return t.value;
+      },
+      cross: function(t) {
+        return "" + (show(t.left)) + "*" + (show(t.right));
+      },
+      assignment: function(t) {
+        return "" + (show(t.left)) + "=" + (show(t.right));
+      },
+      "function": function(t) {
+        var a;
+        return "" + t.name + "(" + (((function() {
+          var _i, _len, _ref, _results;
+          _ref = t.args;
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            a = _ref[_i];
+            _results.push(show(a));
+          }
+          return _results;
+        })()).join(',')) + ")";
+      },
+      varset: function(t) {
+        return '<varset>';
+      }
+    });
     return {
       execute: execute,
       variables: variables,
-      algebra: algebra
+      algebra: algebra,
+      show: show
     };
   });
 
