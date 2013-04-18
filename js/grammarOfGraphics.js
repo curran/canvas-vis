@@ -3,15 +3,17 @@
 (function() {
 
   define(['cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset', 'cv/Scale'], function(parser, match, Varset, Scale) {
-    var algebra, execute, extractScales, renderer, show, variables;
+    var algebra, execute, extractScales, extractVarsets, renderer, show, variables, varsets;
+    varsets = [];
     execute = function(columns, expression) {
       var renderKey, scales, tree, vars;
       tree = parser.parse(expression);
       vars = variables(tree, columns);
       tree = algebra(tree, vars);
+      varsets = extractVarsets(tree);
+      console.log(varsets);
       scales = extractScales(tree);
       renderKey = renderer(tree);
-      console.log(scales);
       return tree;
     };
     variables = function(tree, columns) {
@@ -92,6 +94,46 @@
       },
       'name': function(name, vars) {
         return Varset.fromVariable(vars[name.name]);
+      }
+    });
+    extractVarsets = match('type', {
+      'statements': function(stmts) {
+        var stmt;
+        varsets = (function() {
+          var _i, _len, _ref, _results;
+          _ref = stmts.statements;
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            stmt = _ref[_i];
+            _results.push(extractVarsets(stmt));
+          }
+          return _results;
+        })();
+        return _.filter(_.flatten(varsets), _.identity);
+      },
+      'data': function(data) {},
+      'statement': match('statementType', {
+        ELEMENT: function(stmt) {
+          return extractVarsets(stmt.expr);
+        },
+        TRANS: function(stmt) {},
+        SCALE: function(stmt) {},
+        COORD: function(stmt) {},
+        GUIDE: function(stmt) {}
+      }),
+      'function': function(fn) {
+        var arg, _i, _len, _ref, _results;
+        _ref = fn.args;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          arg = _ref[_i];
+          _results.push(extractVarsets(arg));
+        }
+        return _results;
+      },
+      'name': function(name) {},
+      'varset': function(varset) {
+        return varset;
       }
     });
     extractScales = match('type', {

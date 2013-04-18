@@ -4,18 +4,21 @@
 # The module exposing Grammar of Graphics functionality.
 define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset', 'cv/Scale']
      , (parser, match, Varset, Scale) ->
+  varsets = []
 
   execute = (columns, expression) ->
     tree = parser.parse expression
     vars = variables tree, columns
 
-#    [tree, varsets] = algebra tree, vars
     tree = algebra tree, vars
+    varsets = extractVarsets tree
+    console.log varsets
+    #tree = algebra tree, vars
 #`scales`:Map<dim, Scale>
     scales = extractScales tree
     
     renderKey = renderer tree
-    console.log scales
+#    console.log scales
     return tree
 
   # variables
@@ -54,6 +57,25 @@ define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset', 'cv/Scale']
       Varset.cross left, right
     'name': (name, vars) ->
       Varset.fromVariable vars[name.name]
+
+  # extractVarsets
+  # --------------
+  # Extracts varsets from the syntax tree into a flat list.
+  extractVarsets = match 'type',
+    'statements': (stmts) ->
+      varsets = (extractVarsets stmt for stmt in stmts.statements)
+      _.filter (_.flatten varsets), _.identity
+    'data': (data) ->
+    'statement': match 'statementType',
+      ELEMENT: (stmt) -> extractVarsets stmt.expr
+      TRANS: (stmt) ->
+      SCALE: (stmt) ->
+      COORD: (stmt) ->
+      GUIDE: (stmt) ->
+    'function': (fn) ->
+      (extractVarsets arg for arg in fn.args)
+    'name': (name) ->
+    'varset': (varset) -> varset
 
   # extractScales
   # ------
