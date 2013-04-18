@@ -3,13 +3,14 @@
 (function() {
 
   define(['cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset'], function(parser, match, Varset) {
-    var algebra, execute, scales, show, variables;
+    var algebra, execute, renderer, scales, show, variables;
     execute = function(columns, expression) {
-      var scaleObjects, tree, vars;
+      var renderKey, scaleObjects, tree, vars;
       tree = parser.parse(expression);
       vars = variables(tree, columns);
       tree = algebra(tree, vars);
       scaleObjects = scales(tree);
+      renderKey = renderer(tree, scaleObjects);
       console.log(scaleObjects);
       return tree;
     };
@@ -134,6 +135,56 @@
             throw Error('dim() expects a numeric argument');
           }
           return obj.dim = fn.args[0].value;
+        }
+      })
+    });
+    renderer = match('type', 'renderer', {
+      'statements': function(stmts) {
+        var renderers, stmt;
+        renderers = (function() {
+          var _i, _len, _ref, _results;
+          _ref = stmts.statements;
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            stmt = _ref[_i];
+            _results.push(renderer(stmt));
+          }
+          return _results;
+        })();
+        renderers = _.filter(renderers, _.identity);
+        return renderers[0];
+      },
+      'statement': function(t) {
+        if (t.statementType === 'ELEMENT') {
+          return renderer(t.expr);
+        }
+      },
+      'data': function(t) {},
+      'function': match('name', 'renderer.function', {
+        'point': function(fn) {
+          var arg, argFns, _i, _len, _ref;
+          _ref = fn.args;
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            arg = _ref[_i];
+            argFns = renderer(arg);
+          }
+          return function(key) {
+            var argFn, m, _j, _len1;
+            m = mark().shape('circle').size(0.05);
+            for (_j = 0, _len1 = argFns.length; _j < _len1; _j++) {
+              argFn = argFns[_j];
+              m = argFn(key, m);
+            }
+            return m;
+          };
+        },
+        'position': function(fn, m) {
+          return function(key, m) {
+            var tuple, varset;
+            varset = fn.args[0];
+            tuple = varset.tuple(key);
+            return m.x(tuple[0]).y(tuple[1]);
+          };
         }
       })
     });

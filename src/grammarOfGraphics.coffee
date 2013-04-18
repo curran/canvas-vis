@@ -1,9 +1,7 @@
 #grammarOfGraphics
 #=================
 #
-# The top level module exposing Grammar of Graphics functionality.
-#
-# For inner modules, check out [grammarOfGraphics docs](grammarOfGraphics.html)
+# The module exposing Grammar of Graphics functionality.
 define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset']
      , (parser, match, Varset) ->
 
@@ -12,6 +10,7 @@ define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset']
     vars = variables tree, columns
     tree = algebra tree, vars
     scaleObjects = scales tree
+    renderKey = renderer tree, scaleObjects
     console.log scaleObjects
     return tree
 
@@ -70,6 +69,43 @@ define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset']
         if fn.args.length != 1 then throw Error 'dim() expects one argument'
         if fn.args[0].type != 'number' then throw Error 'dim() expects a numeric argument'
         obj.dim = fn.args[0].value
+
+  # renderer
+  # --------
+  # Generates a function that generates a mark from a key.
+  renderer = match 'type', 'renderer',
+
+    'statements': (stmts) ->
+      renderers = (renderer stmt for stmt in stmts.statements)
+      renderers = _.filter renderers, _.identity # remove null elements
+      #TODO support multiple ELEMENT statements
+      renderers[0]
+
+    'statement': (t) -> if t.statementType == 'ELEMENT' then renderer t.expr
+#TODO unify 'data' and 'statement' types
+    'data': (t) ->
+      #TODO get rid of fnName arg
+    'function': match 'name', 'renderer.function',
+      'point': (fn) ->
+        argFns = renderer arg for arg in fn.args
+        (key) ->
+          # set up the mark with defaults
+          m = mark()
+            .shape('circle')
+            .size(0.05)
+
+          # allow arguments to 'point' to
+          # set properties of the mark
+          for argFn in argFns
+            m = argFn key, m
+
+          return m
+
+      'position': (fn, m) ->
+        (key, m)->
+          varset = fn.args[0]
+          tuple = varset.tuple key
+          m.x(tuple[0]).y(tuple[1])
 
   # show
   # ----
