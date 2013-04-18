@@ -3,24 +3,25 @@
 (function() {
 
   define(['cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset'], function(parser, match, Varset) {
-    var dataStmts, execute, line, printTree, step1, step2, step3;
+    var computeAlgebra, dataStmts, execute, extractNamedVariables, line, printTree, step3;
     execute = function(variables, expression) {
-      var tree;
+      var scales, tree;
       tree = parser.parse(expression);
-      variables = step1(tree, variables);
-      tree = step2(tree, variables);
-      console.dir(step3(tree, variables));
+      variables = extractNamedVariables(tree, variables);
+      tree = computeAlgebra(tree, variables);
+      scales = step3(tree);
+      console.log(scales);
       return tree;
     };
     dataStmts = [];
-    step1 = match('type', 'step1', {
+    extractNamedVariables = match('type', 'extractNamedVariables', {
       'statements': function(stmts, variables) {
         var dataStmt, newName, oldName, stmt, _i, _j, _len, _len1, _ref;
         dataStmts = [];
         _ref = stmts.statements;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           stmt = _ref[_i];
-          step1(stmt);
+          extractNamedVariables(stmt);
         }
         for (_j = 0, _len1 = dataStmts.length; _j < _len1; _j++) {
           dataStmt = dataStmts[_j];
@@ -35,7 +36,7 @@
       },
       'statement': function() {}
     });
-    step2 = match('type', 'step2', {
+    computeAlgebra = match('type', 'computeAlgebra', {
       'statements': function(stmts, vars) {
         var stmt;
         return {
@@ -46,7 +47,7 @@
             _results = [];
             for (_i = 0, _len = _ref.length; _i < _len; _i++) {
               stmt = _ref[_i];
-              _results.push(step2(stmt, vars));
+              _results.push(computeAlgebra(stmt, vars));
             }
             return _results;
           })()
@@ -55,12 +56,12 @@
       'data': function(data, vars) {
         return data;
       },
-      'statement': match('statementType', 'step2', {
+      'statement': match('statementType', 'computeAlgebra', {
         ELEMENT: function(stmt, vars) {
           return {
             type: 'statement',
             statementType: 'ELEMENT',
-            expr: step2(stmt.expr, vars)
+            expr: computeAlgebra(stmt.expr, vars)
           };
         },
         TRANS: function(stmt, vars) {
@@ -87,7 +88,7 @@
             _results = [];
             for (_i = 0, _len = _ref.length; _i < _len; _i++) {
               arg = _ref[_i];
-              _results.push(step2(arg, vars));
+              _results.push(computeAlgebra(arg, vars));
             }
             return _results;
           })()
@@ -95,8 +96,8 @@
       },
       'cross': function(cross, vars) {
         var left, right;
-        left = step2(cross.left, vars);
-        right = step2(cross.right, vars);
+        left = computeAlgebra(cross.left, vars);
+        right = computeAlgebra(cross.right, vars);
         return Varset.cross(left, right);
       },
       'name': function(name, vars) {
@@ -225,8 +226,8 @@
     };
     return {
       execute: execute,
-      step1: step1,
-      step2: step2
+      extractNamedVariables: extractNamedVariables,
+      computeAlgebra: computeAlgebra
     };
   });
 

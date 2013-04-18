@@ -28,11 +28,6 @@
                 examples.coffee
               </a>
             
-              
-              <a class="source" href="grammarOfGraphics.html">
-                grammarOfGraphics.coffee
-              </a>
-            
           </div>
         </li>
       </ul>
@@ -554,10 +549,11 @@ TODO handle missing data</p>
             
             <div class="content"><div class='highlight'><pre>define [ <span class="string">'cv/grammarOfGraphics/parser'</span>, <span class="string">'cv/match'</span>, <span class="string">'cv/Varset'</span>]
      , (parser, match, Varset) -&gt;
+
   <span class="function"><span class="title">execute</span></span> = (variables, expression) -&gt;
     tree = parser.parse expression
-    variables = step1 tree, variables
-    tree = step2 tree, variables</pre></div></div>
+    variables = extractNamedVariables tree, variables
+    tree = computeAlgebra tree, variables</pre></div></div>
             
         </li>
         
@@ -569,18 +565,20 @@ TODO handle missing data</p>
                 <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p>console.log printTree tree</p>
+<p>scales:Map<int tupleIndex, Scale></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    console.dir (step3 tree, variables)
+            <div class="content"><div class='highlight'><pre>    scales = step3 tree
+    console.log scales
     <span class="keyword">return</span> tree
 
   dataStmts = []
-  step1 = match <span class="string">'type'</span>, <span class="string">'step1'</span>,
+  extractNamedVariables = match <span class="string">'type'</span>, <span class="string">'extractNamedVariables'</span>,
     <span class="string">'statements'</span>: (stmts, variables) -&gt;
 
       dataStmts = []
-      step1 stmt <span class="keyword">for</span> stmt <span class="keyword">in</span> stmts.statements
+      extractNamedVariables stmt <span class="keyword">for</span> stmt <span class="keyword">in</span> stmts.statements
 
       <span class="keyword">for</span> dataStmt <span class="keyword">in</span> dataStmts
         oldName = dataStmt.oldName
@@ -592,16 +590,16 @@ TODO handle missing data</p>
     <span class="string">'data'</span>: (data) -&gt; dataStmts.push data
     <span class="string">'statement'</span>: -&gt;
 
-  step2 = match <span class="string">'type'</span>, <span class="string">'step2'</span>,
+  computeAlgebra = match <span class="string">'type'</span>, <span class="string">'computeAlgebra'</span>,
     <span class="string">'statements'</span>: (stmts, vars) -&gt;
       type: <span class="string">'statements'</span>
-      statements: (step2 stmt, vars <span class="keyword">for</span> stmt <span class="keyword">in</span> stmts.statements)
+      statements: (computeAlgebra stmt, vars <span class="keyword">for</span> stmt <span class="keyword">in</span> stmts.statements)
     <span class="string">'data'</span>: (data, vars) -&gt; data
-    <span class="string">'statement'</span>: match <span class="string">'statementType'</span>, <span class="string">'step2'</span>,
+    <span class="string">'statement'</span>: match <span class="string">'statementType'</span>, <span class="string">'computeAlgebra'</span>,
       ELEMENT: (stmt, vars) -&gt;
         type: <span class="string">'statement'</span>
         statementType: <span class="string">'ELEMENT'</span>
-        expr: step2 stmt.expr, vars
+        expr: computeAlgebra stmt.expr, vars
       TRANS: (stmt, vars) -&gt; stmt
       SCALE: (stmt, vars) -&gt; stmt
       COORD: (stmt, vars) -&gt; stmt
@@ -609,10 +607,10 @@ TODO handle missing data</p>
     <span class="string">'function'</span>: (fn, vars) -&gt;
       type: <span class="string">'function'</span>
       name: fn.name
-      args: (step2 arg, vars <span class="keyword">for</span> arg <span class="keyword">in</span> fn.args)
+      args: (computeAlgebra arg, vars <span class="keyword">for</span> arg <span class="keyword">in</span> fn.args)
     <span class="string">'cross'</span>: (cross, vars) -&gt;
-      left = step2 cross.left, vars
-      right = step2 cross.right, vars
+      left = computeAlgebra cross.left, vars
+      right = computeAlgebra cross.right, vars
       Varset.cross left, right</pre></div></div>
             
         </li>
@@ -639,7 +637,7 @@ TODO handle missing data</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
-              <p>TODO have step1 generate Varsets rather than Variables</p>
+              <p>TODO have extractNamedVariables generate Varsets rather than Variables</p>
 
             </div>
             
@@ -757,7 +755,7 @@ TODO handle missing data</p>
       varset: (varset, indent) -&gt; indent+<span class="string">'&lt;varset&gt;'</span>
     p tree, <span class="string">''</span>
   <span class="function"><span class="title">line</span></span> = (str) -&gt; str + <span class="string">'\n'</span>
-  {execute, step1, step2}</pre></div></div>
+  {execute, extractNamedVariables, computeAlgebra}</pre></div></div>
             
         </li>
         

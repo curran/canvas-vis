@@ -5,20 +5,24 @@
 # For inner modules, check out [grammarOfGraphics docs](grammarOfGraphics.html)
 define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset']
      , (parser, match, Varset) ->
+
   execute = (variables, expression) ->
     tree = parser.parse expression
-    variables = step1 tree, variables
-    tree = step2 tree, variables
+    variables = extractNamedVariables tree, variables
+    tree = computeAlgebra tree, variables
     #console.log printTree tree
-    console.dir (step3 tree, variables)
+
+#scales:Map<int tupleIndex, Scale>
+    scales = step3 tree
+    console.log scales
     return tree
 
   dataStmts = []
-  step1 = match 'type', 'step1',
+  extractNamedVariables = match 'type', 'extractNamedVariables',
     'statements': (stmts, variables) ->
 
       dataStmts = []
-      step1 stmt for stmt in stmts.statements
+      extractNamedVariables stmt for stmt in stmts.statements
 
       for dataStmt in dataStmts
         oldName = dataStmt.oldName
@@ -30,16 +34,16 @@ define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset']
     'data': (data) -> dataStmts.push data
     'statement': ->
 
-  step2 = match 'type', 'step2',
+  computeAlgebra = match 'type', 'computeAlgebra',
     'statements': (stmts, vars) ->
       type: 'statements'
-      statements: (step2 stmt, vars for stmt in stmts.statements)
+      statements: (computeAlgebra stmt, vars for stmt in stmts.statements)
     'data': (data, vars) -> data
-    'statement': match 'statementType', 'step2',
+    'statement': match 'statementType', 'computeAlgebra',
       ELEMENT: (stmt, vars) ->
         type: 'statement'
         statementType: 'ELEMENT'
-        expr: step2 stmt.expr, vars
+        expr: computeAlgebra stmt.expr, vars
       TRANS: (stmt, vars) -> stmt
       SCALE: (stmt, vars) -> stmt
       COORD: (stmt, vars) -> stmt
@@ -47,14 +51,14 @@ define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset']
     'function': (fn, vars) ->
       type: 'function'
       name: fn.name
-      args: (step2 arg, vars for arg in fn.args)
+      args: (computeAlgebra arg, vars for arg in fn.args)
     'cross': (cross, vars) ->
-      left = step2 cross.left, vars
-      right = step2 cross.right, vars
+      left = computeAlgebra cross.left, vars
+      right = computeAlgebra cross.right, vars
       Varset.cross left, right
       #return cross
     'name': (name, vars) ->
-      # TODO have step1 generate Varsets rather than Variables
+      # TODO have extractNamedVariables generate Varsets rather than Variables
       Varset.fromVariable vars[name.name]
       #return name
   step3 = match 'type', 'step3',
@@ -83,6 +87,7 @@ define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset']
         if fn.args[0].type != 'number'
           throw Error 'dim() expects a numeric argument'
         fn.args[0].value
+
 # printTree(tree) -> String
   printTree = (tree) ->
     p = match 'type', 'printTree',
@@ -130,4 +135,4 @@ define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset']
       varset: (varset, indent) -> indent+'<varset>'
     p tree, ''
   line = (str) -> str + '\n'
-  {execute, step1, step2}
+  {execute, extractNamedVariables, computeAlgebra}
