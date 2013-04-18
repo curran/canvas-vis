@@ -3,14 +3,14 @@
 (function() {
 
   define(['cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset'], function(parser, match, Varset) {
-    var algebra, execute, show, step3, variables;
+    var algebra, execute, scales, show, variables;
     execute = function(columns, expression) {
-      var scales, tree, vars;
+      var scaleObjects, tree, vars;
       tree = parser.parse(expression);
       vars = variables(tree, columns);
       tree = algebra(tree, vars);
-      scales = step3(tree);
-      console.log(scales);
+      scaleObjects = scales(tree);
+      console.log(scaleObjects);
       return tree;
     };
     variables = function(tree, columns) {
@@ -93,62 +93,47 @@
         return Varset.fromVariable(vars[name.name]);
       }
     });
-    step3 = match('type', 'step3', {
+    scales = match('type', 'scales', {
       'statements': function(stmts) {
-        var scales, stmt;
-        scales = (function() {
+        var stmt;
+        return _.filter((function() {
           var _i, _len, _ref, _results;
           _ref = stmts.statements;
           _results = [];
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             stmt = _ref[_i];
-            _results.push(step3(stmt));
+            _results.push(scales(stmt));
           }
           return _results;
-        })();
-        return _.extend.apply(null, scales);
+        })(), _.identity);
       },
-      'data': function(data) {
-        return {};
-      },
-      'statement': match('statementType', 'step3.statement', {
-        ELEMENT: function(stmt) {
-          return {};
-        },
-        TRANS: function(stmt) {
-          return {};
-        },
-        SCALE: function(stmt) {
-          return step3(stmt.expr);
-        },
-        COORD: function(stmt) {
-          return {};
-        },
-        GUIDE: function(stmt) {
-          return {};
+      'data': function(t) {},
+      'statement': function(t) {
+        if (t.statementType === 'SCALE') {
+          return scales(t.expr);
         }
-      }),
-      'function': match('name', 'step3.function', {
+      },
+      'function': match('name', 'scales.function', {
         'linear': function(fn) {
-          var dim, result;
-          if (fn.args.length !== 1) {
-            throw Error('linear() expects one argument');
-          }
-          dim = step3(fn.args[0]);
-          result = {};
-          result[dim] = {
+          var arg, scaleObj, _i, _len, _ref;
+          scaleObj = {
             type: 'linear'
           };
-          return result;
+          _ref = fn.args;
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            arg = _ref[_i];
+            scales(arg, scaleObj);
+          }
+          return scaleObj;
         },
-        'dim': function(fn) {
+        'dim': function(fn, obj) {
           if (fn.args.length !== 1) {
             throw Error('dim() expects one argument');
           }
           if (fn.args[0].type !== 'number') {
             throw Error('dim() expects a numeric argument');
           }
-          return fn.args[0].value;
+          return obj.dim = fn.args[0].value;
         }
       })
     });
@@ -208,6 +193,7 @@
       execute: execute,
       variables: variables,
       algebra: algebra,
+      scales: scales,
       show: show
     };
   });

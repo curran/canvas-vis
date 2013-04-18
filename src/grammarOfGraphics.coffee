@@ -11,13 +11,13 @@ define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset']
     tree = parser.parse expression
     vars = variables tree, columns
     tree = algebra tree, vars
-    #console.log printTree tree
-
-#scales:Map<int tupleIndex, Scale>
-    scales = step3 tree
-    console.log scales
+    scaleObjects = scales tree
+    console.log scaleObjects
     return tree
 
+  # variables
+  # ---------
+  # Extracts named variables from DATA expressions
   variables = (tree, columns) ->
     vars = _.extend {}, columns
     for stmt in tree.statements when stmt.type == 'data'
@@ -25,7 +25,7 @@ define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset']
     return vars
 
   # algebra
-  # --------------
+  # -------
   # Replaces graphics algebra expressions with varsets in the syntax tree.
   algebra = match 'type', 'algebra',
     'statements': (stmts, vars) ->
@@ -49,38 +49,31 @@ define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset']
       left = algebra cross.left, vars
       right = algebra cross.right, vars
       Varset.cross left, right
-      #return cross
     'name': (name, vars) ->
       # TODO have variables generate Varsets rather than Variables
       Varset.fromVariable vars[name.name]
-      #return name
-  step3 = match 'type', 'step3',
-    'statements': (stmts) ->
-      scales = (step3 stmt for stmt in stmts.statements)
-      _.extend.apply null, scales
-#TODO unify 'data' as a 'statement'
-    'data': (data) -> {}
-    'statement': match 'statementType', 'step3.statement',
-      ELEMENT: (stmt) -> {}
-      TRANS: (stmt) -> {}
-      SCALE: (stmt) -> step3 stmt.expr
-      COORD: (stmt) -> {}
-      GUIDE: (stmt) -> {}
-    'function': match 'name', 'step3.function',
-      'linear': (fn) ->
-        if fn.args.length != 1
-          throw Error 'linear() expects one argument'
-        dim = step3 fn.args[0]
-        result = {}
-        result[dim] = type: 'linear'
-        result
-      'dim': (fn) ->
-        if fn.args.length != 1
-          throw Error 'dim() expects one argument'
-        if fn.args[0].type != 'number'
-          throw Error 'dim() expects a numeric argument'
-        fn.args[0].value
 
+  # scales
+  # ------
+  # Extracts scales from SCALE statements
+  scales = match 'type', 'scales',
+    'statements': (stmts) ->
+      _.filter (scales stmt for stmt in stmts.statements), _.identity
+    'data': (t) ->
+    'statement': (t) -> if t.statementType == 'SCALE' then scales t.expr
+    'function': match 'name', 'scales.function',
+      'linear': (fn) ->
+        scaleObj = type:'linear'
+        scales arg, scaleObj for arg in fn.args
+        scaleObj
+      'dim': (fn, obj) ->
+        if fn.args.length != 1 then throw Error 'dim() expects one argument'
+        if fn.args[0].type != 'number' then throw Error 'dim() expects a numeric argument'
+        obj.dim = fn.args[0].value
+
+  # show
+  # ----
+  # Renders an abstract syntax tree as an expression string
   show = match 'type', 'show',
     statements: (t) -> (show s for s in t.statements).join '\n'
     statement: (t) -> "#{t.statementType}: #{show t.expr}"
@@ -93,4 +86,4 @@ define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset']
     function: (t) -> "#{t.name}(#{(show a for a in t.args).join ','})"
     varset: (t) -> '<varset>'
 
-  {execute, variables, algebra, show}
+  {execute, variables, algebra, scales, show}
