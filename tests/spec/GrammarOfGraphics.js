@@ -36,7 +36,7 @@ define( [
 //ELEMENT: point(position(pop1980))
 
         var tree = parser.parse(testExpr);
-        var variables = grammarOfGraphics.extractNamedVariables(tree, csvColumns);
+        var variables = grammarOfGraphics.variables(tree, csvColumns);
 
         var names = _.keys(variables);
         expect(_(names).contains("sepal width")).toEqual(true);
@@ -50,7 +50,7 @@ define( [
     });
     it("should compute step 2: algebra", function(){
       var tree = parser.parse(testExpr);
-      var variables = grammarOfGraphics.extractNamedVariables(tree, csvColumns);
+      var variables = grammarOfGraphics.variables(tree, csvColumns);
       tree = grammarOfGraphics.computeAlgebra(tree, variables);
       var varset = _.last(tree.statements).expr.args[0].args[0];
       expect(varset.type).toEqual('varset');

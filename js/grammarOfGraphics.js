@@ -3,39 +3,28 @@
 (function() {
 
   define(['cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset'], function(parser, match, Varset) {
-    var computeAlgebra, dataStmts, execute, extractNamedVariables, line, printTree, step3;
-    execute = function(variables, expression) {
-      var scales, tree;
+    var computeAlgebra, execute, line, printTree, step3, variables;
+    execute = function(columns, expression) {
+      var scales, tree, vars;
       tree = parser.parse(expression);
-      variables = extractNamedVariables(tree, variables);
-      tree = computeAlgebra(tree, variables);
+      vars = variables(tree, columns);
+      tree = computeAlgebra(tree, vars);
       scales = step3(tree);
       console.log(scales);
       return tree;
     };
-    dataStmts = [];
-    extractNamedVariables = match('type', 'extractNamedVariables', {
-      'statements': function(stmts, variables) {
-        var dataStmt, newName, oldName, stmt, _i, _j, _len, _len1, _ref;
-        dataStmts = [];
-        _ref = stmts.statements;
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          stmt = _ref[_i];
-          extractNamedVariables(stmt);
+    variables = function(tree, columns) {
+      var stmt, vars, _i, _len, _ref;
+      vars = _.extend({}, columns);
+      _ref = tree.statements;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        stmt = _ref[_i];
+        if (stmt.type === 'data') {
+          vars[stmt.newName] = columns[stmt.oldName];
         }
-        for (_j = 0, _len1 = dataStmts.length; _j < _len1; _j++) {
-          dataStmt = dataStmts[_j];
-          oldName = dataStmt.oldName;
-          newName = dataStmt.newName;
-          variables[newName] = variables[oldName];
-        }
-        return variables;
-      },
-      'data': function(data) {
-        return dataStmts.push(data);
-      },
-      'statement': function() {}
-    });
+      }
+      return vars;
+    };
     computeAlgebra = match('type', 'computeAlgebra', {
       'statements': function(stmts, vars) {
         var stmt;
@@ -226,7 +215,7 @@
     };
     return {
       execute: execute,
-      extractNamedVariables: extractNamedVariables,
+      variables: variables,
       computeAlgebra: computeAlgebra
     };
   });

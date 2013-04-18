@@ -6,10 +6,10 @@
 define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset']
      , (parser, match, Varset) ->
 
-  execute = (variables, expression) ->
+  execute = (columns, expression) ->
     tree = parser.parse expression
-    variables = extractNamedVariables tree, variables
-    tree = computeAlgebra tree, variables
+    vars = variables tree, columns
+    tree = computeAlgebra tree, vars
     #console.log printTree tree
 
 #scales:Map<int tupleIndex, Scale>
@@ -17,22 +17,29 @@ define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset']
     console.log scales
     return tree
 
-  dataStmts = []
-  extractNamedVariables = match 'type', 'extractNamedVariables',
-    'statements': (stmts, variables) ->
+  variables = (tree, columns) ->
+    vars = _.extend {}, columns
+    for stmt in tree.statements when stmt.type == 'data'
+      vars[stmt.newName] = columns[stmt.oldName]
+    return vars
 
-      dataStmts = []
-      extractNamedVariables stmt for stmt in stmts.statements
-
-      for dataStmt in dataStmts
-        oldName = dataStmt.oldName
-        newName = dataStmt.newName
-
-        variables[newName] = variables[oldName]
-
-      return variables
-    'data': (data) -> dataStmts.push data
-    'statement': ->
+  #Old version
+  #  dataStmts = []
+  #  variables = match 'type', 'variables',
+  #    'statements': (stmts, variables) ->
+  #
+  #      dataStmts = []
+  #      variables stmt for stmt in stmts.statements
+  #
+  #      for dataStmt in dataStmts
+  #        oldName = dataStmt.oldName
+  #        newName = dataStmt.newName
+  #
+  #        variables[newName] = variables[oldName]
+  #
+  #      return variables
+  #    'data': (data) -> dataStmts.push data
+  #    'statement': ->
 
   computeAlgebra = match 'type', 'computeAlgebra',
     'statements': (stmts, vars) ->
@@ -58,7 +65,7 @@ define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset']
       Varset.cross left, right
       #return cross
     'name': (name, vars) ->
-      # TODO have extractNamedVariables generate Varsets rather than Variables
+      # TODO have variables generate Varsets rather than Variables
       Varset.fromVariable vars[name.name]
       #return name
   step3 = match 'type', 'step3',
@@ -135,4 +142,4 @@ define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset']
       varset: (varset, indent) -> indent+'<varset>'
     p tree, ''
   line = (str) -> str + '\n'
-  {execute, extractNamedVariables, computeAlgebra}
+  {execute, variables, computeAlgebra}
