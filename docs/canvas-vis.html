@@ -243,6 +243,10 @@ renders to a Canvas within the <code>bounds</code> rectangle.</li>
             
             <div class="content"><div class='highlight'><pre>    initialize: -&gt;
       expose @, <span class="string">'x'</span>, <span class="string">'y'</span>, <span class="string">'w'</span>, <span class="string">'h'</span>
+      <span class="keyword">if</span> !<span class="property">@x</span> <span class="keyword">then</span> <span class="property">@x</span> = <span class="number">0</span>
+      <span class="keyword">if</span> !<span class="property">@y</span> <span class="keyword">then</span> <span class="property">@y</span> = <span class="number">0</span>
+      <span class="keyword">if</span> !<span class="property">@w</span> <span class="keyword">then</span> <span class="property">@w</span> = <span class="number">1</span>
+      <span class="keyword">if</span> !<span class="property">@h</span> <span class="keyword">then</span> <span class="property">@h</span> = <span class="number">1</span>
     copy: (rectangle) -&gt;
       <span class="property">@x</span> = rectangle.x
       <span class="property">@y</span> = rectangle.y
@@ -353,9 +357,12 @@ TODO handle missing data</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>define [<span class="string">'cv/expose'</span>], (expose) -&gt;
+            <div class="content"><div class='highlight'><pre>define [<span class="string">'cv/expose'</span>, <span class="string">'cv/Rectangle'</span>], (expose, Rectangle) -&gt;
   Viewport = Backbone.Model.extend
-    initialize: -&gt; expose @, <span class="string">'src'</span>, <span class="string">'dest'</span>
+    initialize: -&gt;
+      expose @, <span class="string">'src'</span>, <span class="string">'dest'</span>
+      <span class="keyword">if</span> !<span class="property">@src</span> <span class="keyword">then</span> <span class="property">@src</span> = <span class="keyword">new</span> Rectangle
+      <span class="keyword">if</span> !<span class="property">@dest</span> <span class="keyword">then</span> <span class="property">@dest</span> = <span class="keyword">new</span> Rectangle
     srcToDest: (inPt, outPt) -&gt;
       s = <span class="property">@src</span>; d = <span class="property">@dest</span>
       outPt.x = (inPt.x - s.x) / s.w * d.w + d.x

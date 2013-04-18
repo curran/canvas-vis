@@ -5,7 +5,19 @@
   define(['cv/expose'], function(expose) {
     return Backbone.Model.extend({
       initialize: function() {
-        return expose(this, 'x', 'y', 'w', 'h');
+        expose(this, 'x', 'y', 'w', 'h');
+        if (!this.x) {
+          this.x = 0;
+        }
+        if (!this.y) {
+          this.y = 0;
+        }
+        if (!this.w) {
+          this.w = 1;
+        }
+        if (!this.h) {
+          return this.h = 1;
+        }
       },
       copy: function(rectangle) {
         this.x = rectangle.x;

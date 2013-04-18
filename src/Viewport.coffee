@@ -3,9 +3,12 @@
 # 
 #   * src: Rectangle
 #   * dest: Rectangle
-define ['cv/expose'], (expose) ->
+define ['cv/expose', 'cv/Rectangle'], (expose, Rectangle) ->
   Viewport = Backbone.Model.extend
-    initialize: -> expose @, 'src', 'dest'
+    initialize: ->
+      expose @, 'src', 'dest'
+      if !@src then @src = new Rectangle
+      if !@dest then @dest = new Rectangle
     srcToDest: (inPt, outPt) ->
       s = @src; d = @dest
       outPt.x = (inPt.x - s.x) / s.w * d.w + d.x
