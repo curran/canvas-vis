@@ -1,5 +1,5 @@
-#grammarOfGraphics
-#=================
+# grammarOfGraphics
+# =================
 #
 # The module exposing Grammar of Graphics functionality.
 define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset',
@@ -7,12 +7,16 @@ define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset',
        , (parser, match, Varset, Scale, mark) ->
   varsets = []
 
+  # execute
+  # -------
+  # The top-level Grammar of Graphics execution engine.
   execute = (columns, expression) ->
     tree = parser.parse expression
     vars = variables tree, columns
 
     tree = algebra tree, vars
     varsets = extractVarsets tree
+
     scales = extractScales tree
 
     if varsets.length != 1
@@ -83,7 +87,7 @@ define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset',
     'varset': (varset) -> varset
 
   # extractScales
-  # ------
+  # -------------
   # Extracts scales from SCALE statements
   extractScales = match 'type',
     'statements': (stmts) ->
@@ -106,15 +110,12 @@ define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset',
   # --------
   # Generates a function that generates a mark from a key.
   renderer = match 'type',
-
     'statements': (stmts) ->
       renderers = (renderer stmt for stmt in stmts.statements)
       renderers = _.filter renderers, _.identity # remove null elements
       #TODO support multiple ELEMENT statements
       renderers[0]
-
     'statement': (t) -> if t.statementType == 'ELEMENT' then renderer t.expr
-#TODO unify 'data' and 'statement' types
     'data': (t) ->
     'function': match 'name',
       'point': (fn) ->
