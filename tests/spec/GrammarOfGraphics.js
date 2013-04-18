@@ -51,7 +51,7 @@ define( [
     it("should compute step 2: algebra", function(){
       var tree = parser.parse(testExpr);
       var variables = grammarOfGraphics.variables(tree, csvColumns);
-      tree = grammarOfGraphics.computeAlgebra(tree, variables);
+      tree = grammarOfGraphics.algebra(tree, variables);
       var varset = _.last(tree.statements).expr.args[0].args[0];
       expect(varset.type).toEqual('varset');
 

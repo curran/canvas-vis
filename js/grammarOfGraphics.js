@@ -3,12 +3,12 @@
 (function() {
 
   define(['cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset'], function(parser, match, Varset) {
-    var computeAlgebra, execute, line, printTree, step3, variables;
+    var algebra, execute, line, printTree, step3, variables;
     execute = function(columns, expression) {
       var scales, tree, vars;
       tree = parser.parse(expression);
       vars = variables(tree, columns);
-      tree = computeAlgebra(tree, vars);
+      tree = algebra(tree, vars);
       scales = step3(tree);
       console.log(scales);
       return tree;
@@ -25,7 +25,7 @@
       }
       return vars;
     };
-    computeAlgebra = match('type', 'computeAlgebra', {
+    algebra = match('type', 'algebra', {
       'statements': function(stmts, vars) {
         var stmt;
         return {
@@ -36,7 +36,7 @@
             _results = [];
             for (_i = 0, _len = _ref.length; _i < _len; _i++) {
               stmt = _ref[_i];
-              _results.push(computeAlgebra(stmt, vars));
+              _results.push(algebra(stmt, vars));
             }
             return _results;
           })()
@@ -45,12 +45,12 @@
       'data': function(data, vars) {
         return data;
       },
-      'statement': match('statementType', 'computeAlgebra', {
+      'statement': match('statementType', 'algebra', {
         ELEMENT: function(stmt, vars) {
           return {
             type: 'statement',
             statementType: 'ELEMENT',
-            expr: computeAlgebra(stmt.expr, vars)
+            expr: algebra(stmt.expr, vars)
           };
         },
         TRANS: function(stmt, vars) {
@@ -77,7 +77,7 @@
             _results = [];
             for (_i = 0, _len = _ref.length; _i < _len; _i++) {
               arg = _ref[_i];
-              _results.push(computeAlgebra(arg, vars));
+              _results.push(algebra(arg, vars));
             }
             return _results;
           })()
@@ -85,8 +85,8 @@
       },
       'cross': function(cross, vars) {
         var left, right;
-        left = computeAlgebra(cross.left, vars);
-        right = computeAlgebra(cross.right, vars);
+        left = algebra(cross.left, vars);
+        right = algebra(cross.right, vars);
         return Varset.cross(left, right);
       },
       'name': function(name, vars) {
@@ -216,7 +216,7 @@
     return {
       execute: execute,
       variables: variables,
-      computeAlgebra: computeAlgebra
+      algebra: algebra
     };
   });
 

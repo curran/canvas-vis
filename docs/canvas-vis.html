@@ -553,7 +553,7 @@ TODO handle missing data</p>
   <span class="function"><span class="title">execute</span></span> = (columns, expression) -&gt;
     tree = parser.parse expression
     vars = variables tree, columns
-    tree = computeAlgebra tree, vars</pre></div></div>
+    tree = algebra tree, vars</pre></div></div>
             
         </li>
         
@@ -585,50 +585,12 @@ TODO handle missing data</p>
         <li id="section-27">
             <div class="annotation">
               
-              <div class="pilwrap ">
+              <div class="pilwrap for-h2">
                 <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
-              <p>Old version
- dataStmts = []
- variables = match &#39;type&#39;, &#39;variables&#39;,
-   &#39;statements&#39;: (stmts, variables) -&gt;</p>
-<pre><code> dataStmts = []
- variables stmt for stmt in stmts.statements
-
- for dataStmt in dataStmts
-   oldName = dataStmt.oldName
-   newName = dataStmt.newName
-
-   variables[newName] = variables[oldName]
-
- return variables</code></pre>
-<p>   &#39;data&#39;: (data) -&gt; dataStmts.push data
-   &#39;statement&#39;: -&gt;</p>
+              <h2>algebra</h2>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>  computeAlgebra = match <span class="string">'type'</span>, <span class="string">'computeAlgebra'</span>,
-    <span class="string">'statements'</span>: (stmts, vars) -&gt;
-      type: <span class="string">'statements'</span>
-      statements: (computeAlgebra stmt, vars <span class="keyword">for</span> stmt <span class="keyword">in</span> stmts.statements)
-    <span class="string">'data'</span>: (data, vars) -&gt; data
-    <span class="string">'statement'</span>: match <span class="string">'statementType'</span>, <span class="string">'computeAlgebra'</span>,
-      ELEMENT: (stmt, vars) -&gt;
-        type: <span class="string">'statement'</span>
-        statementType: <span class="string">'ELEMENT'</span>
-        expr: computeAlgebra stmt.expr, vars
-      TRANS: (stmt, vars) -&gt; stmt
-      SCALE: (stmt, vars) -&gt; stmt
-      COORD: (stmt, vars) -&gt; stmt
-      GUIDE: (stmt, vars) -&gt; stmt
-    <span class="string">'function'</span>: (fn, vars) -&gt;
-      type: <span class="string">'function'</span>
-      name: fn.name
-      args: (computeAlgebra arg, vars <span class="keyword">for</span> arg <span class="keyword">in</span> fn.args)
-    <span class="string">'cross'</span>: (cross, vars) -&gt;
-      left = computeAlgebra cross.left, vars
-      right = computeAlgebra cross.right, vars
-      Varset.cross left, right</pre></div></div>
             
         </li>
         
@@ -639,11 +601,32 @@ TODO handle missing data</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
-              <p>return cross</p>
+              <p>Replaces graphics algebra expressions with varsets in the syntax tree.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="string">'name'</span>: (name, vars) -&gt;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  algebra = match <span class="string">'type'</span>, <span class="string">'algebra'</span>,
+    <span class="string">'statements'</span>: (stmts, vars) -&gt;
+      type: <span class="string">'statements'</span>
+      statements: (algebra stmt, vars <span class="keyword">for</span> stmt <span class="keyword">in</span> stmts.statements)
+    <span class="string">'data'</span>: (data, vars) -&gt; data
+    <span class="string">'statement'</span>: match <span class="string">'statementType'</span>, <span class="string">'algebra'</span>,
+      ELEMENT: (stmt, vars) -&gt;
+        type: <span class="string">'statement'</span>
+        statementType: <span class="string">'ELEMENT'</span>
+        expr: algebra stmt.expr, vars
+      TRANS: (stmt, vars) -&gt; stmt
+      SCALE: (stmt, vars) -&gt; stmt
+      COORD: (stmt, vars) -&gt; stmt
+      GUIDE: (stmt, vars) -&gt; stmt
+    <span class="string">'function'</span>: (fn, vars) -&gt;
+      type: <span class="string">'function'</span>
+      name: fn.name
+      args: (algebra arg, vars <span class="keyword">for</span> arg <span class="keyword">in</span> fn.args)
+    <span class="string">'cross'</span>: (cross, vars) -&gt;
+      left = algebra cross.left, vars
+      right = algebra cross.right, vars
+      Varset.cross left, right</pre></div></div>
             
         </li>
         
@@ -654,11 +637,11 @@ TODO handle missing data</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
-              <p>TODO have variables generate Varsets rather than Variables</p>
+              <p>return cross</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      Varset.fromVariable vars[name.name]</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="string">'name'</span>: (name, vars) -&gt;</pre></div></div>
             
         </li>
         
@@ -668,6 +651,21 @@ TODO handle missing data</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>TODO have variables generate Varsets rather than Variables</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      Varset.fromVariable vars[name.name]</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p>return name</p>
 
@@ -681,11 +679,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-31">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p>TODO unify &#39;data&#39; as a &#39;statement&#39;</p>
 
@@ -716,11 +714,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-32">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <p>printTree(tree) -&gt; String</p>
 
@@ -772,16 +770,16 @@ TODO handle missing data</p>
       varset: (varset, indent) -&gt; indent+<span class="string">'&lt;varset&gt;'</span>
     p tree, <span class="string">''</span>
   <span class="function"><span class="title">line</span></span> = (str) -&gt; str + <span class="string">'\n'</span>
-  {execute, variables, computeAlgebra}</pre></div></div>
+  {execute, variables, algebra}</pre></div></div>
             
         </li>
         
         
-        <li id="section-33">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <h1>MarkIterator</h1>
 
@@ -790,11 +788,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-34">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <ul>
 <li><code>hasNext</code>: -&gt; Boolean</li>
@@ -807,11 +805,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-35">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <p>An API for Jaque Bertin&#39;s notion of visualization &quot;marks&quot;.</p>
 
@@ -827,11 +825,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-36">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p>p means properties</p>
 
@@ -850,11 +848,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-37">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <p>Chainable property setter functions</p>
 
@@ -873,11 +871,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-38">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <p>Functions that evaluate the mark</p>
 
@@ -914,11 +912,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-39">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <h1>Match</h1>
 
@@ -927,11 +925,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-40">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <p>This utility lets us approximate Haskell&#39;s 
 pattern matching syntax in CoffeeScript</p>
@@ -970,11 +968,11 @@ define [<span class="string">'jquery.csv'</span>, <span class="string">'cv/Varia
         </li>
         
         
-        <li id="section-41">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+                <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
               <p>TODO if keyColumn specified then use it</p>
 

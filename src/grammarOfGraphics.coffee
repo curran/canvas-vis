@@ -9,7 +9,7 @@ define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset']
   execute = (columns, expression) ->
     tree = parser.parse expression
     vars = variables tree, columns
-    tree = computeAlgebra tree, vars
+    tree = algebra tree, vars
     #console.log printTree tree
 
 #scales:Map<int tupleIndex, Scale>
@@ -23,34 +23,19 @@ define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset']
       vars[stmt.newName] = columns[stmt.oldName]
     return vars
 
-  #Old version
-  #  dataStmts = []
-  #  variables = match 'type', 'variables',
-  #    'statements': (stmts, variables) ->
-  #
-  #      dataStmts = []
-  #      variables stmt for stmt in stmts.statements
-  #
-  #      for dataStmt in dataStmts
-  #        oldName = dataStmt.oldName
-  #        newName = dataStmt.newName
-  #
-  #        variables[newName] = variables[oldName]
-  #
-  #      return variables
-  #    'data': (data) -> dataStmts.push data
-  #    'statement': ->
-
-  computeAlgebra = match 'type', 'computeAlgebra',
+  # algebra
+  # --------------
+  # Replaces graphics algebra expressions with varsets in the syntax tree.
+  algebra = match 'type', 'algebra',
     'statements': (stmts, vars) ->
       type: 'statements'
-      statements: (computeAlgebra stmt, vars for stmt in stmts.statements)
+      statements: (algebra stmt, vars for stmt in stmts.statements)
     'data': (data, vars) -> data
-    'statement': match 'statementType', 'computeAlgebra',
+    'statement': match 'statementType', 'algebra',
       ELEMENT: (stmt, vars) ->
         type: 'statement'
         statementType: 'ELEMENT'
-        expr: computeAlgebra stmt.expr, vars
+        expr: algebra stmt.expr, vars
       TRANS: (stmt, vars) -> stmt
       SCALE: (stmt, vars) -> stmt
       COORD: (stmt, vars) -> stmt
@@ -58,10 +43,10 @@ define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset']
     'function': (fn, vars) ->
       type: 'function'
       name: fn.name
-      args: (computeAlgebra arg, vars for arg in fn.args)
+      args: (algebra arg, vars for arg in fn.args)
     'cross': (cross, vars) ->
-      left = computeAlgebra cross.left, vars
-      right = computeAlgebra cross.right, vars
+      left = algebra cross.left, vars
+      right = algebra cross.right, vars
       Varset.cross left, right
       #return cross
     'name': (name, vars) ->
@@ -142,4 +127,4 @@ define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset']
       varset: (varset, indent) -> indent+'<varset>'
     p tree, ''
   line = (str) -> str + '\n'
-  {execute, variables, computeAlgebra}
+  {execute, variables, algebra}
