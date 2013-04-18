@@ -578,8 +578,9 @@ TODO handle missing data</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>define [ <span class="string">'cv/grammarOfGraphics/parser'</span>, <span class="string">'cv/match'</span>, <span class="string">'cv/Varset'</span>, <span class="string">'cv/Scale'</span>]
-     , (parser, match, Varset, Scale) -&gt;
+            <div class="content"><div class='highlight'><pre>define [ <span class="string">'cv/grammarOfGraphics/parser'</span>, <span class="string">'cv/match'</span>, <span class="string">'cv/Varset'</span>,
+         <span class="string">'cv/Scale'</span>, <span class="string">'cv/mark'</span>]
+       , (parser, match, Varset, Scale, mark) -&gt;
   varsets = []
 
   <span class="function"><span class="title">execute</span></span> = (columns, expression) -&gt;
@@ -588,7 +589,18 @@ TODO handle missing data</p>
 
     tree = algebra tree, vars
     varsets = extractVarsets tree
-    console.log varsets</pre></div></div>
+    scales = extractScales tree
+
+    <span class="keyword">if</span> varsets.length != <span class="number">1</span>
+      <span class="keyword">throw</span> Error <span class="string">'Expected a single varset, got '</span>+varset.length
+
+    varset = varsets[<span class="number">0</span>]
+    (scale.init varset) <span class="keyword">for</span> scale <span class="keyword">in</span> _.values scales
+
+    keyToMark = renderer tree
+
+    keys = varset.keys()
+    <span class="keyword">return</span> [keys, scales, keyToMark]</pre></div></div>
             
         </li>
         
@@ -596,17 +608,12 @@ TODO handle missing data</p>
         <li id="section-27">
             <div class="annotation">
               
-              <div class="pilwrap ">
+              <div class="pilwrap for-h2">
                 <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
-              <p>tree = algebra tree, vars
-<code>scales</code>:Map<dim, Scale></p>
+              <h2>variables</h2>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    scales = extractScales tree
-    
-    renderKey = renderer tree</pre></div></div>
             
         </li>
         
@@ -616,34 +623,6 @@ TODO handle missing data</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-28">&#182;</a>
-              </div>
-              <p>   console.log scales</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">return</span> tree</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-29">
-            <div class="annotation">
-              
-              <div class="pilwrap for-h2">
-                <a class="pilcrow" href="#section-29">&#182;</a>
-              </div>
-              <h2>variables</h2>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-30">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p>Extracts named variables from DATA expressions</p>
 
@@ -658,11 +637,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-31">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap for-h2">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <h2>algebra</h2>
 
@@ -671,11 +650,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-32">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p>Replaces graphics algebra expressions with varsets in the syntax tree.</p>
 
@@ -709,11 +688,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-33">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap for-h2">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <h2>extractVarsets</h2>
 
@@ -722,11 +701,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-34">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p>Extracts varsets from the syntax tree into a flat list.</p>
 
@@ -751,13 +730,56 @@ TODO handle missing data</p>
         </li>
         
         
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <h2>extractScales</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>Extracts scales from SCALE statements</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  extractScales = match <span class="string">'type'</span>,
+    <span class="string">'statements'</span>: (stmts) -&gt;
+      scaleObjects = (extractScales stmt <span class="keyword">for</span> stmt <span class="keyword">in</span> stmts.statements)
+      scaleObjects = _.filter scaleObjects, _.identity
+      scales = {}
+      <span class="keyword">for</span> scale <span class="keyword">in</span> scaleObjects
+        scales[scale.dim] = scale
+      <span class="keyword">return</span> scales
+    <span class="string">'data'</span>: (t) -&gt;
+    <span class="string">'statement'</span>: (t) -&gt;
+      <span class="keyword">if</span> t.statementType == <span class="string">'SCALE'</span>
+        extractScales t.expr
+    <span class="string">'function'</span>: match <span class="string">'name'</span>,
+      <span class="string">'linear'</span>: (fn) -&gt;
+        dim = fn.args[<span class="number">0</span>].args[<span class="number">0</span>].value
+        <span class="keyword">new</span> Scale dim</pre></div></div>
+            
+        </li>
+        
+        
         <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap for-h2">
                 <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
-              <h2>extractScales</h2>
+              <h2>renderer</h2>
 
             </div>
             
@@ -769,45 +791,6 @@ TODO handle missing data</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-36">&#182;</a>
-              </div>
-              <p>Extracts scales from SCALE statements</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  extractScales = match <span class="string">'type'</span>,
-    <span class="string">'statements'</span>: (stmts) -&gt;
-      _.filter (extractScales stmt <span class="keyword">for</span> stmt <span class="keyword">in</span> stmts.statements), _.identity
-    <span class="string">'data'</span>: (t) -&gt;
-    <span class="string">'statement'</span>: (t) -&gt;
-      <span class="keyword">if</span> t.statementType == <span class="string">'SCALE'</span>
-        extractScales t.expr
-    <span class="string">'function'</span>: match <span class="string">'name'</span>,
-      <span class="string">'linear'</span>: (fn) -&gt;
-        dim = fn.args[<span class="number">0</span>].args[<span class="number">0</span>].value
-        console.log <span class="string">'dim = '</span>+dim
-        <span class="keyword">new</span> Scale dim</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-37">
-            <div class="annotation">
-              
-              <div class="pilwrap for-h2">
-                <a class="pilcrow" href="#section-37">&#182;</a>
-              </div>
-              <h2>renderer</h2>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-38">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <p>Generates a function that generates a mark from a key.</p>
 
@@ -822,11 +805,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-39">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p>TODO support multiple ELEMENT statements</p>
 
@@ -839,11 +822,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-40">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <p>TODO unify &#39;data&#39; and &#39;statement&#39; types</p>
 
@@ -852,17 +835,17 @@ TODO handle missing data</p>
             <div class="content"><div class='highlight'><pre>    <span class="string">'data'</span>: (t) -&gt;
     <span class="string">'function'</span>: match <span class="string">'name'</span>,
       <span class="string">'point'</span>: (fn) -&gt;
-        argFns = renderer arg <span class="keyword">for</span> arg <span class="keyword">in</span> fn.args
-        (key) -&gt;</pre></div></div>
+        argFns = (renderer arg <span class="keyword">for</span> arg <span class="keyword">in</span> fn.args)
+        (key, scales) -&gt;</pre></div></div>
             
         </li>
         
         
-        <li id="section-41">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <p>set up the mark with defaults</p>
 
@@ -875,11 +858,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-42">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <p>allow arguments to &#39;point&#39; to
 set properties of the mark</p>
@@ -887,24 +870,25 @@ set properties of the mark</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>          <span class="keyword">for</span> argFn <span class="keyword">in</span> argFns
-            m = argFn key, m
+            m = argFn key, scales, m
 
           <span class="keyword">return</span> m
 
       <span class="string">'position'</span>: (fn, m) -&gt;
-        (key, m)-&gt;
+        (key, scales, m)-&gt;
           varset = fn.args[<span class="number">0</span>]
           tuple = varset.tuple key
-          m.x(tuple[<span class="number">0</span>]).y(tuple[<span class="number">1</span>])</pre></div></div>
+          m.x(scales[<span class="number">1</span>].value tuple)
+           .y(scales[<span class="number">2</span>].value tuple)</pre></div></div>
             
         </li>
         
         
-        <li id="section-43">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap for-h2">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <h2>show</h2>
 
@@ -913,11 +897,11 @@ set properties of the mark</p>
         </li>
         
         
-        <li id="section-44">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+                <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
               <p>Renders an abstract syntax tree as an expression string</p>
 
@@ -940,11 +924,11 @@ set properties of the mark</p>
         </li>
         
         
-        <li id="section-45">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+                <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
               <h1>MarkIterator</h1>
 
@@ -953,11 +937,11 @@ set properties of the mark</p>
         </li>
         
         
-        <li id="section-46">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
+                <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
               <ul>
 <li><code>hasNext</code>: -&gt; Boolean</li>
@@ -970,11 +954,11 @@ set properties of the mark</p>
         </li>
         
         
-        <li id="section-47">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
+                <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
               <p>An API for Jaque Bertin&#39;s notion of visualization &quot;marks&quot;.</p>
 
@@ -990,11 +974,11 @@ set properties of the mark</p>
         </li>
         
         
-        <li id="section-48">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-48">&#182;</a>
+                <a class="pilcrow" href="#section-46">&#182;</a>
               </div>
               <p>p means properties</p>
 
@@ -1013,11 +997,11 @@ set properties of the mark</p>
         </li>
         
         
-        <li id="section-49">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-49">&#182;</a>
+                <a class="pilcrow" href="#section-47">&#182;</a>
               </div>
               <p>Chainable property setter functions</p>
 
@@ -1036,11 +1020,11 @@ set properties of the mark</p>
         </li>
         
         
-        <li id="section-50">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-50">&#182;</a>
+                <a class="pilcrow" href="#section-48">&#182;</a>
               </div>
               <p>Functions that evaluate the mark</p>
 
@@ -1089,11 +1073,11 @@ set properties of the mark</p>
         </li>
         
         
-        <li id="section-51">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-51">&#182;</a>
+                <a class="pilcrow" href="#section-49">&#182;</a>
               </div>
               <h1>Match</h1>
 
@@ -1102,11 +1086,11 @@ set properties of the mark</p>
         </li>
         
         
-        <li id="section-52">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-52">&#182;</a>
+                <a class="pilcrow" href="#section-50">&#182;</a>
               </div>
               <p>This utility lets us approximate Haskell&#39;s 
 pattern matching syntax in CoffeeScript</p>
@@ -1145,11 +1129,11 @@ define [<span class="string">'jquery.csv'</span>, <span class="string">'cv/Varia
         </li>
         
         
-        <li id="section-53">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-53">&#182;</a>
+                <a class="pilcrow" href="#section-51">&#182;</a>
               </div>
               <p>TODO if keyColumn specified then use it</p>
 

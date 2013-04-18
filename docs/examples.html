@@ -199,8 +199,17 @@
   """</span>
 
   readCSV <span class="string">'../data/iris.csv'</span>, (err, variables) -&gt;
-    tree = grammarOfGraphics.execute variables, expr
-    console.log grammarOfGraphics.show tree</pre></div></div>
+    [keys, scales, keyToMark] = grammarOfGraphics.execute variables, expr
+
+    viewport = <span class="keyword">new</span> Viewport
+
+    GGComponent = Component.extend
+      paint: (ctx, bounds) -&gt;
+        viewport.dest.copy bounds
+        <span class="keyword">for</span> key <span class="keyword">in</span> keys
+          (keyToMark key, scales).render ctx, viewport
+
+    bindToCanvas <span class="string">'grammarOfGraphics'</span>, <span class="keyword">new</span> GGComponent</pre></div></div>
             
         </li>
         
@@ -208,53 +217,8 @@
         <li id="section-8">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              <p>TODO this is a hack</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    varset = _.last(tree.statements).expr.args[<span class="number">0</span>].args[<span class="number">0</span>]
-    window.varset = varset
-
-    xs = _.map varset.tuples(), (tuple) -&gt; tuple[<span class="number">0</span>]
-    ys = _.map varset.tuples(), (tuple) -&gt; tuple[<span class="number">1</span>]
-
-    xMin = _.min xs
-    xMax = _.max xs
-    yMin = _.min ys
-    yMax = _.max ys
-
-    viewport = <span class="keyword">new</span> Viewport
-      src: <span class="keyword">new</span> Rectangle
-        x: xMin
-        y: yMin
-        w: xMax - xMin
-        h: yMax - yMin
-      dest: <span class="keyword">new</span> Rectangle
-
-    GGComponent = Component.extend
-      paint: (ctx, bounds) -&gt;
-        viewport.dest.copy bounds
-        <span class="keyword">for</span> tuple <span class="keyword">in</span> varset.tuples()
-          mark()
-            .x(tuple[<span class="number">0</span>])
-            .y(tuple[<span class="number">1</span>])
-            .size(<span class="number">0.1</span>)
-            .fillStyle(<span class="string">'rgba(0,0,0,0.2)'</span>)
-            .render ctx, viewport
-
-    bindToCanvas <span class="string">'grammarOfGraphics'</span>, <span class="keyword">new</span> GGComponent</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-9">
-            <div class="annotation">
-              
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <h1>Roadmap</h1>
 
@@ -263,11 +227,11 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               <ul>
 <li>Bertin example from p.43</li>

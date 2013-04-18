@@ -20,39 +20,15 @@ require ['cv/Component', 'cv/bindToCanvas', 'cv/readCSV',
   """
 
   readCSV '../data/iris.csv', (err, variables) ->
-    tree = grammarOfGraphics.execute variables, expr
-    console.log grammarOfGraphics.show tree
-
-#TODO this is a hack
-    varset = _.last(tree.statements).expr.args[0].args[0]
-    window.varset = varset
-
-    xs = _.map varset.tuples(), (tuple) -> tuple[0]
-    ys = _.map varset.tuples(), (tuple) -> tuple[1]
-
-    xMin = _.min xs
-    xMax = _.max xs
-    yMin = _.min ys
-    yMax = _.max ys
+    [keys, scales, keyToMark] = grammarOfGraphics.execute variables, expr
 
     viewport = new Viewport
-      src: new Rectangle
-        x: xMin
-        y: yMin
-        w: xMax - xMin
-        h: yMax - yMin
-      dest: new Rectangle
 
     GGComponent = Component.extend
       paint: (ctx, bounds) ->
         viewport.dest.copy bounds
-        for tuple in varset.tuples()
-          mark()
-            .x(tuple[0])
-            .y(tuple[1])
-            .size(0.1)
-            .fillStyle('rgba(0,0,0,0.2)')
-            .render ctx, viewport
+        for key in keys
+          (keyToMark key, scales).render ctx, viewport
 
     bindToCanvas 'grammarOfGraphics', new GGComponent
 

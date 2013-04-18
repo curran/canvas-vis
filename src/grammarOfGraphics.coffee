@@ -2,8 +2,9 @@
 #=================
 #
 # The module exposing Grammar of Graphics functionality.
-define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset', 'cv/Scale']
-     , (parser, match, Varset, Scale) ->
+define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset',
+         'cv/Scale', 'cv/mark']
+       , (parser, match, Varset, Scale, mark) ->
   varsets = []
 
   execute = (columns, expression) ->
@@ -12,14 +13,18 @@ define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset', 'cv/Scale']
 
     tree = algebra tree, vars
     varsets = extractVarsets tree
-    console.log varsets
-    #tree = algebra tree, vars
-#`scales`:Map<dim, Scale>
     scales = extractScales tree
-    
-    renderKey = renderer tree
-#    console.log scales
-    return tree
+
+    if varsets.length != 1
+      throw Error 'Expected a single varset, got '+varset.length
+
+    varset = varsets[0]
+    (scale.init varset) for scale in _.values scales
+
+    keyToMark = renderer tree
+
+    keys = varset.keys()
+    return [keys, scales, keyToMark]
 
   # variables
   # ---------
@@ -82,7 +87,12 @@ define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset', 'cv/Scale']
   # Extracts scales from SCALE statements
   extractScales = match 'type',
     'statements': (stmts) ->
-      _.filter (extractScales stmt for stmt in stmts.statements), _.identity
+      scaleObjects = (extractScales stmt for stmt in stmts.statements)
+      scaleObjects = _.filter scaleObjects, _.identity
+      scales = {}
+      for scale in scaleObjects
+        scales[scale.dim] = scale
+      return scales
     'data': (t) ->
     'statement': (t) ->
       if t.statementType == 'SCALE'
@@ -90,7 +100,6 @@ define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset', 'cv/Scale']
     'function': match 'name',
       'linear': (fn) ->
         dim = fn.args[0].args[0].value
-        console.log 'dim = '+dim
         new Scale dim
 
   # renderer
@@ -109,8 +118,8 @@ define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset', 'cv/Scale']
     'data': (t) ->
     'function': match 'name',
       'point': (fn) ->
-        argFns = renderer arg for arg in fn.args
-        (key) ->
+        argFns = (renderer arg for arg in fn.args)
+        (key, scales) ->
           # set up the mark with defaults
           m = mark()
             .shape('circle')
@@ -119,15 +128,16 @@ define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset', 'cv/Scale']
           # allow arguments to 'point' to
           # set properties of the mark
           for argFn in argFns
-            m = argFn key, m
+            m = argFn key, scales, m
 
           return m
 
       'position': (fn, m) ->
-        (key, m)->
+        (key, scales, m)->
           varset = fn.args[0]
           tuple = varset.tuple key
-          m.x(tuple[0]).y(tuple[1])
+          m.x(scales[1].value tuple)
+           .y(scales[2].value tuple)
 
   # show
   # ----

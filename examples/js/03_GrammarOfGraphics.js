@@ -6,39 +6,17 @@
     var expr;
     expr = "DATA: x = \"petal length\"\nDATA: y = \"sepal length\"\nTRANS: x = x\nTRANS: y = y\nSCALE: linear(dim(1))\nSCALE: linear(dim(2))\nCOORD: rect(dim(1, 2))\nGUIDE: axis(dim(1))\nGUIDE: axis(dim(2))\nELEMENT: point(position(x*y))";
     return readCSV('../data/iris.csv', function(err, variables) {
-      var GGComponent, tree, varset, viewport, xMax, xMin, xs, yMax, yMin, ys;
-      tree = grammarOfGraphics.execute(variables, expr);
-      console.log(grammarOfGraphics.show(tree));
-      varset = _.last(tree.statements).expr.args[0].args[0];
-      window.varset = varset;
-      xs = _.map(varset.tuples(), function(tuple) {
-        return tuple[0];
-      });
-      ys = _.map(varset.tuples(), function(tuple) {
-        return tuple[1];
-      });
-      xMin = _.min(xs);
-      xMax = _.max(xs);
-      yMin = _.min(ys);
-      yMax = _.max(ys);
-      viewport = new Viewport({
-        src: new Rectangle({
-          x: xMin,
-          y: yMin,
-          w: xMax - xMin,
-          h: yMax - yMin
-        }),
-        dest: new Rectangle
-      });
+      var GGComponent, keyToMark, keys, scales, viewport, _ref;
+      _ref = grammarOfGraphics.execute(variables, expr), keys = _ref[0], scales = _ref[1], keyToMark = _ref[2];
+      viewport = new Viewport;
       GGComponent = Component.extend({
         paint: function(ctx, bounds) {
-          var tuple, _i, _len, _ref, _results;
+          var key, _i, _len, _results;
           viewport.dest.copy(bounds);
-          _ref = varset.tuples();
           _results = [];
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            tuple = _ref[_i];
-            _results.push(mark().x(tuple[0]).y(tuple[1]).size(0.1).fillStyle('rgba(0,0,0,0.2)').render(ctx, viewport));
+          for (_i = 0, _len = keys.length; _i < _len; _i++) {
+            key = keys[_i];
+            _results.push((keyToMark(key, scales)).render(ctx, viewport));
           }
           return _results;
         }
