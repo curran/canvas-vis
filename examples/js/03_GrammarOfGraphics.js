@@ -7,7 +7,7 @@
     expr = "DATA: x = \"petal length\"\nDATA: y = \"sepal length\"\nTRANS: x = x\nTRANS: y = y\nSCALE: linear(dim(1))\nSCALE: linear(dim(2))\nCOORD: rect(dim(1, 2))\nGUIDE: axis(dim(1))\nGUIDE: axis(dim(2))\nELEMENT: point(position(x*y))";
     return readCSV('../data/iris.csv', function(err, variables) {
       var GGComponent, tree, varset, viewport, xMax, xMin, xs, yMax, yMin, ys;
-      tree = grammarOfGraphics(variables, expr);
+      tree = grammarOfGraphics.execute(variables, expr);
       varset = _.last(tree.statements).expr.args[0].args[0];
       window.varset = varset;
       xs = _.map(varset.tuples(), function(tuple) {

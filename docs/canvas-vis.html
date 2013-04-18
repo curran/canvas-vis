@@ -552,12 +552,12 @@ TODO handle missing data</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>define [
-  <span class="string">'cv/grammarOfGraphics/parser'</span>,
-  <span class="string">'cv/grammarOfGraphics/printTree'</span>,
-  <span class="string">'cv/grammarOfGraphics/step1_variables'</span>,
-  <span class="string">'cv/grammarOfGraphics/step2_algebra'</span>,
-  <span class="string">'cv/grammarOfGraphics/step3_scales'</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>define [ <span class="string">'cv/grammarOfGraphics/parser'</span>, <span class="string">'cv/match'</span>, <span class="string">'cv/Varset'</span>]
+     , (parser, match, Varset) -&gt;
+  <span class="function"><span class="title">execute</span></span> = (variables, expression) -&gt;
+    tree = parser.parse expression
+    variables = step1 tree, variables
+    tree = step2 tree, variables</pre></div></div>
             
         </li>
         
@@ -568,19 +568,52 @@ TODO handle missing data</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
-              <p> &#39;cv/grammarOfGraphics/step4_statistics&#39;,
- &#39;cv/grammarOfGraphics/step5_geometry&#39;,
- &#39;cv/grammarOfGraphics/step6_coordinates&#39;,
- &#39;cv/grammarOfGraphics/step7_aesthetics&#39;,
- &#39;cv/grammarOfGraphics/step8_renderer&#39;</p>
+              <p>console.log printTree tree</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>], (parser, printTree, step1, step2, step3) -&gt;
-  (variables, expression) -&gt;
-    tree = parser.parse expression
-    variables = step1 tree, variables
-    tree = step2 tree, variables</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    console.dir (step3 tree, variables)
+    <span class="keyword">return</span> tree
+
+  dataStmts = []
+  step1 = match <span class="string">'type'</span>, <span class="string">'step1'</span>,
+    <span class="string">'statements'</span>: (stmts, variables) -&gt;
+
+      dataStmts = []
+      step1 stmt <span class="keyword">for</span> stmt <span class="keyword">in</span> stmts.statements
+
+      <span class="keyword">for</span> dataStmt <span class="keyword">in</span> dataStmts
+        oldName = dataStmt.oldName
+        newName = dataStmt.newName
+
+        variables[newName] = variables[oldName]
+
+      <span class="keyword">return</span> variables
+    <span class="string">'data'</span>: (data) -&gt; dataStmts.push data
+    <span class="string">'statement'</span>: -&gt;
+
+  step2 = match <span class="string">'type'</span>, <span class="string">'step2'</span>,
+    <span class="string">'statements'</span>: (stmts, vars) -&gt;
+      type: <span class="string">'statements'</span>
+      statements: (step2 stmt, vars <span class="keyword">for</span> stmt <span class="keyword">in</span> stmts.statements)
+    <span class="string">'data'</span>: (data, vars) -&gt; data
+    <span class="string">'statement'</span>: match <span class="string">'statementType'</span>, <span class="string">'step2'</span>,
+      ELEMENT: (stmt, vars) -&gt;
+        type: <span class="string">'statement'</span>
+        statementType: <span class="string">'ELEMENT'</span>
+        expr: step2 stmt.expr, vars
+      TRANS: (stmt, vars) -&gt; stmt
+      SCALE: (stmt, vars) -&gt; stmt
+      COORD: (stmt, vars) -&gt; stmt
+      GUIDE: (stmt, vars) -&gt; stmt
+    <span class="string">'function'</span>: (fn, vars) -&gt;
+      type: <span class="string">'function'</span>
+      name: fn.name
+      args: (step2 arg, vars <span class="keyword">for</span> arg <span class="keyword">in</span> fn.args)
+    <span class="string">'cross'</span>: (cross, vars) -&gt;
+      left = step2 cross.left, vars
+      right = step2 cross.right, vars
+      Varset.cross left, right</pre></div></div>
             
         </li>
         
@@ -591,12 +624,11 @@ TODO handle missing data</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
-              <p>console.log printTree tree</p>
+              <p>return cross</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    console.dir (step3 tree, variables)
-    <span class="keyword">return</span> tree</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="string">'name'</span>: (name, vars) -&gt;</pre></div></div>
             
         </li>
         
@@ -604,12 +636,14 @@ TODO handle missing data</p>
         <li id="section-28">
             <div class="annotation">
               
-              <div class="pilwrap for-h1">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
-              <h1>MarkIterator</h1>
+              <p>TODO have step1 generate Varsets rather than Variables</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>      Varset.fromVariable vars[name.name]</pre></div></div>
             
         </li>
         
@@ -619,6 +653,133 @@ TODO handle missing data</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <p>return name</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  step3 = match <span class="string">'type'</span>, <span class="string">'step3'</span>,
+    <span class="string">'statements'</span>: (stmts) -&gt;
+      scales = (step3 stmt <span class="keyword">for</span> stmt <span class="keyword">in</span> stmts.statements)
+      _.extend.apply <span class="literal">null</span>, scales</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>TODO unify &#39;data&#39; as a &#39;statement&#39;</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="string">'data'</span>: (data) -&gt; {}
+    <span class="string">'statement'</span>: match <span class="string">'statementType'</span>, <span class="string">'step3.statement'</span>,
+      ELEMENT: (stmt) -&gt; {}
+      TRANS: (stmt) -&gt; {}
+      SCALE: (stmt) -&gt; step3 stmt.expr
+      COORD: (stmt) -&gt; {}
+      GUIDE: (stmt) -&gt; {}
+    <span class="string">'function'</span>: match <span class="string">'name'</span>, <span class="string">'step3.function'</span>,
+      <span class="string">'linear'</span>: (fn) -&gt;
+        <span class="keyword">if</span> fn.args.length != <span class="number">1</span>
+          <span class="keyword">throw</span> Error <span class="string">'linear() expects one argument'</span>
+        dim = step3 fn.args[<span class="number">0</span>]
+        result = {}
+        result[dim] = type: <span class="string">'linear'</span>
+        result
+      <span class="string">'dim'</span>: (fn) -&gt;
+        <span class="keyword">if</span> fn.args.length != <span class="number">1</span>
+          <span class="keyword">throw</span> Error <span class="string">'dim() expects one argument'</span>
+        <span class="keyword">if</span> fn.args[<span class="number">0</span>].type != <span class="string">'number'</span>
+          <span class="keyword">throw</span> Error <span class="string">'dim() expects a numeric argument'</span>
+        fn.args[<span class="number">0</span>].value</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p>printTree(tree) -&gt; String</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="function"><span class="title">printTree</span></span> = (tree) -&gt;
+    p = match <span class="string">'type'</span>, <span class="string">'printTree'</span>,
+      statements: (statements, indent) -&gt;
+        [ss, i] = [statements.statements, indent]
+        line(i+<span class="string">'statements'</span>)+
+          ((p s, i+<span class="string">'  '</span>) <span class="keyword">for</span> s <span class="keyword">in</span> ss).join <span class="string">''</span>
+      statement: (stmt, indent) -&gt;
+        [
+          (line indent+<span class="string">'statement: '</span>+stmt.statementType),
+          (p stmt.expr, indent+<span class="string">'  '</span>)
+        ].join <span class="string">''</span>
+      data: (data, indent) -&gt;
+        line indent+<span class="string">"statement: DATA <span class="subst">#{data.newName}</span> = \"<span class="subst">#{data.oldName}</span>\""</span>
+      name: (name, indent) -&gt;
+        line indent+<span class="string">'name '</span>+name.name
+      number: (number, indent) -&gt;
+        line indent+<span class="string">'number '</span>+number.value
+      string: (string, indent) -&gt;
+        line indent+<span class="string">'string '</span>+string.value
+      cross: (cross, indent) -&gt;
+        [
+          (line indent+<span class="string">'cross'</span>),
+          (line indent+<span class="string">'  left'</span>),
+          (p cross.left, indent+<span class="string">'    '</span>),
+          (line indent+<span class="string">'  right'</span>),
+          (p cross.right, indent+<span class="string">'    '</span>)
+        ].join <span class="string">''</span>
+      assignment: (assignment, indent) -&gt;
+        [
+          (line indent+<span class="string">'assignment'</span>),
+          (line indent+<span class="string">'  left'</span>),
+          (p assignment.left, indent+<span class="string">'    '</span>),
+          (line indent+<span class="string">'  right'</span>),
+          (p assignment.right, indent+<span class="string">'    '</span>)
+        ].join <span class="string">''</span>
+      <span class="reserved">function</span>: (fn, indent) -&gt;
+        [
+          (line indent+<span class="string">'function '</span>+fn.name),
+          (line indent+<span class="string">'  args:'</span>),
+          (<span class="keyword">for</span> arg <span class="keyword">in</span> fn.args
+             p arg, indent+<span class="string">'    '</span>
+          ).join <span class="string">''</span>
+        ].join <span class="string">''</span>
+      varset: (varset, indent) -&gt; indent+<span class="string">'&lt;varset&gt;'</span>
+    p tree, <span class="string">''</span>
+  <span class="function"><span class="title">line</span></span> = (str) -&gt; str + <span class="string">'\n'</span>
+  {execute, step1, step2}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h1">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <h1>MarkIterator</h1>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <ul>
 <li><code>hasNext</code>: -&gt; Boolean</li>
@@ -631,11 +792,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-30">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <p>An API for Jaque Bertin&#39;s notion of visualization &quot;marks&quot;.</p>
 
@@ -651,11 +812,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-31">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <p>p means properties</p>
 
@@ -674,11 +835,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-32">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <p>Chainable property setter functions</p>
 
@@ -697,11 +858,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-33">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p>Functions that evaluate the mark</p>
 
@@ -738,11 +899,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-34">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <h1>Match</h1>
 
@@ -751,11 +912,11 @@ TODO handle missing data</p>
         </li>
         
         
-        <li id="section-35">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <p>This utility lets us approximate Haskell&#39;s 
 pattern matching syntax in CoffeeScript</p>
@@ -794,11 +955,11 @@ define [<span class="string">'jquery.csv'</span>, <span class="string">'cv/Varia
         </li>
         
         
-        <li id="section-36">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <p>TODO if keyColumn specified then use it</p>
 

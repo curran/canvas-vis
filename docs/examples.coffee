@@ -86,7 +86,7 @@ require ['cv/Component', 'cv/bindToCanvas', 'cv/readCSV',
   """
 
   readCSV '../data/iris.csv', (err, variables) ->
-    tree = grammarOfGraphics variables, expr
+    tree = grammarOfGraphics.execute variables, expr
 
 #TODO this is a hack
     varset = _.last(tree.statements).expr.args[0].args[0]

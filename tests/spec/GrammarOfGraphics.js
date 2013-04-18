@@ -2,11 +2,8 @@ define( [
   'cv/readCSV',
   'cv/grammarOfGraphics',
   'cv/grammarOfGraphics/parser',
-  'cv/grammarOfGraphics/printTree',
-  'cv/grammarOfGraphics/step1_variables',
-  'cv/grammarOfGraphics/step2_algebra'
-], function(readCSV, gg, parser, printTree, 
-   step1, step2){
+  'cv/grammarOfGraphics/printTree'
+], function(readCSV, grammarOfGraphics, parser, printTree){
   var csvLoaded = false, csvColumns;
   var testExpr = [
     'DATA: x = "petal length"',
@@ -39,7 +36,7 @@ define( [
 //ELEMENT: point(position(pop1980))
 
         var tree = parser.parse(testExpr);
-        var variables = step1(tree, csvColumns);
+        var variables = grammarOfGraphics.step1(tree, csvColumns);
 
         var names = _.keys(variables);
         expect(_(names).contains("sepal width")).toEqual(true);
@@ -53,8 +50,8 @@ define( [
     });
     it("should compute step 2: algebra", function(){
       var tree = parser.parse(testExpr);
-      var variables = step1(tree, csvColumns);
-      tree = step2(tree, variables);
+      var variables = grammarOfGraphics.step1(tree, csvColumns);
+      tree = grammarOfGraphics.step2(tree, variables);
       var varset = _.last(tree.statements).expr.args[0].args[0];
       expect(varset.type).toEqual('varset');
 
