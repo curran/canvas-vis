@@ -4,7 +4,7 @@
 
   define([], function() {
     var match;
-    return match = function(property, fnName, fns) {
+    return match = function(property, fns) {
       return function(obj) {
         var fn, key;
         key = obj[property];
@@ -12,7 +12,7 @@
         if (fn) {
           return fn.apply(null, arguments);
         } else {
-          throw Error("no match for " + fnName + "." + property + " = " + key + ".\nObject = " + obj);
+          throw Error("no match for " + property + " = " + key + ".\nObject = " + obj);
         }
       };
     };

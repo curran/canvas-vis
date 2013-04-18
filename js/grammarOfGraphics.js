@@ -26,7 +26,7 @@
       }
       return vars;
     };
-    algebra = match('type', 'algebra', {
+    algebra = match('type', {
       'statements': function(stmts, vars) {
         var stmt;
         return {
@@ -46,7 +46,7 @@
       'data': function(data, vars) {
         return data;
       },
-      'statement': match('statementType', 'algebra', {
+      'statement': match('statementType', {
         ELEMENT: function(stmt, vars) {
           return {
             type: 'statement',
@@ -94,7 +94,7 @@
         return Varset.fromVariable(vars[name.name]);
       }
     });
-    scales = match('type', 'scales', {
+    scales = match('type', {
       'statements': function(stmts) {
         var stmt;
         return _.filter((function() {
@@ -114,7 +114,7 @@
           return scales(t.expr);
         }
       },
-      'function': match('name', 'scales.function', {
+      'function': match('name', {
         'linear': function(fn) {
           var arg, scaleObj, _i, _len, _ref;
           scaleObj = {
@@ -138,7 +138,7 @@
         }
       })
     });
-    renderer = match('type', 'renderer', {
+    renderer = match('type', {
       'statements': function(stmts) {
         var renderers, stmt;
         renderers = (function() {
@@ -160,7 +160,7 @@
         }
       },
       'data': function(t) {},
-      'function': match('name', 'renderer.function', {
+      'function': match('name', {
         'point': function(fn) {
           var arg, argFns, _i, _len, _ref;
           _ref = fn.args;
@@ -188,7 +188,7 @@
         }
       })
     });
-    show = match('type', 'show', {
+    show = match('type', {
       statements: function(t) {
         var s;
         return ((function() {

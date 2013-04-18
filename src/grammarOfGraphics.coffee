@@ -26,12 +26,12 @@ define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset']
   # algebra
   # -------
   # Replaces graphics algebra expressions with varsets in the syntax tree.
-  algebra = match 'type', 'algebra',
+  algebra = match 'type',
     'statements': (stmts, vars) ->
       type: 'statements'
       statements: (algebra stmt, vars for stmt in stmts.statements)
     'data': (data, vars) -> data
-    'statement': match 'statementType', 'algebra',
+    'statement': match 'statementType',
       ELEMENT: (stmt, vars) ->
         type: 'statement'
         statementType: 'ELEMENT'
@@ -49,18 +49,17 @@ define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset']
       right = algebra cross.right, vars
       Varset.cross left, right
     'name': (name, vars) ->
-      # TODO have variables generate Varsets rather than Variables
       Varset.fromVariable vars[name.name]
 
   # scales
   # ------
   # Extracts scales from SCALE statements
-  scales = match 'type', 'scales',
+  scales = match 'type',
     'statements': (stmts) ->
       _.filter (scales stmt for stmt in stmts.statements), _.identity
     'data': (t) ->
     'statement': (t) -> if t.statementType == 'SCALE' then scales t.expr
-    'function': match 'name', 'scales.function',
+    'function': match 'name',
       'linear': (fn) ->
         scaleObj = type:'linear'
         scales arg, scaleObj for arg in fn.args
@@ -73,7 +72,7 @@ define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset']
   # renderer
   # --------
   # Generates a function that generates a mark from a key.
-  renderer = match 'type', 'renderer',
+  renderer = match 'type',
 
     'statements': (stmts) ->
       renderers = (renderer stmt for stmt in stmts.statements)
@@ -84,8 +83,7 @@ define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset']
     'statement': (t) -> if t.statementType == 'ELEMENT' then renderer t.expr
 #TODO unify 'data' and 'statement' types
     'data': (t) ->
-      #TODO get rid of fnName arg
-    'function': match 'name', 'renderer.function',
+    'function': match 'name',
       'point': (fn) ->
         argFns = renderer arg for arg in fn.args
         (key) ->
@@ -110,7 +108,7 @@ define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset']
   # show
   # ----
   # Renders an abstract syntax tree as an expression string
-  show = match 'type', 'show',
+  show = match 'type',
     statements: (t) -> (show s for s in t.statements).join '\n'
     statement: (t) -> "#{t.statementType}: #{show t.expr}"
     data: (t) -> "DATA: #{t.newName}=\"#{t.oldName}\""

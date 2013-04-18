@@ -648,12 +648,12 @@ TODO handle missing data</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  algebra = match <span class="string">'type'</span>, <span class="string">'algebra'</span>,
+            <div class="content"><div class='highlight'><pre>  algebra = match <span class="string">'type'</span>,
     <span class="string">'statements'</span>: (stmts, vars) -&gt;
       type: <span class="string">'statements'</span>
       statements: (algebra stmt, vars <span class="keyword">for</span> stmt <span class="keyword">in</span> stmts.statements)
     <span class="string">'data'</span>: (data, vars) -&gt; data
-    <span class="string">'statement'</span>: match <span class="string">'statementType'</span>, <span class="string">'algebra'</span>,
+    <span class="string">'statement'</span>: match <span class="string">'statementType'</span>,
       ELEMENT: (stmt, vars) -&gt;
         type: <span class="string">'statement'</span>
         statementType: <span class="string">'ELEMENT'</span>
@@ -713,12 +713,12 @@ TODO handle missing data</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  scales = match <span class="string">'type'</span>, <span class="string">'scales'</span>,
+            <div class="content"><div class='highlight'><pre>  scales = match <span class="string">'type'</span>,
     <span class="string">'statements'</span>: (stmts) -&gt;
       _.filter (scales stmt <span class="keyword">for</span> stmt <span class="keyword">in</span> stmts.statements), _.identity
     <span class="string">'data'</span>: (t) -&gt;
     <span class="string">'statement'</span>: (t) -&gt; <span class="keyword">if</span> t.statementType == <span class="string">'SCALE'</span> <span class="keyword">then</span> scales t.expr
-    <span class="string">'function'</span>: match <span class="string">'name'</span>, <span class="string">'scales.function'</span>,
+    <span class="string">'function'</span>: match <span class="string">'name'</span>,
       <span class="string">'linear'</span>: (fn) -&gt;
         scaleObj = type:<span class="string">'linear'</span>
         scales arg, scaleObj <span class="keyword">for</span> arg <span class="keyword">in</span> fn.args
@@ -754,7 +754,7 @@ TODO handle missing data</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  renderer = match <span class="string">'type'</span>, <span class="string">'renderer'</span>,
+            <div class="content"><div class='highlight'><pre>  renderer = match <span class="string">'type'</span>,
 
     <span class="string">'statements'</span>: (stmts) -&gt;
       renderers = (renderer stmt <span class="keyword">for</span> stmt <span class="keyword">in</span> stmts.statements)
@@ -805,7 +805,7 @@ TODO handle missing data</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="string">'function'</span>: match <span class="string">'name'</span>, <span class="string">'renderer.function'</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="string">'function'</span>: match <span class="string">'name'</span>,
       <span class="string">'point'</span>: (fn) -&gt;
         argFns = renderer arg <span class="keyword">for</span> arg <span class="keyword">in</span> fn.args
         (key) -&gt;</pre></div></div>
@@ -878,7 +878,7 @@ set properties of the mark</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  show = match <span class="string">'type'</span>, <span class="string">'show'</span>,
+            <div class="content"><div class='highlight'><pre>  show = match <span class="string">'type'</span>,
     statements: (t) -&gt; (show s <span class="keyword">for</span> s <span class="keyword">in</span> t.statements).join <span class="string">'\n'</span>
     statement: (t) -&gt; <span class="string">"<span class="subst">#{t.statementType}</span>: <span class="subst">#{show t.expr}</span>"</span>
     data: (t) -&gt; <span class="string">"DATA: <span class="subst">#{t.newName}</span>=\"<span class="subst">#{t.oldName}</span>\""</span>
@@ -1068,22 +1068,8 @@ pattern matching syntax in CoffeeScript</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>define [], -&gt;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-51">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-51">&#182;</a>
-              </div>
-              <p>TODO remove fnName, because it makes the code cleaner and has no effect on debugging (stack trace tells all)</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  <span class="function"><span class="title">match</span></span> = (property, fnName, fns) -&gt;
+            <div class="content"><div class='highlight'><pre>define [], -&gt;
+  <span class="function"><span class="title">match</span></span> = (property, fns) -&gt;
     (obj) -&gt;
       key = obj[property]
       fn = fns[key]
@@ -1091,7 +1077,7 @@ pattern matching syntax in CoffeeScript</p>
         fn.apply <span class="literal">null</span>, arguments
       <span class="keyword">else</span>
         <span class="keyword">throw</span> Error <span class="string">"""
-          no match for <span class="subst">#{fnName}</span>.<span class="subst">#{property}</span> = <span class="subst">#{key}</span>.
+          no match for <span class="subst">#{property}</span> = <span class="subst">#{key}</span>.
           Object = <span class="subst">#{obj}</span>
         """</span>
 define [<span class="string">'jquery.csv'</span>, <span class="string">'cv/Variable'</span>], (csv, Variable) -&gt;
@@ -1114,11 +1100,11 @@ define [<span class="string">'jquery.csv'</span>, <span class="string">'cv/Varia
         </li>
         
         
-        <li id="section-52">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-52">&#182;</a>
+                <a class="pilcrow" href="#section-51">&#182;</a>
               </div>
               <p>TODO if keyColumn specified then use it</p>
 
