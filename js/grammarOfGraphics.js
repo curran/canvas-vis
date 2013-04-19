@@ -217,7 +217,7 @@
           })();
           return function(key, scales) {
             var argFn, m, _i, _len;
-            m = mark().shape('circle').size(0.05);
+            m = mark().shape('circle').size(0.03);
             for (_i = 0, _len = argFns.length; _i < _len; _i++) {
               argFn = argFns[_i];
               m = argFn(key, scales, m);
@@ -225,12 +225,16 @@
             return m;
           };
         },
-        'position': function(fn, m) {
+        'position': function(fn) {
           return function(key, scales, m) {
             var tuple, varset;
             varset = fn.args[0];
             tuple = varset.tuple(key);
-            return m.x(scales[1].value(tuple)).y(scales[2].value(tuple));
+            if (tuple.length < 2) {
+              return m.x(scales[1].value(tuple)).y(0.5);
+            } else {
+              return m.x(scales[1].value(tuple)).y(scales[2].value(tuple));
+            }
           };
         }
       })

@@ -124,7 +124,7 @@ define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset',
           # set up the mark with defaults
           m = mark()
             .shape('circle')
-            .size(0.05)
+            .size(0.03)
 
           # allow arguments to 'point' to
           # set properties of the mark
@@ -133,12 +133,16 @@ define [ 'cv/grammarOfGraphics/parser', 'cv/match', 'cv/Varset',
 
           return m
 
-      'position': (fn, m) ->
+      'position': (fn) ->
         (key, scales, m)->
           varset = fn.args[0]
           tuple = varset.tuple key
-          m.x(scales[1].value tuple)
-           .y(scales[2].value tuple)
+          if tuple.length < 2
+            m.x(scales[1].value tuple)
+             .y(0.5)
+          else
+            m.x(scales[1].value tuple)
+             .y(scales[2].value tuple)
 
   # show
   # ----

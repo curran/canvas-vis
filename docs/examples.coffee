@@ -64,12 +64,14 @@ require ['cv/Component', 'cv/bindToCanvas', 'cv/readCSV',
 # [Grammar of Graphics](../examples/03_GrammarOfGraphics.html)
 # ------------------------------------------------------------
 # <canvas id="grammarOfGraphics" width="450" height="450"></canvas>
+# <textarea rows="20" cols="40" id="expressionBox">loading...</textarea>
+# <div style="color:red" id='errorDiv'></div>
 require ['cv/Component', 'cv/bindToCanvas', 'cv/readCSV',
          'cv/Viewport', 'cv/Rectangle', 'cv/mark','cv/grammarOfGraphics']
       , (Component, bindToCanvas, readCSV,
          Viewport, Rectangle, mark, grammarOfGraphics) ->
 
-  expr = """
+  initialExpr = """
     DATA: x = "petal length"
     DATA: y = "sepal length"
     TRANS: x = x
@@ -83,18 +85,32 @@ require ['cv/Component', 'cv/bindToCanvas', 'cv/readCSV',
   """
 
   readCSV '../data/iris.csv', (err, variables) ->
-    [keys, scales, keyToMark] = grammarOfGraphics.execute variables, expr
+    [keys, scales, keyToMark] = grammarOfGraphics.execute variables, initialExpr
 
     viewport = new Viewport
 
     GGComponent = Component.extend
       paint: (ctx, bounds) ->
+        ctx.clearRect 0, 0, bounds.w, bounds.h
         viewport.dest.copy bounds
         for key in keys
           (keyToMark key, scales).render ctx, viewport
 
-    bindToCanvas 'grammarOfGraphics', new GGComponent
+    component = new GGComponent
 
+    bindToCanvas 'grammarOfGraphics', component
+
+    changeExpr = (expr)->
+      [keys, scales, keyToMark] = grammarOfGraphics.execute variables, expr
+      component.trigger 'graphicsDirty'
+
+    expressionBox.value = initialExpr
+    expressionBox.addEventListener 'input', ->
+      try
+        errorDiv.innerHTML = ''
+        changeExpr expressionBox.value
+      catch error
+        errorDiv.innerHTML = error
 # Roadmap
 # =======
 #

@@ -176,7 +176,9 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <canvas id="grammarOfGraphics" width="450" height="450"></canvas>
+              <p><canvas id="grammarOfGraphics" width="450" height="450"></canvas></p>
+<p><textarea rows="20" cols="40" id="expressionBox">loading...</textarea></p>
+<div style="color:red" id='errorDiv'></div>
 
             </div>
             
@@ -185,7 +187,7 @@
       , (Component, bindToCanvas, readCSV,
          Viewport, Rectangle, mark, grammarOfGraphics) -&gt;
 
-  expr = <span class="string">"""
+  initialExpr = <span class="string">"""
     DATA: x = "petal length"
     DATA: y = "sepal length"
     TRANS: x = x
@@ -199,17 +201,32 @@
   """</span>
 
   readCSV <span class="string">'../data/iris.csv'</span>, (err, variables) -&gt;
-    [keys, scales, keyToMark] = grammarOfGraphics.execute variables, expr
+    [keys, scales, keyToMark] = grammarOfGraphics.execute variables, initialExpr
 
     viewport = <span class="keyword">new</span> Viewport
 
     GGComponent = Component.extend
       paint: (ctx, bounds) -&gt;
+        ctx.clearRect <span class="number">0</span>, <span class="number">0</span>, bounds.w, bounds.h
         viewport.dest.copy bounds
         <span class="keyword">for</span> key <span class="keyword">in</span> keys
           (keyToMark key, scales).render ctx, viewport
 
-    bindToCanvas <span class="string">'grammarOfGraphics'</span>, <span class="keyword">new</span> GGComponent</pre></div></div>
+    component = <span class="keyword">new</span> GGComponent
+
+    bindToCanvas <span class="string">'grammarOfGraphics'</span>, component
+
+    <span class="function"><span class="title">changeExpr</span></span> = (expr)-&gt;
+      [keys, scales, keyToMark] = grammarOfGraphics.execute variables, expr
+      component.trigger <span class="string">'graphicsDirty'</span>
+
+    expressionBox.value = initialExpr
+    expressionBox.addEventListener <span class="string">'input'</span>, -&gt;
+      <span class="keyword">try</span>
+        errorDiv.innerHTML = <span class="string">''</span>
+        changeExpr expressionBox.value
+      <span class="keyword">catch</span> error
+        errorDiv.innerHTML = error</pre></div></div>
             
         </li>
         
