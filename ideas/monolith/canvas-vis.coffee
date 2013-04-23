@@ -54,6 +54,19 @@ class Viewport
       outRect.h = inRect.h * d.h / s.h
 
 t = ->
+
+  class Animal
+    constructor: (@name) ->
+  class Snake extends Animal
+  class Horse extends Animal
+  sam = new Snake "Sammy the Python"
+  tom = new Horse "Tommy the Palomino"
+  sayHello = match
+    Snake: (snake) -> "I am #{snake.name}, hiss!"
+    Animal: (animal) -> "I am #{animal.name}, an animal."
+
+  e (sayHello sam), 'I am Sammy the Python, hiss!'
+  e (sayHello tom), 'I am Tommy the Palomino, an animal.'
   e (new Point 4, 6).x, 4
   e (new Rect 5, 6, 7, 8).w, 7
 
@@ -89,4 +102,22 @@ else
   canvas.width = window.innerWidth
   canvas.height = window.innerHeight
   ctx = canvas.getContext '2d'
+
+  ctx.fillStyle = 'darkBlue'
   ctx.fillRect 0, 0, canvas.width, canvas.height
+
+  squares = []
+  size = 0.03
+  for i in [0...10]
+    x = Math.random() * (1 - size)
+    y = Math.random() * (1 - size)
+    squares.push new Rect x, y, size, size
+
+  src = new Rect 0, 0, 1, 1
+  dest = new Rect 0, 0, canvas.width, canvas.height
+  viewport = new Viewport src, dest
+  out = new Rect
+  for square in squares
+    viewport.project square, out
+    ctx.fillStyle = 'yellow'
+    ctx.fillRect out.x, out.y, out.w, out.h
