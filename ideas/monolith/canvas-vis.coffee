@@ -53,6 +53,12 @@ class Viewport
       outRect.w = inRect.w * d.w / s.w
       outRect.h = inRect.h * d.h / s.h
 
+class Scale
+  constructor: (values) ->
+    @min = _.min values
+    @max = _.max values
+  normalize: (value) -> (value - @min)/(@max - @min)
+
 t = ->
 
   class Animal
@@ -79,16 +85,21 @@ t = ->
   e outPt.x, 5
   e outPt.y, 10
 
-e = (a, b) -> if a != b
-  throw new Error "Expected #{a}, got #{b}"
+  scale = new Scale [4, 5, 6, 8]
+  e (scale.normalize 7), 0.75
 
-# Run tests
-t()
-console.log 'All tests passed!'
+e = (actual, expected) -> if actual != expected
+  throw new Error "Expected #{expected}, got #{actual}"
+
 
 # Hoist into a browser
 inNode = typeof module != 'undefined'
 if inNode
+# Run tests
+  GLOBAL._ = require 'underscore'
+  t()
+  console.log 'All tests passed!'
+
   express = require 'express'
   app = express()
   port = 8080
@@ -99,6 +110,12 @@ if inNode
   app.listen port
   console.log "Serving at localhost:#{port}"
 else
+# Run tests
+  t()
+  console.log 'All tests passed!'
+
+# Draw the Iris Scatterplot
+
   canvas.width = window.innerWidth
   canvas.height = window.innerHeight
   ctx = canvas.getContext '2d'
@@ -106,18 +123,31 @@ else
   ctx.fillStyle = 'darkBlue'
   ctx.fillRect 0, 0, canvas.width, canvas.height
 
-  squares = []
-  size = 0.03
-  for i in [0...10]
-    x = Math.random() * (1 - size)
-    y = Math.random() * (1 - size)
-    squares.push new Rect x, y, size, size
+  $.get 'iris.csv', (data) ->
+    table = $.csv.toArrays data
+    columnNames = _.first table
+    tuples = _.rest table
 
-  src = new Rect 0, 0, 1, 1
-  dest = new Rect 0, 0, canvas.width, canvas.height
-  viewport = new Viewport src, dest
-  out = new Rect
-  for square in squares
-    viewport.project square, out
-    ctx.fillStyle = 'yellow'
-    ctx.fillRect out.x, out.y, out.w, out.h
+    xIndex = 0
+    yIndex = 1
+
+    xs = _.map tuples, (tuple) -> tuple[xIndex]
+    xScale = new Scale xs
+    ys = _.map tuples, (tuple) -> tuple[yIndex]
+    yScale = new Scale ys
+
+    squares = []
+    size = 0.01
+    for tuple in tuples
+      x = xScale.normalize tuple[xIndex]
+      y = yScale.normalize tuple[yIndex]
+      squares.push new Rect x, y, size, size
+
+    src = new Rect 0, 0, 1, 1
+    dest = new Rect 0, 0, canvas.width, canvas.height
+    viewport = new Viewport src, dest
+    out = new Rect
+    for square in squares
+      viewport.project square, out
+      ctx.fillStyle = 'yellow'
+      ctx.fillRect out.x, out.y, out.w, out.h
