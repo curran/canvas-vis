@@ -125,29 +125,52 @@ else
 
   $.get 'iris.csv', (data) ->
     table = $.csv.toArrays data
+
     columnNames = _.first table
     tuples = _.rest table
 
     xIndex = 0
-    yIndex = 1
-
     xs = _.map tuples, (tuple) -> tuple[xIndex]
     xScale = new Scale xs
+
+    yIndex = 1
     ys = _.map tuples, (tuple) -> tuple[yIndex]
     yScale = new Scale ys
 
-    squares = []
-    size = 0.01
-    for tuple in tuples
-      x = xScale.normalize tuple[xIndex]
-      y = yScale.normalize tuple[yIndex]
-      squares.push new Rect x, y, size, size
+    rIndex = 1
+    rs = _.map tuples, (tuple) -> tuple[rIndex]
+    rScale = new Scale rs
 
-    src = new Rect 0, 0, 1, 1
+    unit = new Rect 0, 0, 1, 1
+
+    margin = 0.1
+    src = new Rect -margin,-margin,1+2*margin,1+2*margin
     dest = new Rect 0, 0, canvas.width, canvas.height
     viewport = new Viewport src, dest
-    out = new Rect
-    for square in squares
-      viewport.project square, out
-      ctx.fillStyle = 'yellow'
-      ctx.fillRect out.x, out.y, out.w, out.h
+
+    rect = new Rect
+    viewport.project unit, rect
+    ctx.fillStyle = 'orange'
+    ctx.fillRect rect.x, rect.y, rect.w, rect.h
+
+    inPt = new Point
+    outPt = new Point
+    minRadius = 5
+    maxRadius = 10
+    points = []
+
+# Primary focus: How can this code be abstracted?
+# Identify elements of the pipeline
+    for tuple in tuples
+      inPt.x = xScale.normalize tuple[xIndex]
+      inPt.y = yScale.normalize tuple[yIndex]
+      viewport.project inPt, outPt
+
+      r = rScale.normalize tuple[rIndex]
+      radius = minRadius + r * (maxRadius - minRadius)
+
+      ctx.fillStyle = 'black'
+      ctx.beginPath()
+      ctx.arc outPt.x, outPt.y, radius, 0, 2*Math.PI
+      ctx.closePath()
+      ctx.fill()

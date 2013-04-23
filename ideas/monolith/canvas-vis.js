@@ -212,38 +212,52 @@
     ctx.fillStyle = 'darkBlue';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     $.get('iris.csv', function(data) {
-      var columnNames, dest, out, size, square, squares, src, table, tuple, tuples, viewport, x, xIndex, xScale, xs, y, yIndex, yScale, ys, _i, _j, _len, _len1, _results;
+      var columnNames, dest, inPt, margin, maxRadius, minRadius, outPt, points, r, rIndex, rScale, radius, rect, rs, src, table, tuple, tuples, unit, viewport, xIndex, xScale, xs, yIndex, yScale, ys, _i, _len, _results;
       table = $.csv.toArrays(data);
       columnNames = _.first(table);
       tuples = _.rest(table);
       xIndex = 0;
-      yIndex = 1;
       xs = _.map(tuples, function(tuple) {
         return tuple[xIndex];
       });
       xScale = new Scale(xs);
+      yIndex = 1;
       ys = _.map(tuples, function(tuple) {
         return tuple[yIndex];
       });
       yScale = new Scale(ys);
-      squares = [];
-      size = 0.01;
-      for (_i = 0, _len = tuples.length; _i < _len; _i++) {
-        tuple = tuples[_i];
-        x = xScale.normalize(tuple[xIndex]);
-        y = yScale.normalize(tuple[yIndex]);
-        squares.push(new Rect(x, y, size, size));
-      }
-      src = new Rect(0, 0, 1, 1);
+      rIndex = 1;
+      rs = _.map(tuples, function(tuple) {
+        return tuple[rIndex];
+      });
+      rScale = new Scale(rs);
+      unit = new Rect(0, 0, 1, 1);
+      margin = 0.1;
+      src = new Rect(-margin, -margin, 1 + 2 * margin, 1 + 2 * margin);
       dest = new Rect(0, 0, canvas.width, canvas.height);
       viewport = new Viewport(src, dest);
-      out = new Rect;
+      rect = new Rect;
+      viewport.project(unit, rect);
+      ctx.fillStyle = 'orange';
+      ctx.fillRect(rect.x, rect.y, rect.w, rect.h);
+      inPt = new Point;
+      outPt = new Point;
+      minRadius = 5;
+      maxRadius = 10;
+      points = [];
       _results = [];
-      for (_j = 0, _len1 = squares.length; _j < _len1; _j++) {
-        square = squares[_j];
-        viewport.project(square, out);
-        ctx.fillStyle = 'yellow';
-        _results.push(ctx.fillRect(out.x, out.y, out.w, out.h));
+      for (_i = 0, _len = tuples.length; _i < _len; _i++) {
+        tuple = tuples[_i];
+        inPt.x = xScale.normalize(tuple[xIndex]);
+        inPt.y = yScale.normalize(tuple[yIndex]);
+        viewport.project(inPt, outPt);
+        r = rScale.normalize(tuple[rIndex]);
+        radius = minRadius + r * (maxRadius - minRadius);
+        ctx.fillStyle = 'black';
+        ctx.beginPath();
+        ctx.arc(outPt.x, outPt.y, radius, 0, 2 * Math.PI);
+        ctx.closePath();
+        _results.push(ctx.fill());
       }
       return _results;
     });
