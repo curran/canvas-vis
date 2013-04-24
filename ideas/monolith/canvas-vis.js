@@ -133,13 +133,12 @@
 
   })();
 
-  Interval.UNIT = new Interval(0, 1);
-
   Scale = (function() {
 
     function Scale(attribute) {
       var values;
       this.attribute = attribute;
+      type(this.attribute, Attribute);
       values = this.attribute.values();
       this.src = new Interval(_.min(values), _.max(values));
       this.dest = new Interval(0, 1);
@@ -302,7 +301,7 @@
     ctx.fillStyle = 'darkBlue';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     $.get('iris.csv', function(data) {
-      var dest, inPt, key, margin, outPt, points, rScale, radius, rect, relation, src, table, unit, viewport, xScale, yScale, _i, _len, _ref, _results;
+      var dest, inPt, key, margin, outPt, rScale, radius, rect, relation, src, table, unit, viewport, xScale, yScale, _i, _len, _ref, _results;
       table = $.csv.toArrays(data);
       relation = new Relation(table);
       xScale = new Scale(relation.attribute('sepal length'));
@@ -320,15 +319,14 @@
       ctx.fillRect(rect.x, rect.y, rect.w, rect.h);
       inPt = new Point;
       outPt = new Point;
-      points = [];
       _ref = relation.keys;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         key = _ref[_i];
         inPt.x = xScale.normalize(key);
         inPt.y = yScale.normalize(key);
-        viewport.project(inPt, outPt);
         radius = rScale.normalize(key);
+        viewport.project(inPt, outPt);
         ctx.fillStyle = 'black';
         ctx.beginPath();
         ctx.arc(outPt.x, outPt.y, radius, 0, 2 * Math.PI);

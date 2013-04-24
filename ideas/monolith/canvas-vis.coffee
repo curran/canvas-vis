@@ -63,10 +63,10 @@ class Interval
     type interval, Interval
     type value, Number
     (value - @min) / @span() * interval.span() + interval.min
-Interval.UNIT = new Interval 0, 1
 
 class Scale
   constructor: (@attribute) ->
+    type @attribute, Attribute
     values = @attribute.values()
     @src = new Interval (_.min values), (_.max values)
     @dest = new Interval 0, 1
@@ -84,6 +84,7 @@ class Relation
     # a column should be used as keys.
     # For now integer keys are generated.
     @keys = [0...m]
+    
     @attributes = for i in [0...n]
       name = names[i]
       map = {}
@@ -182,17 +183,17 @@ else
 
     inPt = new Point
     outPt = new Point
-    points = []
 
 # Primary focus: How can this code be abstracted?
 # Identify elements of the pipeline
     for key in relation.keys
       inPt.x = xScale.normalize key
       inPt.y = yScale.normalize key
-      viewport.project inPt, outPt
-
       radius = rScale.normalize key
 
+      viewport.project inPt, outPt
+
+#TODO use mark API
       ctx.fillStyle = 'black'
       ctx.beginPath()
       ctx.arc outPt.x, outPt.y, radius, 0, 2*Math.PI
