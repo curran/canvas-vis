@@ -54,10 +54,36 @@ class Viewport
       outRect.h = inRect.h * d.h / s.h
 
 class Scale
-  constructor: (values) ->
+  constructor: (@attribute) ->
+    values = @attribute.values()
     @min = _.min values
     @max = _.max values
-  normalize: (value) -> (value - @min)/(@max - @min)
+  normalize: (key) -> (@attribute.map[key] - @min)/(@max - @min)
+
+class Relation
+  constructor: (table) ->
+    names = _.first table
+    tuples = _.rest table
+
+    n = names.length
+    m = tuples.length
+
+    # TODO use metadata to determine if
+    # a column should be used as keys.
+    # For now integer keys are generated.
+    @keys = [0...m]
+    @attributes = for i in [0...n]
+      name = names[i]
+      map = {}
+      for key in @keys
+        tuple = tuples[key]
+        map[key] = tuple[i]
+      new Attribute name, @keys, map
+  attribute: (name) -> _.findWhere @attributes, {name}
+
+class Attribute
+  constructor: (@name, @keys, @map) ->
+  values: -> @map[key] for key in @keys
 
 t = ->
 
@@ -84,9 +110,6 @@ t = ->
   viewport.project inPt, outPt
   e outPt.x, 5
   e outPt.y, 10
-
-  scale = new Scale [4, 5, 6, 8]
-  e (scale.normalize 7), 0.75
 
 e = (actual, expected) -> if actual != expected
   throw new Error "Expected #{expected}, got #{actual}"
@@ -125,21 +148,11 @@ else
 
   $.get 'iris.csv', (data) ->
     table = $.csv.toArrays data
+    relation = new Relation table
 
-    columnNames = _.first table
-    tuples = _.rest table
-
-    xIndex = 0
-    xs = _.map tuples, (tuple) -> tuple[xIndex]
-    xScale = new Scale xs
-
-    yIndex = 1
-    ys = _.map tuples, (tuple) -> tuple[yIndex]
-    yScale = new Scale ys
-
-    rIndex = 1
-    rs = _.map tuples, (tuple) -> tuple[rIndex]
-    rScale = new Scale rs
+    xScale = new Scale relation.attribute 'sepal length'
+    yScale = new Scale relation.attribute 'sepal width'
+    rScale = new Scale relation.attribute 'petal width'
 
     unit = new Rect 0, 0, 1, 1
 
@@ -161,12 +174,12 @@ else
 
 # Primary focus: How can this code be abstracted?
 # Identify elements of the pipeline
-    for tuple in tuples
-      inPt.x = xScale.normalize tuple[xIndex]
-      inPt.y = yScale.normalize tuple[yIndex]
+    for key in relation.keys
+      inPt.x = xScale.normalize key
+      inPt.y = yScale.normalize key
       viewport.project inPt, outPt
 
-      r = rScale.normalize tuple[rIndex]
+      r = rScale.normalize key
       radius = minRadius + r * (maxRadius - minRadius)
 
       ctx.fillStyle = 'black'
