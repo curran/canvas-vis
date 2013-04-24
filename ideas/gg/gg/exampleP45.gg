@@ -1,0 +1,2 @@
+DATA: r = reshape.low(pounding, sinking, nauseous, "value")
+ELEMENT: point.dodge.asymmetric(position.bin.dot(r))
