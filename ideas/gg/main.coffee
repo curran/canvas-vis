@@ -1,2 +1,4 @@
+parser = require './parser.js'
+
 console.log 'hello'
-throw new Error 'Poop'
+console.log parser.parse '2+2'

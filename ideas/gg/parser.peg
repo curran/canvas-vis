@@ -1,0 +1,12 @@
+{
+  var Add = require('./Add.coffee');
+}
+
+start
+  = additive
+
+additive
+  = left:integer "+" right:integer { return new Add(left, right); }
+
+integer "integer"
+  = digits:[0-9]+ { return parseInt(digits.join(""), 10); }
