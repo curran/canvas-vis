@@ -1,13 +1,21 @@
+// See Wilkinson's Grammar of Graphics p. 38
 {
   var AST = require('./AST.coffee');
-  var Add = AST.Add
+  var Program = AST.Program
+  var Data = AST.Data
+  var Name = AST.Name
 }
 
-start
-  = additive
+start = stmts:stmt+ { return new Program(stmts); }
 
-additive
-  = left:integer "+" right:integer { return new Add(left, right); }
+stmt = data
 
-integer "integer"
-  = digits:[0-9]+ { return parseInt(digits.join(""), 10); }
+data
+  = "DATA:" ws* left:name ws* "=" ws* right:name ws*
+  { return new Data(left.value, right.value); }
+
+name
+  = chars:([a-z]/[A-Z])+ 
+  { return new Name(chars.join('')); }
+
+ws = " " / "\n"

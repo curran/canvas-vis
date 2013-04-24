@@ -37,8 +37,10 @@ module.exports = (function(){
      */
     parse: function(input, startRule) {
       var parseFunctions = {
-        "additive": parse_additive,
-        "integer": parse_integer
+        "start": parse_start,
+        "data": parse_data,
+        "name": parse_name,
+        "ws": parse_ws
       };
       
       if (startRule !== undefined) {
@@ -46,7 +48,7 @@ module.exports = (function(){
           throw new Error("Invalid rule name: " + quote(startRule) + ".");
         }
       } else {
-        startRule = "additive";
+        startRule = "start";
       }
       
       var pos = 0;
@@ -94,27 +96,109 @@ module.exports = (function(){
         rightmostFailuresExpected.push(failure);
       }
       
-      function parse_additive() {
-        var result0, result1, result2;
+      function parse_start() {
+        var result0, result1;
+        var pos0;
+        
+        pos0 = pos;
+        result1 = parse_data();
+        if (result1 !== null) {
+          result0 = [];
+          while (result1 !== null) {
+            result0.push(result1);
+            result1 = parse_data();
+          }
+        } else {
+          result0 = null;
+        }
+        if (result0 !== null) {
+          result0 = (function(offset, stmts) { return new Program(stmts); })(pos0, result0);
+        }
+        if (result0 === null) {
+          pos = pos0;
+        }
+        return result0;
+      }
+      
+      function parse_data() {
+        var result0, result1, result2, result3, result4, result5, result6, result7, result8;
         var pos0, pos1;
         
         pos0 = pos;
         pos1 = pos;
-        result0 = parse_integer();
+        if (input.substr(pos, 5) === "DATA:") {
+          result0 = "DATA:";
+          pos += 5;
+        } else {
+          result0 = null;
+          if (reportFailures === 0) {
+            matchFailed("\"DATA:\"");
+          }
+        }
         if (result0 !== null) {
-          if (input.charCodeAt(pos) === 43) {
-            result1 = "+";
-            pos++;
-          } else {
-            result1 = null;
-            if (reportFailures === 0) {
-              matchFailed("\"+\"");
-            }
+          result1 = [];
+          result2 = parse_ws();
+          while (result2 !== null) {
+            result1.push(result2);
+            result2 = parse_ws();
           }
           if (result1 !== null) {
-            result2 = parse_integer();
+            result2 = parse_name();
             if (result2 !== null) {
-              result0 = [result0, result1, result2];
+              result3 = [];
+              result4 = parse_ws();
+              while (result4 !== null) {
+                result3.push(result4);
+                result4 = parse_ws();
+              }
+              if (result3 !== null) {
+                if (input.charCodeAt(pos) === 61) {
+                  result4 = "=";
+                  pos++;
+                } else {
+                  result4 = null;
+                  if (reportFailures === 0) {
+                    matchFailed("\"=\"");
+                  }
+                }
+                if (result4 !== null) {
+                  result5 = [];
+                  result6 = parse_ws();
+                  while (result6 !== null) {
+                    result5.push(result6);
+                    result6 = parse_ws();
+                  }
+                  if (result5 !== null) {
+                    result6 = parse_name();
+                    if (result6 !== null) {
+                      result7 = [];
+                      result8 = parse_ws();
+                      while (result8 !== null) {
+                        result7.push(result8);
+                        result8 = parse_ws();
+                      }
+                      if (result7 !== null) {
+                        result0 = [result0, result1, result2, result3, result4, result5, result6, result7];
+                      } else {
+                        result0 = null;
+                        pos = pos1;
+                      }
+                    } else {
+                      result0 = null;
+                      pos = pos1;
+                    }
+                  } else {
+                    result0 = null;
+                    pos = pos1;
+                  }
+                } else {
+                  result0 = null;
+                  pos = pos1;
+                }
+              } else {
+                result0 = null;
+                pos = pos1;
+              }
             } else {
               result0 = null;
               pos = pos1;
@@ -128,7 +212,7 @@ module.exports = (function(){
           pos = pos1;
         }
         if (result0 !== null) {
-          result0 = (function(offset, left, right) { return new Add(left, right); })(pos0, result0[0], result0[2]);
+          result0 = (function(offset, left, right) { return new Data(left.value, right.value); })(pos0, result0[2], result0[6]);
         }
         if (result0 === null) {
           pos = pos0;
@@ -136,32 +220,53 @@ module.exports = (function(){
         return result0;
       }
       
-      function parse_integer() {
+      function parse_name() {
         var result0, result1;
         var pos0;
         
-        reportFailures++;
         pos0 = pos;
-        if (/^[0-9]/.test(input.charAt(pos))) {
+        if (/^[a-z]/.test(input.charAt(pos))) {
           result1 = input.charAt(pos);
           pos++;
         } else {
           result1 = null;
           if (reportFailures === 0) {
-            matchFailed("[0-9]");
+            matchFailed("[a-z]");
+          }
+        }
+        if (result1 === null) {
+          if (/^[A-Z]/.test(input.charAt(pos))) {
+            result1 = input.charAt(pos);
+            pos++;
+          } else {
+            result1 = null;
+            if (reportFailures === 0) {
+              matchFailed("[A-Z]");
+            }
           }
         }
         if (result1 !== null) {
           result0 = [];
           while (result1 !== null) {
             result0.push(result1);
-            if (/^[0-9]/.test(input.charAt(pos))) {
+            if (/^[a-z]/.test(input.charAt(pos))) {
               result1 = input.charAt(pos);
               pos++;
             } else {
               result1 = null;
               if (reportFailures === 0) {
-                matchFailed("[0-9]");
+                matchFailed("[a-z]");
+              }
+            }
+            if (result1 === null) {
+              if (/^[A-Z]/.test(input.charAt(pos))) {
+                result1 = input.charAt(pos);
+                pos++;
+              } else {
+                result1 = null;
+                if (reportFailures === 0) {
+                  matchFailed("[A-Z]");
+                }
               }
             }
           }
@@ -169,14 +274,36 @@ module.exports = (function(){
           result0 = null;
         }
         if (result0 !== null) {
-          result0 = (function(offset, digits) { return parseInt(digits.join(""), 10); })(pos0, result0);
+          result0 = (function(offset, chars) { return new Name(chars.join('')); })(pos0, result0);
         }
         if (result0 === null) {
           pos = pos0;
         }
-        reportFailures--;
-        if (reportFailures === 0 && result0 === null) {
-          matchFailed("integer");
+        return result0;
+      }
+      
+      function parse_ws() {
+        var result0;
+        
+        if (input.charCodeAt(pos) === 32) {
+          result0 = " ";
+          pos++;
+        } else {
+          result0 = null;
+          if (reportFailures === 0) {
+            matchFailed("\" \"");
+          }
+        }
+        if (result0 === null) {
+          if (input.charCodeAt(pos) === 10) {
+            result0 = "\n";
+            pos++;
+          } else {
+            result0 = null;
+            if (reportFailures === 0) {
+              matchFailed("\"\\n\"");
+            }
+          }
         }
         return result0;
       }
@@ -229,7 +356,9 @@ module.exports = (function(){
       
       
         var AST = require('./AST.coffee');
-        var Add = AST.Add
+        var Program = AST.Program
+        var Data = AST.Data
+        var Name = AST.Name
       
       
       var result = parseFunctions[startRule]();

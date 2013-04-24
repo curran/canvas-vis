@@ -1,7 +1,24 @@
 class AST
 
-class Add extends AST
-  constructor: (@a, @b) ->
+class Program extends AST
+  constructor: (@stmts) ->
 
-AST.Add = Add
+class Statement extends AST
+
+class Data extends Statement
+  constructor: (@left, @right) ->
+
+class Expr extends AST
+
+class Primitive extends Expr
+  constructor: (@value) ->
+
+class Name extends Primitive
+
+AST.Program = Program
+AST.Statement = Statement
+AST.Data = Data
+AST.Expr = Expr
+AST.Primitive = Primitive
+AST.Name = Name
 module.exports = AST
