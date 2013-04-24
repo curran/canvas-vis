@@ -3,9 +3,9 @@ class AST
 class Program extends AST
   constructor: (@stmts) ->
 
-class Statement extends AST
+class Stmt extends AST
 
-class Data extends Statement
+class Data extends Stmt
   constructor: (@left, @right) ->
 
 class Expr extends AST
@@ -16,7 +16,7 @@ class Primitive extends Expr
 class Name extends Primitive
 
 AST.Program = Program
-AST.Statement = Statement
+AST.Stmt = Stmt
 AST.Data = Data
 AST.Expr = Expr
 AST.Primitive = Primitive
