@@ -228,7 +228,8 @@ module.exports = (function(){
       }
       
       
-        var Add = require('./Add.coffee');
+        var AST = require('./AST.coffee');
+        var Add = AST.Add
       
       
       var result = parseFunctions[startRule]();
