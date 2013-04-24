@@ -199,6 +199,7 @@
       this.name = name;
       this.keys = keys;
       this.map = map;
+      type(this.name, String);
     }
 
     Attribute.prototype.values = function() {

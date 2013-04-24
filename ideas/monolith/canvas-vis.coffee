@@ -74,6 +74,7 @@ class Scale
 
 class Relation
   constructor: (table) ->
+    #    type (Array.of Array.of Number) table
     names = _.first table
     tuples = _.rest table
 
@@ -96,10 +97,12 @@ class Relation
 
 class Attribute
   constructor: (@name, @keys, @map) ->
+    type @name, String
   values: -> @map[key] for key in @keys
 
 t = ->
 
+  # match
   class Animal
     constructor: (@name) ->
   class Snake extends Animal
@@ -115,6 +118,7 @@ t = ->
   e (new Point 4, 6).x, 4
   e (new Rect 5, 6, 7, 8).w, 7
 
+  # Rect, Viewport, Point
   src = new Rect 0, 0, 1, 1
   dest = new Rect 2, 4, 6, 8
   viewport = new Viewport src, dest
