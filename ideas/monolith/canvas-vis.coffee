@@ -7,6 +7,7 @@ type = (obj, t) ->
     when Number then typeof obj != 'number'
     when String then typeof obj != 'string'
     else obj.constructor != t
+# TODO better error reporting (expected vs actual type)
   if shouldError then throw Error 'Type Error'
 
 match = (fns) ->
@@ -53,12 +54,23 @@ class Viewport
       outRect.w = inRect.w * d.w / s.w
       outRect.h = inRect.h * d.h / s.h
 
+class Interval
+  constructor: (@min, @max) ->
+    type @min, Number
+    type @max, Number
+  span: -> @max - @min
+  to: (interval, value) ->
+    type interval, Interval
+    type value, Number
+    (value - @min) / @span() * interval.span() + interval.min
+Interval.UNIT = new Interval 0, 1
+
 class Scale
   constructor: (@attribute) ->
     values = @attribute.values()
-    @min = _.min values
-    @max = _.max values
-  normalize: (key) -> (@attribute.map[key] - @min)/(@max - @min)
+    @src = new Interval (_.min values), (_.max values)
+    @dest = new Interval 0, 1
+  normalize: (key) -> @src.to @dest, @attribute.map[key]
 
 class Relation
   constructor: (table) ->
@@ -77,7 +89,7 @@ class Relation
       map = {}
       for key in @keys
         tuple = tuples[key]
-        map[key] = tuple[i]
+        map[key] = parseFloat tuple[i]
       new Attribute name, @keys, map
   attribute: (name) -> _.findWhere @attributes, {name}
 
@@ -146,6 +158,7 @@ else
   ctx.fillStyle = 'darkBlue'
   ctx.fillRect 0, 0, canvas.width, canvas.height
 
+
   $.get 'iris.csv', (data) ->
     table = $.csv.toArrays data
     relation = new Relation table
@@ -153,6 +166,7 @@ else
     xScale = new Scale relation.attribute 'sepal length'
     yScale = new Scale relation.attribute 'sepal width'
     rScale = new Scale relation.attribute 'petal width'
+    rScale.dest = new Interval 3, 20
 
     unit = new Rect 0, 0, 1, 1
 
@@ -168,8 +182,6 @@ else
 
     inPt = new Point
     outPt = new Point
-    minRadius = 5
-    maxRadius = 10
     points = []
 
 # Primary focus: How can this code be abstracted?
@@ -179,8 +191,7 @@ else
       inPt.y = yScale.normalize key
       viewport.project inPt, outPt
 
-      r = rScale.normalize key
-      radius = minRadius + r * (maxRadius - minRadius)
+      radius = rScale.normalize key
 
       ctx.fillStyle = 'black'
       ctx.beginPath()
