@@ -10,6 +10,7 @@
   var Element = AST.Element;
   var Fn = AST.Fn;
   var Cross = AST.Cross;
+  var Blend = AST.Blend;
   var Name = AST.Name;
   var Str = AST.Str;
   var Num = AST.Num;
@@ -17,11 +18,12 @@
 
 start = stmts:stmt+ { return new Program(stmts); }
 
-stmt = data
-     / scale
-     / coord
-     / guide
-     / element
+stmt
+  = data
+  / scale
+  / coord
+  / guide
+  / element
 
 data
   = "DATA:" ws* left:name ws* "=" ws* expr:(name / str) ws*
@@ -52,7 +54,9 @@ fn
   = name:([a-z]/".")+ args:args
   { return new Fn(name.join(''), args);}
 
-args = "(" " "* args:arg* " "* ")" { return args; }
+args 
+  = "(" ws* args:arg* ws* ")"
+  { return args; }
 
 arg
   = expr:expr 
@@ -61,10 +65,15 @@ arg
 
 op
   = cross
+  / blend
 
 cross
   = left:name " "* "*" " "* right:name
   { return new Cross(left, right); }
+
+blend
+  = left:name " "* "+" " "* right:name
+  { return new Blend(left, right); }
 
 primitive
   = name

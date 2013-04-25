@@ -36,12 +36,13 @@ class Primitive extends Expr
 
 class Cross extends Op
 
+class Blend extends Op
+
 class Name extends Primitive
 
 class Str extends Primitive
 
 class Num extends Primitive
-
 
 show = match
   Program: ({stmts}) -> (_.map stmts, show).join '\n'
@@ -54,9 +55,10 @@ show = match
   Str: ({value}) -> '"'+value+'"'
   Fn: ({name, args}) -> "#{name}(#{(_.map args, show).join ', '})"
   Cross: ({left, right}) -> "#{show left}*#{show right}"
+  Blend: ({left, right}) -> "#{show left}+#{show right}"
 
 _.extend AST, {
   Program, Stmt, Data, Scale, Coord, Guide, Element,
-  Expr, Primitive, Name, Str, Num, Fn, Cross, show
+  Expr, Primitive, Name, Str, Num, Fn, Cross, Blend, show
 }
 module.exports = AST
