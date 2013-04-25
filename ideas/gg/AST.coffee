@@ -65,7 +65,7 @@ show = match
   Primitive: ({value}) -> value
   Str: ({value}) -> '"'+value+'"'
   Fn: ({name, args}) -> "#{name}(#{(_.map args, show).join ', '})"
-  Op: ({left, right, sym}) -> (show left) + sym + (show right)
+  Op: ({left, right, sym}) -> "#{show left}#{sym}#{show right}"
 
 _.extend AST, {
   Program, Stmt, Data, FnStmt, Scale, Coord, Guide, Element,
