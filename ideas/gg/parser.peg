@@ -9,9 +9,10 @@
   var Guide = AST.Guide;
   var Element = AST.Element;
   var Fn = AST.Fn;
-  var Cross = AST.Cross;
-  var Blend = AST.Blend;
-  var Nest = AST.Nest;
+  var Op = AST.Op;
+//  var Cross = AST.Cross;
+//  var Blend = AST.Blend;
+//  var Nest = AST.Nest;
   var Name = AST.Name;
   var Str = AST.Str;
   var Num = AST.Num;
@@ -65,21 +66,24 @@ arg
   { return expr; }
 
 op
-  = cross
-  / blend
-  / nest
+  = left:name ws* sym:('*' / '+' / '/') ws* right:name
+  { return Op.create(left, right, sym); }
 
-cross
-  = left:name ws* '*' ws* right:name
-  { return new Cross(left, right); }
-
-blend
-  = left:name ws* '+' ws* right:name
-  { return new Blend(left, right); }
-
-nest
-  = left:name ws* '/' ws* right:name
-  { return new Nest(left, right); }
+//  = cross
+//  / blend
+//  / nest
+//
+//cross
+//  = left:name ws* '*' ws* right:name
+//  { return new Cross(left, right); }
+//
+//blend
+//  = left:name ws* '+' ws* right:name
+//  { return new Blend(left, right); }
+//
+//nest
+//  = left:name ws* '/' ws* right:name
+//  { return new Nest(left, right); }
 
 primitive
   = name
