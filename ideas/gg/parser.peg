@@ -12,6 +12,7 @@
   var Str = AST.Str;
   var Num = AST.Num;
   var Fn = AST.Fn;
+  var Cross = AST.Cross;
 }
 
 start = stmts:stmt+ { return new Program(stmts); }
@@ -44,6 +45,7 @@ element
 
 expr
   = fn
+  / cross
   / name
   / str
   / num
@@ -56,6 +58,8 @@ args = "(" " "* args:arg* " "* ")" { return args; }
 
 arg
   = expr:expr 
+  / ws* "," ws* expr:expr
+  { return expr; }
 
 name
   = chars:([a-z]/[A-Z])+ 
@@ -68,8 +72,9 @@ str
 num
   = chars:[0-9]+
   { return new Num(parseFloat(chars.join(''))); }
-
-  / ws* "," ws* expr:expr
-  { return expr; }
+  
+cross
+  = left:name " "* "*" " "* right:name
+  { return new Cross(left, right); }
 
 ws = " " / "\n"

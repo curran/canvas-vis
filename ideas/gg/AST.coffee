@@ -37,6 +37,9 @@ class Num extends Primitive
 class Fn extends Expr
   constructor: (@name, @args) ->
 
+class Cross extends Expr
+  constructor: (@left, @right) ->
+
 show = match
   Program: ({stmts}) -> (_.map stmts, show).join '\n'
   Data: ({name, expr}) -> "DATA: #{name} = #{show expr}"
@@ -47,9 +50,10 @@ show = match
   Primitive: ({value}) -> value
   Str: ({value}) -> '"'+value+'"'
   Fn: ({name, args}) -> "#{name}(#{(_.map args, show).join ', '})"
+  Cross: ({left, right}) -> "#{show left}*#{show right}"
 
 _.extend AST, {
   Program, Stmt, Data, Scale, Coord, Guide, Element,
-  Expr, Primitive, Name, Str, Num, Fn, show
+  Expr, Primitive, Name, Str, Num, Fn, Cross, show
 }
 module.exports = AST
