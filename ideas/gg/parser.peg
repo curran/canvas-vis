@@ -4,15 +4,13 @@
   var AST = require('./AST.coffee');
   var Program = AST.Program;
   var Data = AST.Data;
+  var FnStmt = AST.FnStmt;
   var Scale = AST.Scale;
   var Coord = AST.Coord;
   var Guide = AST.Guide;
   var Element = AST.Element;
   var Fn = AST.Fn;
   var Op = AST.Op;
-//  var Cross = AST.Cross;
-//  var Blend = AST.Blend;
-//  var Nest = AST.Nest;
   var Name = AST.Name;
   var Str = AST.Str;
   var Num = AST.Num;
@@ -22,30 +20,15 @@ start = stmts:stmt+ { return new Program(stmts); }
 
 stmt
   = data
-  / scale
-  / coord
-  / guide
-  / element
+  / fnStmt
 
 data
   = 'DATA:' ws* left:name ws* '=' ws* expr:(name / str) ws*
   { return new Data(left.value, expr); }
 
-scale
-  = 'SCALE:' ws* fn:fn ws*
-  { return new Scale(fn); }
-
-coord
-  = 'COORD:' ws* fn:fn ws*
-  { return new Coord(fn); }
-
-guide
-  = 'GUIDE:' ws* fn:fn ws*
-  { return new Guide(fn); }
-
-element
-  = 'ELEMENT:' ws* fn:fn ws*
-  { return new Element(fn); }
+fnStmt
+  = label:('SCALE'/'COORD'/'GUIDE'/'ELEMENT') ':' ws* fn:fn ws*
+  { return FnStmt.create(label, fn); }
 
 expr
   = fn
@@ -68,22 +51,6 @@ arg
 op
   = left:name ws* sym:('*' / '+' / '/') ws* right:name
   { return Op.create(left, right, sym); }
-
-//  = cross
-//  / blend
-//  / nest
-//
-//cross
-//  = left:name ws* '*' ws* right:name
-//  { return new Cross(left, right); }
-//
-//blend
-//  = left:name ws* '+' ws* right:name
-//  { return new Blend(left, right); }
-//
-//nest
-//  = left:name ws* '/' ws* right:name
-//  { return new Nest(left, right); }
 
 primitive
   = name
