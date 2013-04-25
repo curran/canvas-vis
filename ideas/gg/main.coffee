@@ -15,6 +15,9 @@ DATA: x = y
 DATA: q = z
 """
 check 'DATA: x = "sepal length"'
+check 'ELEMENT: point(position(x*y))'
+check 'ELEMENT: point(position(x+y))'
+check 'ELEMENT: point(position(x/y))'
 
 expr = """
 DATA: x = "petal length"
@@ -24,7 +27,7 @@ SCALE: linear(dim(2))
 COORD: rect(dim(1, 2))
 GUIDE: axis(dim(1))
 GUIDE: axis(dim(2))
-ELEMENT: point(position(x+y))
+ELEMENT: point(position(x*y))
 """
 
 check expr

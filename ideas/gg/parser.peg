@@ -11,6 +11,7 @@
   var Fn = AST.Fn;
   var Cross = AST.Cross;
   var Blend = AST.Blend;
+  var Nest = AST.Nest;
   var Name = AST.Name;
   var Str = AST.Str;
   var Num = AST.Num;
@@ -26,23 +27,23 @@ stmt
   / element
 
 data
-  = "DATA:" ws* left:name ws* "=" ws* expr:(name / str) ws*
+  = 'DATA:' ws* left:name ws* '=' ws* expr:(name / str) ws*
   { return new Data(left.value, expr); }
 
 scale
-  = "SCALE:" ws* fn:fn ws*
+  = 'SCALE:' ws* fn:fn ws*
   { return new Scale(fn); }
 
 coord
-  = "COORD:" ws* fn:fn ws*
+  = 'COORD:' ws* fn:fn ws*
   { return new Coord(fn); }
 
 guide
-  = "GUIDE:" ws* fn:fn ws*
+  = 'GUIDE:' ws* fn:fn ws*
   { return new Guide(fn); }
 
 element
-  = "ELEMENT:" ws* fn:fn ws*
+  = 'ELEMENT:' ws* fn:fn ws*
   { return new Element(fn); }
 
 expr
@@ -51,29 +52,34 @@ expr
   / primitive
 
 fn
-  = name:([a-z]/".")+ args:args
+  = name:([a-z]/'.')+ args:args
   { return new Fn(name.join(''), args);}
 
 args 
-  = "(" ws* args:arg* ws* ")"
+  = '(' ws* args:arg* ws* ')'
   { return args; }
 
 arg
   = expr:expr 
-  / ws* "," ws* expr:expr
+  / ws* ',' ws* expr:expr
   { return expr; }
 
 op
   = cross
   / blend
+  / nest
 
 cross
-  = left:name " "* "*" " "* right:name
+  = left:name ws* '*' ws* right:name
   { return new Cross(left, right); }
 
 blend
-  = left:name " "* "+" " "* right:name
+  = left:name ws* '+' ws* right:name
   { return new Blend(left, right); }
+
+nest
+  = left:name ws* '/' ws* right:name
+  { return new Nest(left, right); }
 
 primitive
   = name
@@ -92,4 +98,4 @@ num
   = chars:[0-9]+
   { return new Num(parseFloat(chars.join(''))); }
 
-ws = " " / "\n"
+ws = ' ' / '\n'
