@@ -25,8 +25,16 @@ class Element extends Stmt
 
 class Expr extends AST
 
+class Fn extends Expr
+  constructor: (@name, @args) ->
+
+class Op extends Expr
+  constructor: (@left, @right) ->
+
 class Primitive extends Expr
   constructor: (@value) ->
+
+class Cross extends Op
 
 class Name extends Primitive
 
@@ -34,11 +42,6 @@ class Str extends Primitive
 
 class Num extends Primitive
 
-class Fn extends Expr
-  constructor: (@name, @args) ->
-
-class Cross extends Expr
-  constructor: (@left, @right) ->
 
 show = match
   Program: ({stmts}) -> (_.map stmts, show).join '\n'

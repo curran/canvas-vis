@@ -8,11 +8,11 @@
   var Coord = AST.Coord;
   var Guide = AST.Guide;
   var Element = AST.Element;
+  var Fn = AST.Fn;
+  var Cross = AST.Cross;
   var Name = AST.Name;
   var Str = AST.Str;
   var Num = AST.Num;
-  var Fn = AST.Fn;
-  var Cross = AST.Cross;
 }
 
 start = stmts:stmt+ { return new Program(stmts); }
@@ -45,10 +45,8 @@ element
 
 expr
   = fn
-  / cross
-  / name
-  / str
-  / num
+  / op
+  / primitive
 
 fn
   = name:([a-z]/".")+ args:args
@@ -61,6 +59,18 @@ arg
   / ws* "," ws* expr:expr
   { return expr; }
 
+op
+  = cross
+
+cross
+  = left:name " "* "*" " "* right:name
+  { return new Cross(left, right); }
+
+primitive
+  = name
+  / str
+  / num
+
 name
   = chars:([a-z]/[A-Z])+ 
   { return new Name(chars.join('')); }
@@ -72,9 +82,5 @@ str
 num
   = chars:[0-9]+
   { return new Num(parseFloat(chars.join(''))); }
-  
-cross
-  = left:name " "* "*" " "* right:name
-  { return new Cross(left, right); }
 
 ws = " " / "\n"
