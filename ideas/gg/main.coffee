@@ -21,10 +21,10 @@ DATA: x = "petal length"
 DATA: y = "sepal length"
 SCALE: linear(dim(1))
 SCALE: linear(dim(2))
-COORD:  rect(dim(1, 2))
-"""; x = """
+COORD: rect(dim(1, 2))
 GUIDE: axis(dim(1))
 GUIDE: axis(dim(2))
+"""; x = """
 ELEMENT: point(position(x*y))
 """
 

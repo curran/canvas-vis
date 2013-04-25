@@ -42,6 +42,8 @@ module.exports = (function(){
         "data": parse_data,
         "scale": parse_scale,
         "coord": parse_coord,
+        "guide": parse_guide,
+        "element": parse_element,
         "expr": parse_expr,
         "fn": parse_fn,
         "args": parse_args,
@@ -137,6 +139,12 @@ module.exports = (function(){
           result0 = parse_scale();
           if (result0 === null) {
             result0 = parse_coord();
+            if (result0 === null) {
+              result0 = parse_guide();
+              if (result0 === null) {
+                result0 = parse_element();
+              }
+            }
           }
         }
         return result0;
@@ -354,6 +362,122 @@ module.exports = (function(){
         }
         if (result0 !== null) {
           result0 = (function(offset, fn) { return new Coord(fn); })(pos0, result0[2]);
+        }
+        if (result0 === null) {
+          pos = pos0;
+        }
+        return result0;
+      }
+      
+      function parse_guide() {
+        var result0, result1, result2, result3, result4;
+        var pos0, pos1;
+        
+        pos0 = pos;
+        pos1 = pos;
+        if (input.substr(pos, 6) === "GUIDE:") {
+          result0 = "GUIDE:";
+          pos += 6;
+        } else {
+          result0 = null;
+          if (reportFailures === 0) {
+            matchFailed("\"GUIDE:\"");
+          }
+        }
+        if (result0 !== null) {
+          result1 = [];
+          result2 = parse_ws();
+          while (result2 !== null) {
+            result1.push(result2);
+            result2 = parse_ws();
+          }
+          if (result1 !== null) {
+            result2 = parse_fn();
+            if (result2 !== null) {
+              result3 = [];
+              result4 = parse_ws();
+              while (result4 !== null) {
+                result3.push(result4);
+                result4 = parse_ws();
+              }
+              if (result3 !== null) {
+                result0 = [result0, result1, result2, result3];
+              } else {
+                result0 = null;
+                pos = pos1;
+              }
+            } else {
+              result0 = null;
+              pos = pos1;
+            }
+          } else {
+            result0 = null;
+            pos = pos1;
+          }
+        } else {
+          result0 = null;
+          pos = pos1;
+        }
+        if (result0 !== null) {
+          result0 = (function(offset, fn) { return new Guide(fn); })(pos0, result0[2]);
+        }
+        if (result0 === null) {
+          pos = pos0;
+        }
+        return result0;
+      }
+      
+      function parse_element() {
+        var result0, result1, result2, result3, result4;
+        var pos0, pos1;
+        
+        pos0 = pos;
+        pos1 = pos;
+        if (input.substr(pos, 8) === "ELEMENT:") {
+          result0 = "ELEMENT:";
+          pos += 8;
+        } else {
+          result0 = null;
+          if (reportFailures === 0) {
+            matchFailed("\"ELEMENT:\"");
+          }
+        }
+        if (result0 !== null) {
+          result1 = [];
+          result2 = parse_ws();
+          while (result2 !== null) {
+            result1.push(result2);
+            result2 = parse_ws();
+          }
+          if (result1 !== null) {
+            result2 = parse_fn();
+            if (result2 !== null) {
+              result3 = [];
+              result4 = parse_ws();
+              while (result4 !== null) {
+                result3.push(result4);
+                result4 = parse_ws();
+              }
+              if (result3 !== null) {
+                result0 = [result0, result1, result2, result3];
+              } else {
+                result0 = null;
+                pos = pos1;
+              }
+            } else {
+              result0 = null;
+              pos = pos1;
+            }
+          } else {
+            result0 = null;
+            pos = pos1;
+          }
+        } else {
+          result0 = null;
+          pos = pos1;
+        }
+        if (result0 !== null) {
+          result0 = (function(offset, fn) { return new Element(fn); })(pos0, result0[2]);
         }
         if (result0 === null) {
           pos = pos0;
@@ -873,6 +997,8 @@ module.exports = (function(){
         var Data = AST.Data;
         var Scale = AST.Scale;
         var Coord = AST.Coord;
+        var Guide = AST.Guide;
+        var Element = AST.Element;
         var Name = AST.Name;
         var Str = AST.Str;
         var Num = AST.Num;

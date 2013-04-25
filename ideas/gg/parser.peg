@@ -6,6 +6,8 @@
   var Data = AST.Data;
   var Scale = AST.Scale;
   var Coord = AST.Coord;
+  var Guide = AST.Guide;
+  var Element = AST.Element;
   var Name = AST.Name;
   var Str = AST.Str;
   var Num = AST.Num;
@@ -17,6 +19,8 @@ start = stmts:stmt+ { return new Program(stmts); }
 stmt = data
      / scale
      / coord
+     / guide
+     / element
 
 data
   = "DATA:" ws* left:name ws* "=" ws* expr:(name / str) ws*
@@ -29,6 +33,14 @@ scale
 coord
   = "COORD:" ws* fn:fn ws*
   { return new Coord(fn); }
+
+guide
+  = "GUIDE:" ws* fn:fn ws*
+  { return new Guide(fn); }
+
+element
+  = "ELEMENT:" ws* fn:fn ws*
+  { return new Element(fn); }
 
 expr
   = fn

@@ -17,6 +17,12 @@ class Scale extends Stmt
 class Coord extends Stmt
   constructor: (@fn) ->
 
+class Guide extends Stmt
+  constructor: (@fn) ->
+
+class Element extends Stmt
+  constructor: (@fn) ->
+
 class Expr extends AST
 
 class Primitive extends Expr
@@ -36,12 +42,13 @@ show = match
   Data: ({name, expr}) -> "DATA: #{name} = #{show expr}"
   Scale: ({fn}) -> "SCALE: #{show fn}"
   Coord: ({fn}) -> "COORD: #{show fn}"
+  Guide: ({fn}) -> "GUIDE: #{show fn}"
   Primitive: ({value}) -> value
   Str: ({value}) -> '"'+value+'"'
   Fn: ({name, args}) -> "#{name}(#{(_.map args, show).join ', '})"
 
 _.extend AST, {
-  Program, Stmt, Data, Scale, Coord,
+  Program, Stmt, Data, Scale, Coord, Guide, Element,
   Expr, Primitive, Name, Str, Num, Fn, show
 }
 module.exports = AST
