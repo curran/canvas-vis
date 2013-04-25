@@ -129,7 +129,7 @@ t = ->
   e outPt.y, 10
 
 e = (actual, expected) -> if actual != expected
-  throw new Error "Expected #{expected}, got #{actual}"
+  throw new Error "Expected '#{expected}', got '#{actual}'"
 
 
 # Hoist into a browser
