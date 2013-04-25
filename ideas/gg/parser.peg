@@ -2,19 +2,42 @@
 {
   // Import AST types for building the Abstract Syntax Tree.
   var AST = require('./AST.coffee');
-  var Program = AST.Program
-  var Data = AST.Data
-  var Name = AST.Name
-  var Str = AST.Str
+  var Program = AST.Program;
+  var Data = AST.Data;
+  var Name = AST.Name;
+  var Str = AST.Str;
+  var Num = AST.Num;
+  var Scale = AST.Scale;
+  var Fn = AST.Fn;
 }
 
 start = stmts:stmt+ { return new Program(stmts); }
 
 stmt = data
+     / scale
 
 data
   = "DATA:" ws* left:name ws* "=" ws* expr:(name / str) ws*
   { return new Data(left.value, expr); }
+
+scale
+  = "SCALE:" ws* fn:fn ws*
+  { return new Scale(fn); }
+
+expr
+  = fn
+  / name
+  / str
+  / num
+
+fn
+  = name:([a-z]/".")+ args:args
+  { return new Fn(name.join(''), args);}
+
+args = "(" " "* args:arg* " "* ")" { return args; }
+
+arg
+  = expr:expr 
 
 name
   = chars:([a-z]/[A-Z])+ 
@@ -22,6 +45,13 @@ name
 
 str
   = '"' chars:[^"]* '"'
-  { return new Str(chars.join("")); }
+  { return new Str(chars.join('')); }
+
+num
+  = chars:[0-9]+
+  { return new Num(parseFloat(chars.join(''))); }
+
+  / ws* "," ws* expr:expr
+  { return expr; }
 
 ws = " " / "\n"

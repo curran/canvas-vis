@@ -1,19 +1,9 @@
-$ = require 'jquery-browserify'
-_ = require 'underscore'
-map = _.map
 parser = require './parser.js'
 parse = parser.parse
 match = require './match.coffee'
 AST = require './AST.coffee'
-Program = AST.Program
-Data = AST.Data
-Name = AST.Name
-
-show = match
-  Program: ({stmts}) -> (map stmts, show).join '\n'
-  Data: ({name, expr}) -> "DATA: #{name} = #{show expr}"
-  Name: ({value}) -> value
-  Str: ({value}) -> '"'+value+'"'
+show = AST.show
+Relation = require './Relation.coffee'
 
 e = (actual, expected) -> if actual != expected
   throw new Error "Expected '#{expected}', got '#{actual}'"
@@ -25,5 +15,25 @@ DATA: x = y
 DATA: q = z
 """
 check 'DATA: x = "sepal length"'
+
+expr = """
+DATA: x = "petal length"
+DATA: y = "sepal length"
+SCALE: linear(dim(1))
+SCALE: linear(dim(2))
+"""; x = """
+COORD: rect(dim(1, 2))
+GUIDE: axis(dim(1))
+GUIDE: axis(dim(2))
+ELEMENT: point(position(x*y))
+"""
+
+check expr
 console.log 'All tests passed!'
-#console.log show parse expr
+
+#TODO next: pull pipeline from CSV to graphic, thu grammar
+$.get 'data/iris.csv', (data) ->
+  table = $.csv.toArrays data
+  console.log table
+  relation = new Relation table
+
