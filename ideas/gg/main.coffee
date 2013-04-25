@@ -24,6 +24,7 @@ SCALE: linear(dim(2))
 COORD: rect(dim(1, 2))
 GUIDE: axis(dim(1))
 GUIDE: axis(dim(2))
+ELEMENT: point(position(x))
 """; x = """
 ELEMENT: point(position(x*y))
 """
