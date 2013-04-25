@@ -41,6 +41,7 @@ module.exports = (function(){
         "stmt": parse_stmt,
         "data": parse_data,
         "scale": parse_scale,
+        "coord": parse_coord,
         "expr": parse_expr,
         "fn": parse_fn,
         "args": parse_args,
@@ -134,6 +135,9 @@ module.exports = (function(){
         result0 = parse_data();
         if (result0 === null) {
           result0 = parse_scale();
+          if (result0 === null) {
+            result0 = parse_coord();
+          }
         }
         return result0;
       }
@@ -292,6 +296,64 @@ module.exports = (function(){
         }
         if (result0 !== null) {
           result0 = (function(offset, fn) { return new Scale(fn); })(pos0, result0[2]);
+        }
+        if (result0 === null) {
+          pos = pos0;
+        }
+        return result0;
+      }
+      
+      function parse_coord() {
+        var result0, result1, result2, result3, result4;
+        var pos0, pos1;
+        
+        pos0 = pos;
+        pos1 = pos;
+        if (input.substr(pos, 6) === "COORD:") {
+          result0 = "COORD:";
+          pos += 6;
+        } else {
+          result0 = null;
+          if (reportFailures === 0) {
+            matchFailed("\"COORD:\"");
+          }
+        }
+        if (result0 !== null) {
+          result1 = [];
+          result2 = parse_ws();
+          while (result2 !== null) {
+            result1.push(result2);
+            result2 = parse_ws();
+          }
+          if (result1 !== null) {
+            result2 = parse_fn();
+            if (result2 !== null) {
+              result3 = [];
+              result4 = parse_ws();
+              while (result4 !== null) {
+                result3.push(result4);
+                result4 = parse_ws();
+              }
+              if (result3 !== null) {
+                result0 = [result0, result1, result2, result3];
+              } else {
+                result0 = null;
+                pos = pos1;
+              }
+            } else {
+              result0 = null;
+              pos = pos1;
+            }
+          } else {
+            result0 = null;
+            pos = pos1;
+          }
+        } else {
+          result0 = null;
+          pos = pos1;
+        }
+        if (result0 !== null) {
+          result0 = (function(offset, fn) { return new Coord(fn); })(pos0, result0[2]);
         }
         if (result0 === null) {
           pos = pos0;
@@ -809,10 +871,11 @@ module.exports = (function(){
         var AST = require('./AST.coffee');
         var Program = AST.Program;
         var Data = AST.Data;
+        var Scale = AST.Scale;
+        var Coord = AST.Coord;
         var Name = AST.Name;
         var Str = AST.Str;
         var Num = AST.Num;
-        var Scale = AST.Scale;
         var Fn = AST.Fn;
       
       

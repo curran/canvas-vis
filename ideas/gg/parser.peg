@@ -4,10 +4,11 @@
   var AST = require('./AST.coffee');
   var Program = AST.Program;
   var Data = AST.Data;
+  var Scale = AST.Scale;
+  var Coord = AST.Coord;
   var Name = AST.Name;
   var Str = AST.Str;
   var Num = AST.Num;
-  var Scale = AST.Scale;
   var Fn = AST.Fn;
 }
 
@@ -15,6 +16,7 @@ start = stmts:stmt+ { return new Program(stmts); }
 
 stmt = data
      / scale
+     / coord
 
 data
   = "DATA:" ws* left:name ws* "=" ws* expr:(name / str) ws*
@@ -23,6 +25,10 @@ data
 scale
   = "SCALE:" ws* fn:fn ws*
   { return new Scale(fn); }
+
+coord
+  = "COORD:" ws* fn:fn ws*
+  { return new Coord(fn); }
 
 expr
   = fn
