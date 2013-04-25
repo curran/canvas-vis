@@ -53,7 +53,9 @@ show = match
   Coord: ({fn}) -> "COORD: #{show fn}"
   Guide: ({fn}) -> "GUIDE: #{show fn}"
   Element: ({fn}) -> "ELEMENT: #{show fn}"
-  Primitive: ({value}) -> value
+  Name: ({value}) -> value
+  Str: ({value}) -> value
+  Num: ({value}) -> value
   Str: ({value}) -> '"'+value+'"'
   Fn: ({name, args}) -> "#{name}(#{(_.map args, show).join ', '})"
   Cross: ({left, right}) -> "#{show left}*#{show right}"
