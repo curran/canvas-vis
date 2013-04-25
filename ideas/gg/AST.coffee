@@ -6,7 +6,7 @@ class Program extends AST
 class Stmt extends AST
 
 class Data extends Stmt
-  constructor: (@left, @right) ->
+  constructor: (@name, @expr) ->
 
 class Expr extends AST
 
@@ -15,10 +15,13 @@ class Primitive extends Expr
 
 class Name extends Primitive
 
+class Str extends Primitive
+
 AST.Program = Program
 AST.Stmt = Stmt
 AST.Data = Data
 AST.Expr = Expr
 AST.Primitive = Primitive
 AST.Name = Name
+AST.Str = Str
 module.exports = AST

@@ -131,7 +131,6 @@ t = ->
 e = (actual, expected) -> if actual != expected
   throw new Error "Expected '#{expected}', got '#{actual}'"
 
-
 # Hoist into a browser
 inNode = typeof module != 'undefined'
 if inNode

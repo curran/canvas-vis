@@ -40,6 +40,7 @@ module.exports = (function(){
         "start": parse_start,
         "data": parse_data,
         "name": parse_name,
+        "str": parse_str,
         "ws": parse_ws
       };
       
@@ -170,6 +171,9 @@ module.exports = (function(){
                   }
                   if (result5 !== null) {
                     result6 = parse_name();
+                    if (result6 === null) {
+                      result6 = parse_str();
+                    }
                     if (result6 !== null) {
                       result7 = [];
                       result8 = parse_ws();
@@ -212,7 +216,7 @@ module.exports = (function(){
           pos = pos1;
         }
         if (result0 !== null) {
-          result0 = (function(offset, left, right) { return new Data(left.value, right.value); })(pos0, result0[2], result0[6]);
+          result0 = (function(offset, left, expr) { return new Data(left.value, expr); })(pos0, result0[2], result0[6]);
         }
         if (result0 === null) {
           pos = pos0;
@@ -275,6 +279,77 @@ module.exports = (function(){
         }
         if (result0 !== null) {
           result0 = (function(offset, chars) { return new Name(chars.join('')); })(pos0, result0);
+        }
+        if (result0 === null) {
+          pos = pos0;
+        }
+        return result0;
+      }
+      
+      function parse_str() {
+        var result0, result1, result2;
+        var pos0, pos1;
+        
+        pos0 = pos;
+        pos1 = pos;
+        if (input.charCodeAt(pos) === 34) {
+          result0 = "\"";
+          pos++;
+        } else {
+          result0 = null;
+          if (reportFailures === 0) {
+            matchFailed("\"\\\"\"");
+          }
+        }
+        if (result0 !== null) {
+          result1 = [];
+          if (/^[^"]/.test(input.charAt(pos))) {
+            result2 = input.charAt(pos);
+            pos++;
+          } else {
+            result2 = null;
+            if (reportFailures === 0) {
+              matchFailed("[^\"]");
+            }
+          }
+          while (result2 !== null) {
+            result1.push(result2);
+            if (/^[^"]/.test(input.charAt(pos))) {
+              result2 = input.charAt(pos);
+              pos++;
+            } else {
+              result2 = null;
+              if (reportFailures === 0) {
+                matchFailed("[^\"]");
+              }
+            }
+          }
+          if (result1 !== null) {
+            if (input.charCodeAt(pos) === 34) {
+              result2 = "\"";
+              pos++;
+            } else {
+              result2 = null;
+              if (reportFailures === 0) {
+                matchFailed("\"\\\"\"");
+              }
+            }
+            if (result2 !== null) {
+              result0 = [result0, result1, result2];
+            } else {
+              result0 = null;
+              pos = pos1;
+            }
+          } else {
+            result0 = null;
+            pos = pos1;
+          }
+        } else {
+          result0 = null;
+          pos = pos1;
+        }
+        if (result0 !== null) {
+          result0 = (function(offset, chars) { return new Str(chars.join("")); })(pos0, result0[1]);
         }
         if (result0 === null) {
           pos = pos0;
@@ -355,10 +430,12 @@ module.exports = (function(){
       }
       
       
+        // Import AST types for building the Abstract Syntax Tree.
         var AST = require('./AST.coffee');
         var Program = AST.Program
         var Data = AST.Data
         var Name = AST.Name
+        var Str = AST.Str
       
       
       var result = parseFunctions[startRule]();

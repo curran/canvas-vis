@@ -1,9 +1,11 @@
 // See Wilkinson's Grammar of Graphics p. 38
 {
+  // Import AST types for building the Abstract Syntax Tree.
   var AST = require('./AST.coffee');
   var Program = AST.Program
   var Data = AST.Data
   var Name = AST.Name
+  var Str = AST.Str
 }
 
 start = stmts:stmt+ { return new Program(stmts); }
@@ -11,11 +13,15 @@ start = stmts:stmt+ { return new Program(stmts); }
 stmt = data
 
 data
-  = "DATA:" ws* left:name ws* "=" ws* right:name ws*
-  { return new Data(left.value, right.value); }
+  = "DATA:" ws* left:name ws* "=" ws* expr:(name / str) ws*
+  { return new Data(left.value, expr); }
 
 name
   = chars:([a-z]/[A-Z])+ 
   { return new Name(chars.join('')); }
+
+str
+  = '"' chars:[^"]* '"'
+  { return new Str(chars.join("")); }
 
 ws = " " / "\n"
