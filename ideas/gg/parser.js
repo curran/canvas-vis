@@ -923,6 +923,7 @@ module.exports = (function(){
         var AST = require('./AST.coffee');
         var Program = AST.Program;
         var Data = AST.Data;
+        var Source = AST.Source;
         var FnStmt = AST.FnStmt;
         var Scale = AST.Scale;
         var Coord = AST.Coord;

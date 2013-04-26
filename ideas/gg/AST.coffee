@@ -9,6 +9,10 @@ class Program extends AST
 
 class Stmt extends AST
 
+class Source extends Stmt
+  constructor: (@csvPath) ->
+    type @csvPath, String
+
 class Data extends Stmt
   constructor: (@name, @expr) ->
     type @name, String

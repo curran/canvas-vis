@@ -19,6 +19,7 @@ check 'ELEMENT: point(position(x*y))'
 check 'ELEMENT: point(position(x+y))'
 check 'ELEMENT: point(position(x/y))'
 
+# SOURCE: "data/iris.csv"
 expr = """
 DATA: x = "petal length"
 DATA: y = "sepal length"
@@ -32,6 +33,10 @@ ELEMENT: point(position(x*y))
 
 check expr
 console.log 'All tests passed!'
+
+#ast0 = parse expr
+#ast1 = processSources ast
+#check = (expr) -> e (show parse expr), expr
 
 #TODO next: pull pipeline from CSV to graphic, thu grammar
 # Step 1. add SOURCE statements for loading CSV files
