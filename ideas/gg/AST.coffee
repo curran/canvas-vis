@@ -1,5 +1,6 @@
 _ = require 'underscore'
 match = require './match.coffee'
+type = require './type.coffee'
 
 class AST
 
@@ -10,9 +11,12 @@ class Stmt extends AST
 
 class Data extends Stmt
   constructor: (@name, @expr) ->
+    type @name, String
 
 class FnStmt extends Stmt
   constructor: (@label, @fn) ->
+    type @label, String
+    type @fn, Fn
 
 FnStmt.create = (label, fn) ->
   switch label
@@ -33,9 +37,12 @@ class Expr extends AST
 
 class Fn extends Expr
   constructor: (@name, @args) ->
+    type @name, String
 
 class Op extends Expr
   constructor: (@left, @right, @sym) ->
+    type @left, Name
+    type @right, Expr
 
 Op.create = (left, right, sym) ->
   switch sym
@@ -50,13 +57,18 @@ class Blend extends Op
 class Nest extends Op
 
 class Primitive extends Expr
-  constructor: (@value) ->
 
 class Name extends Primitive
+  constructor: (@value) ->
+    type @value, String
 
 class Str extends Primitive
+  constructor: (@value) ->
+    type @value, String
 
 class Num extends Primitive
+  constructor: (@value) ->
+    type @value, Number
 
 show = match
   Program: ({stmts}) -> (_.map stmts, show).join '\n'

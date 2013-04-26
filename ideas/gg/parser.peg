@@ -49,7 +49,7 @@ arg
   { return expr; }
 
 op
-  = left:name ws* sym:('*' / '+' / '/') ws* right:name
+  = left:name ws* sym:('*' / '+' / '/') ws* right:expr
   { return Op.create(left, right, sym); }
 
 primitive
