@@ -21,11 +21,16 @@ start = stmts:stmt+ { return new Program(stmts); }
 
 stmt
   = data
+  / source
   / fnStmt
 
 data
   = 'DATA:' ws* left:name ws* '=' ws* expr:(name / str) ws*
   { return new Data(left.value, expr); }
+
+source
+  = 'SOURCE:' ws* name:name ws* '=' ws* csvPath:str ws*
+  { return new Source(name.value, csvPath.value); }
 
 fnStmt
   = label:('SCALE'/'COORD'/'GUIDE'/'ELEMENT') ':' ws* fn:fn ws*

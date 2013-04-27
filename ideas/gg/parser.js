@@ -40,6 +40,7 @@ module.exports = (function(){
         "start": parse_start,
         "stmt": parse_stmt,
         "data": parse_data,
+        "source": parse_source,
         "fnStmt": parse_fnStmt,
         "expr": parse_expr,
         "fn": parse_fn,
@@ -135,7 +136,10 @@ module.exports = (function(){
         
         result0 = parse_data();
         if (result0 === null) {
-          result0 = parse_fnStmt();
+          result0 = parse_source();
+          if (result0 === null) {
+            result0 = parse_fnStmt();
+          }
         }
         return result0;
       }
@@ -236,6 +240,106 @@ module.exports = (function(){
         }
         if (result0 !== null) {
           result0 = (function(offset, left, expr) { return new Data(left.value, expr); })(pos0, result0[2], result0[6]);
+        }
+        if (result0 === null) {
+          pos = pos0;
+        }
+        return result0;
+      }
+      
+      function parse_source() {
+        var result0, result1, result2, result3, result4, result5, result6, result7, result8;
+        var pos0, pos1;
+        
+        pos0 = pos;
+        pos1 = pos;
+        if (input.substr(pos, 7) === "SOURCE:") {
+          result0 = "SOURCE:";
+          pos += 7;
+        } else {
+          result0 = null;
+          if (reportFailures === 0) {
+            matchFailed("\"SOURCE:\"");
+          }
+        }
+        if (result0 !== null) {
+          result1 = [];
+          result2 = parse_ws();
+          while (result2 !== null) {
+            result1.push(result2);
+            result2 = parse_ws();
+          }
+          if (result1 !== null) {
+            result2 = parse_name();
+            if (result2 !== null) {
+              result3 = [];
+              result4 = parse_ws();
+              while (result4 !== null) {
+                result3.push(result4);
+                result4 = parse_ws();
+              }
+              if (result3 !== null) {
+                if (input.charCodeAt(pos) === 61) {
+                  result4 = "=";
+                  pos++;
+                } else {
+                  result4 = null;
+                  if (reportFailures === 0) {
+                    matchFailed("\"=\"");
+                  }
+                }
+                if (result4 !== null) {
+                  result5 = [];
+                  result6 = parse_ws();
+                  while (result6 !== null) {
+                    result5.push(result6);
+                    result6 = parse_ws();
+                  }
+                  if (result5 !== null) {
+                    result6 = parse_str();
+                    if (result6 !== null) {
+                      result7 = [];
+                      result8 = parse_ws();
+                      while (result8 !== null) {
+                        result7.push(result8);
+                        result8 = parse_ws();
+                      }
+                      if (result7 !== null) {
+                        result0 = [result0, result1, result2, result3, result4, result5, result6, result7];
+                      } else {
+                        result0 = null;
+                        pos = pos1;
+                      }
+                    } else {
+                      result0 = null;
+                      pos = pos1;
+                    }
+                  } else {
+                    result0 = null;
+                    pos = pos1;
+                  }
+                } else {
+                  result0 = null;
+                  pos = pos1;
+                }
+              } else {
+                result0 = null;
+                pos = pos1;
+              }
+            } else {
+              result0 = null;
+              pos = pos1;
+            }
+          } else {
+            result0 = null;
+            pos = pos1;
+          }
+        } else {
+          result0 = null;
+          pos = pos1;
+        }
+        if (result0 !== null) {
+          result0 = (function(offset, name, csvPath) { return new Source(name.value, csvPath.value); })(pos0, result0[2], result0[6]);
         }
         if (result0 === null) {
           pos = pos0;

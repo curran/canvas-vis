@@ -44,6 +44,8 @@ type = (object, expectedType) ->
     while error and c?.__super__
       c = c.__super__.constructor
       error = (c != expectedType)
+    if error
+      message = "Exped type , got type '#{typeof object}"
   if error
     throw Error 'Type Error'
 

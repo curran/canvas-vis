@@ -15,12 +15,13 @@ DATA: x = y
 DATA: q = z
 """
 check 'DATA: x = "sepal length"'
+check 'SOURCE: iris = "data/iris.csv"'
 check 'ELEMENT: point(position(x*y))'
 check 'ELEMENT: point(position(x+y))'
 check 'ELEMENT: point(position(x/y))'
 
-# SOURCE: "data/iris.csv"
 expr = """
+SOURCE: iris = "data/iris.csv"
 DATA: x = "petal length"
 DATA: y = "sepal length"
 SCALE: linear(dim(1))

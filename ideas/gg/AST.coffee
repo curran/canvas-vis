@@ -10,7 +10,8 @@ class Program extends AST
 class Stmt extends AST
 
 class Source extends Stmt
-  constructor: (@csvPath) ->
+  constructor: (@name, @csvPath) ->
+    type @name, String
     type @csvPath, String
 
 class Data extends Stmt
@@ -77,6 +78,7 @@ class Num extends Primitive
 show = match
   Program: ({stmts}) -> (_.map stmts, show).join '\n'
   Data: ({name, expr}) -> "DATA: #{name} = #{show expr}"
+  Source: ({name, csvPath}) -> "SOURCE: #{name} = \"#{csvPath}\""
   FnStmt : ({label, fn}) -> "#{label}: #{show fn}"
   Primitive: ({value}) -> value
   Str: ({value}) -> '"'+value+'"'
@@ -84,7 +86,9 @@ show = match
   Op: ({left, right, sym}) -> "#{show left}#{sym}#{show right}"
 
 _.extend AST, {
-  Program, Stmt, Data, FnStmt, Scale, Coord, Guide, Element,
-  Expr, Primitive, Name, Str, Num, Fn, Op, Cross, Blend, Nest, show
+  Program, Stmt, Data, Source, FnStmt,
+  Scale, Coord, Guide, Element,
+  Expr, Primitive, Name, Str, Num, Fn,
+  Op, Cross, Blend, Nest, show
 }
 module.exports = AST
