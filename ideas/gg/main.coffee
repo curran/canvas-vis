@@ -4,6 +4,11 @@ match = require './match.coffee'
 AST = require './AST.coffee'
 show = AST.show
 Relation = require './Relation.coffee'
+_ = require 'underscore'
+map = _.map
+compact = _.compact
+identity = _.identity
+async = require 'async'
 
 e = (actual, expected) -> if actual != expected
   throw new Error "Expected '#{expected}', got '#{actual}'"
@@ -11,8 +16,8 @@ e = (actual, expected) -> if actual != expected
 check = (expr) -> e (show parse expr), expr
 check 'DATA: x = y'
 check """
-DATA: x = y
-DATA: q = z
+  DATA: x = y
+  DATA: q = z
 """
 check 'DATA: x = "sepal length"'
 check 'SOURCE: iris = "data/iris.csv"'
@@ -35,18 +40,30 @@ ELEMENT: point(position(x*y))
 check expr
 console.log 'All tests passed!'
 
-#ast0 = parse expr
-#ast1 = processSources ast
-#check = (expr) -> e (show parse expr), expr
+# callback(err, text)
+getFile = (path, callback) ->
+  # TODO handle error case for missing files
+  $.get path, (text) -> callback null, text
 
-#TODO next: pull pipeline from CSV to graphic, thu grammar
-# Step 1. add SOURCE statements for loading CSV files
-# SOURCE: "iris.csv"
-#
-# ELEMENT: point(position(x*y))
-#
-$.get 'data/iris.csv', (data) ->
-  table = $.csv.toArrays data
-  console.log table
-  relation = new Relation table
+csvToRelation = (csvText) ->
+  new Relation $.csv.toArrays csvText
 
+extractSources = match
+  Program: ({stmts}) -> compact map stmts, extractSources
+  Source: identity
+  AST: ->
+
+# callback(err, [name:String, Relation])
+getNamedRelation = (source, callback) ->
+  getFile source.csvPath, (err, csvText) ->
+    relation = csvToRelation csvText
+    callback null, [source.name, relation]
+
+# callback(err, [[name:String, Relation]])
+getNamedRelations = (sources, callback) ->
+  async.map sources, getNamedRelation, callback
+
+ast0 = parse expr
+sources = extractSources ast0
+getNamedRelations sources, (err, namedRelations) ->
+  console.log namedRelations
