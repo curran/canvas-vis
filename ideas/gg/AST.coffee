@@ -1,5 +1,4 @@
 _ = require 'underscore'
-match = require './match.coffee'
 type = require './type.coffee'
 
 class AST
@@ -10,13 +9,13 @@ class Program extends AST
 class Stmt extends AST
 
 class Source extends Stmt
-  constructor: (@name, @csvPath) ->
-    type @name, String
+  constructor: (@csvPath) ->
     type @csvPath, String
 
 class Data extends Stmt
   constructor: (@name, @expr) ->
     type @name, String
+    # type @expr Name or String
 
 class FnStmt extends Stmt
   constructor: (@label, @fn) ->
@@ -75,20 +74,10 @@ class Num extends Primitive
   constructor: (@value) ->
     type @value, Number
 
-show = match
-  Program: ({stmts}) -> (_.map stmts, show).join '\n'
-  Data: ({name, expr}) -> "DATA: #{name} = #{show expr}"
-  Source: ({name, csvPath}) -> "SOURCE: #{name} = \"#{csvPath}\""
-  FnStmt : ({label, fn}) -> "#{label}: #{show fn}"
-  Primitive: ({value}) -> value
-  Str: ({value}) -> '"'+value+'"'
-  Fn: ({name, args}) -> "#{name}(#{(_.map args, show).join ', '})"
-  Op: ({left, right, sym}) -> "#{show left}#{sym}#{show right}"
-
 _.extend AST, {
   Program, Stmt, Data, Source, FnStmt,
   Scale, Coord, Guide, Element,
   Expr, Primitive, Name, Str, Num, Fn,
-  Op, Cross, Blend, Nest, show
+  Op, Cross, Blend, Nest
 }
 module.exports = AST

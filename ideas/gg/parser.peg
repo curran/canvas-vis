@@ -29,8 +29,8 @@ data
   { return new Data(left.value, expr); }
 
 source
-  = 'SOURCE:' ws* name:name ws* '=' ws* csvPath:str ws*
-  { return new Source(name.value, csvPath.value); }
+  = 'SOURCE:' ws* csvPath:str ws*
+  { return new Source(csvPath.value); }
 
 fnStmt
   = label:('SCALE'/'COORD'/'GUIDE'/'ELEMENT') ':' ws* fn:fn ws*

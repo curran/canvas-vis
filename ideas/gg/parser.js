@@ -248,7 +248,7 @@ module.exports = (function(){
       }
       
       function parse_source() {
-        var result0, result1, result2, result3, result4, result5, result6, result7, result8;
+        var result0, result1, result2, result3, result4;
         var pos0, pos1;
         
         pos0 = pos;
@@ -270,7 +270,7 @@ module.exports = (function(){
             result2 = parse_ws();
           }
           if (result1 !== null) {
-            result2 = parse_name();
+            result2 = parse_str();
             if (result2 !== null) {
               result3 = [];
               result4 = parse_ws();
@@ -279,49 +279,7 @@ module.exports = (function(){
                 result4 = parse_ws();
               }
               if (result3 !== null) {
-                if (input.charCodeAt(pos) === 61) {
-                  result4 = "=";
-                  pos++;
-                } else {
-                  result4 = null;
-                  if (reportFailures === 0) {
-                    matchFailed("\"=\"");
-                  }
-                }
-                if (result4 !== null) {
-                  result5 = [];
-                  result6 = parse_ws();
-                  while (result6 !== null) {
-                    result5.push(result6);
-                    result6 = parse_ws();
-                  }
-                  if (result5 !== null) {
-                    result6 = parse_str();
-                    if (result6 !== null) {
-                      result7 = [];
-                      result8 = parse_ws();
-                      while (result8 !== null) {
-                        result7.push(result8);
-                        result8 = parse_ws();
-                      }
-                      if (result7 !== null) {
-                        result0 = [result0, result1, result2, result3, result4, result5, result6, result7];
-                      } else {
-                        result0 = null;
-                        pos = pos1;
-                      }
-                    } else {
-                      result0 = null;
-                      pos = pos1;
-                    }
-                  } else {
-                    result0 = null;
-                    pos = pos1;
-                  }
-                } else {
-                  result0 = null;
-                  pos = pos1;
-                }
+                result0 = [result0, result1, result2, result3];
               } else {
                 result0 = null;
                 pos = pos1;
@@ -339,7 +297,7 @@ module.exports = (function(){
           pos = pos1;
         }
         if (result0 !== null) {
-          result0 = (function(offset, name, csvPath) { return new Source(name.value, csvPath.value); })(pos0, result0[2], result0[6]);
+          result0 = (function(offset, csvPath) { return new Source(csvPath.value); })(pos0, result0[2]);
         }
         if (result0 === null) {
           pos = pos0;
