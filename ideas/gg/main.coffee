@@ -3,6 +3,8 @@ getFile = require './getFile.coffee'
 parse = (require './parser').parse
 processSourceStmts = require './processSourceStmts.coffee'
 processDataStmts = require './processDataStmts.coffee'
+evaluateAlgebra = require './evaluateAlgebra.coffee'
+show = require './show.coffee'
 
 # Run unit tests for parser
 tests()
@@ -14,5 +16,5 @@ evaluate = (expr, canvas) ->
   ast = parse expr
   processSourceStmts ast, (err, vars) ->
     vars = processDataStmts ast, vars
-    console.log vars
-
+    ast = evaluateAlgebra ast, vars
+    console.log show ast
