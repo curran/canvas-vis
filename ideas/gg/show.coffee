@@ -10,5 +10,6 @@ show = match
   Str: ({value}) -> '"'+value+'"'
   Fn: ({name, args}) -> "#{name}(#{(map args, show).join ', '})"
   Op: ({left, right, sym}) -> "#{show left}#{sym}#{show right}"
+  Relation: (r) -> "<Relation with #{r.m()} rows and #{r.n()} columns>"
 
 module.exports = show

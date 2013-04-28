@@ -30,6 +30,9 @@ getRelations = (sources, callback) ->
 # callback(err, [name:String, Relation])
 getRelation = (source, callback) ->
   getFile source.csvPath, (err, csvText) ->
-    callback null, new Relation $.csv.toArrays csvText
+    if err then callback err
+    table = $.csv.toArrays csvText
+    relation = Relation.fromTable table
+    callback null, relation
 
 module.exports = processSourceStmts
