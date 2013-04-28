@@ -42,6 +42,7 @@ class Expr extends AST
 class Fn extends Expr
   constructor: (@name, @args) ->
     type @name, String
+# type @args, Array<Expr>
 
 class Op extends Expr
   constructor: (@left, @right, @sym) ->

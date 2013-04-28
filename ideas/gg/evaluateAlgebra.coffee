@@ -3,7 +3,6 @@ Relation = require './Relation.coffee'
 AST = require './AST.coffee'
 Program = AST.Program
 Element = AST.Element
-Stmt = AST.Stmt
 Fn = AST.Fn
 Cross = AST.Cross
 _ = require 'underscore'
@@ -20,11 +19,6 @@ evaluateAlgebra = (ast, vars) ->
     Fn: ({name, args}) -> new Fn name, map args, algebra
     Cross: ({left, right, sym}) ->
       Relation.cross (algebra left), (algebra right)
-      #a = algebra left
-      #b = algebra right
-      #retval = Relation.cross a, b
-      #console.log retval
-      #retval
     Name: ({value}) -> Relation.fromAttribute vars[value]
     AST: (ast) -> ast
   algebra ast

@@ -1,5 +1,6 @@
 type = require './type.coffee'
 _ = require 'underscore'
+map = _.map
 first = _.first
 rest = _.rest
 union = _.union
@@ -9,6 +10,12 @@ class Relation
   attribute: (name) -> _.findWhere @attributes, {name}
   n: -> @attributes.length
   m: -> @keys.length
+  toCSV: ->
+    names = (attr.name for attr in @attributes).join ','
+    line = (key) =>
+      (attr.map[key] for attr in @attributes).join ','
+    tuples = (map @keys, line).join '\n'
+    names + '\n' + tuples
 
 class Attribute
   constructor: (@name, @keys, @map) ->
@@ -29,11 +36,11 @@ Relation.fromTable = (table) ->
   
   attributes = for i in [0...n]
     name = names[i]
-    map = {}
+    keyValueMap = {}
     for key in keys
       tuple = tuples[key]
-      map[key] = parseFloat tuple[i]
-    new Attribute name, keys, map
+      keyValueMap[key] = parseFloat tuple[i]
+    new Attribute name, keys, keyValueMap
 
   new Relation keys, attributes
 
