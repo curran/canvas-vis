@@ -8,6 +8,8 @@ processCoordStmts = require './processCoordStmts.coffee'
 evaluateAlgebra = require './evaluateAlgebra.coffee'
 show = require './show.coffee'
 match = require './match.coffee'
+Scale = require './Scale.coffee'
+Interval = require './Interval.coffee'
 
 _ = require 'underscore'
 map = _.map
@@ -24,10 +26,15 @@ getFile 'gg/scatter.gg', (err, expr) -> evaluate expr, canvas
 Mark = ->
   x: (@_x) -> @
   y: (@_y) -> @
+  size: (@_size) -> @
   render: (ctx, w, h) ->
     x = @_x * w
     y = @_y * h
-    ctx.fillRect x, y, 10, 10
+    radius = @_size * (w + h) / 4
+    ctx.beginPath()
+    ctx.arc x, y, radius, 0, 2*Math.PI
+    ctx.closePath()
+    ctx.fill()
 
 evaluate = (expr, canvas) ->
   ast = parse expr
@@ -49,7 +56,7 @@ evaluate = (expr, canvas) ->
         mark = Mark()
         mark = geometry key, mark
 #        mark = coords.apply mark
-#        mark = aesthetics key, mark
+        mark = aesthetics key, mark
 #        console.log mark._x, mark._y
         mark.render ctx, canvas.width, canvas.height
 
@@ -74,32 +81,35 @@ extractElementStmts = match
   AST: ->
 
 genGeometryFn = (fnName, options) ->
-  (key, mark) ->
+  geometryFns[fnName] options
+
+geometryFns =
+  point: (options) ->
     if options.position
       relation = options.position
-      mark.x(relation.attributes[0].map[key])
-          .y(relation.attributes[1].map[key])
-
-#geometryFns =
-#  point: 
+      (key, mark) ->
+        mark.x(relation.attributes[0].map[key])
+            .y(relation.attributes[1].map[key])
+    else (key, mark) -> mark
 
 genAestheticsFn = (fnName, options) ->
-  (key, mark) ->
-    mark
+  aestheticsFns[fnName] options
 
 
+aestheticsFns =
+  point: ({size}) ->
+    if size
+      minSize = 0.01
+      maxSize = 0.05
+      unit = new Interval 0, 1
+      sizes = new Interval minSize, maxSize
+      scale = new Scale
+#      scale.dest.min = 0.1
+#      scale.dest.max = 0.1
+      attr = size.attributes[0]
+      attr = scale.apply attr
+      (key, mark) ->
+        val = attr.map[key]
+        mark.size unit.to sizes, val
+    else (key, mark) -> mark
 
-genRenderFn = ({fn}) ->
-  options = argsToOptions fn.args
-
-
-  
-# match
-#  Element: ({fn}) -> genRenderFn fn
-#  Fn: ({name, args}) ->
-#    new Fn name, map args, genRenderFn
-#  Cross: ({left, right, sym}) ->
-#    Relation.cross (genRenderFn left), (genRenderFn right)
-#  Name: ({value}) -> Relation.fromAttribute vars[value]
-#  AST: (ast) -> ast
-  
