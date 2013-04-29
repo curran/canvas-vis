@@ -26,6 +26,7 @@ getFile 'gg/scatter.gg', (err, expr) -> evaluate expr, canvas
 Mark = ->
   x: (@_x) -> @
   y: (@_y) -> @
+  _size: 0.01
   size: (@_size) -> @
   render: (ctx, w, h) ->
     x = @_x * w
@@ -87,9 +88,14 @@ geometryFns =
   point: (options) ->
     if options.position
       relation = options.position
+      attrs = relation.attributes
       (key, mark) ->
-        mark.x(relation.attributes[0].map[key])
-            .y(relation.attributes[1].map[key])
+        if attrs.length == 1
+          mark.x(relation.attributes[0].map[key])
+              .y(0.5)
+        else if attrs.length == 2
+          mark.x(relation.attributes[0].map[key])
+              .y(relation.attributes[1].map[key])
     else (key, mark) -> mark
 
 genAestheticsFn = (fnName, options) ->
