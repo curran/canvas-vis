@@ -6,6 +6,7 @@ compact = _.compact
 async = require 'async'
 Relation = require './Relation.coffee'
 
+# This function is asynchronous because it grabs CSV files from URLs
 # callback(err, vars:Map<String, Relation.Attribute>)
 processSourceStmts = (ast, callback) ->
   sources = extractSources ast
