@@ -10,6 +10,7 @@ show = require './show.coffee'
 match = require './match.coffee'
 Scale = require './Scale.coffee'
 Interval = require './Interval.coffee'
+Mark = require './Mark.coffee'
 
 _ = require 'underscore'
 map = _.map
@@ -22,20 +23,6 @@ tests()
 
 # Evaluate the Grammar of Graphics expression
 getFile 'gg/scatter.gg', (err, expr) -> evaluate expr, canvas
-
-Mark = ->
-  x: (@_x) -> @
-  y: (@_y) -> @
-  _size: 0.01
-  size: (@_size) -> @
-  render: (ctx, w, h) ->
-    x = @_x * w
-    y = @_y * h
-    radius = @_size * (w + h) / 4
-    ctx.beginPath()
-    ctx.arc x, y, radius, 0, 2*Math.PI
-    ctx.closePath()
-    ctx.fill()
 
 evaluate = (expr, canvas) ->
   ast = parse expr
