@@ -16,6 +16,7 @@ processScaleStmts = (ast) ->
   scales = match
     Program: ({stmts}) -> new Program map stmts, scales
 #TODO make the label argument optional, reverse order
+# it's stupid to pass in 'ELEMENT' to new Element()
     Element: ({fn}) -> new Element 'ELEMENT', scales fn
     Fn: ({name, args}) -> new Fn name, map args, scales
     Relation: (relation) -> applyScales relation, scalesByDim
@@ -31,14 +32,14 @@ extractScalesByDim = (ast) ->
     scalesByDim[dim.value] = makeScale()
   return scalesByDim
 
-scaleFactories =
-  linear: -> new Scale
-
 extractScaleStmts = match
   Program: ({stmts}) ->
     compact map stmts, extractScaleStmts
   Scale: (s) -> s
   AST: ->
+
+scaleFactories =
+  linear: -> new Scale
 
 applyScales = (relation, scalesByDim) ->
   keys = relation.keys
