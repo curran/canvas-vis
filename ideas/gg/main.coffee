@@ -4,6 +4,7 @@ parse = (require './parser').parse
 processSourceStmts = require './processSourceStmts.coffee'
 processDataStmts = require './processDataStmts.coffee'
 processScaleStmts = require './processScaleStmts.coffee'
+processCoordStmts = require './processCoordStmts.coffee'
 evaluateAlgebra = require './evaluateAlgebra.coffee'
 show = require './show.coffee'
 match = require './match.coffee'
@@ -20,10 +21,10 @@ evaluate = (expr, canvas) ->
     vars = processDataStmts ast, vars
     ast = evaluateAlgebra ast, vars
     ast = processScaleStmts ast
-    console.log show ast
-    #coordinates = processCoordStmts ast
-    #console.log coordinates
-#    renderFns = genRenderFns ast
+    #console.log show ast
+    coords = processCoordStmts ast
+    console.log coords
+#    renderFns = genRenderFns ast, coords
 #    keys = extractKeys ast
 #    for genMark in renderFns
 #      for key in keys

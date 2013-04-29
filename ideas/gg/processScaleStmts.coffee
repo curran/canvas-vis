@@ -6,6 +6,7 @@ AST = require './AST.coffee'
 Program = AST.Program
 Element = AST.Element
 Fn = AST.Fn
+argsToOptions = require './argsToOptions.coffee'
 _ = require 'underscore'
 map = _.map
 compact = _.compact
@@ -28,23 +29,10 @@ extractScalesByDim = (ast) ->
     {dim} = argsToOptions fn.args
     makeScale = scaleFactories[fn.name]
     scalesByDim[dim] = makeScale()
-  console.log scalesByDim
   return scalesByDim
 
 scaleFactories =
   linear: -> new Scale
-
-argsToOptions = (args) ->
-  options = {}
-  for fn in args
-    type fn, Fn
-    if args.length == 1
-      options[fn.name] = fn.args[0].value
-    else
-      options[fn.name] = (arg.value for arg in fn.args)
-  return options
-
-
 
 extractScaleStmts = match
   Program: ({stmts}) ->
