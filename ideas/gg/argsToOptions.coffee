@@ -3,9 +3,9 @@ argsToOptions = (args) ->
   for fn in args
     #    type fn, Fn
     if args.length == 1
-      options[fn.name] = fn.args[0].value
+      options[fn.name] = fn.args[0]
     else
-      options[fn.name] = (arg.value for arg in fn.args)
+      options[fn.name] = fn.args
   return options
 
 module.exports = argsToOptions

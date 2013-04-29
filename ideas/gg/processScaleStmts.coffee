@@ -28,7 +28,7 @@ extractScalesByDim = (ast) ->
   for {fn} in scaleStmts
     {dim} = argsToOptions fn.args
     makeScale = scaleFactories[fn.name]
-    scalesByDim[dim] = makeScale()
+    scalesByDim[dim.value] = makeScale()
   return scalesByDim
 
 scaleFactories =
