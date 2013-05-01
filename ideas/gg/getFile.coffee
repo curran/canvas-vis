@@ -1,6 +1,11 @@
 # callback(err, text)
+
 getFile = (path, callback) ->
-  # TODO handle error case for missing files
-  $.get path, (text) -> callback null, text
+  $.ajax
+    url: path,
+    type: 'GET'
+    success: (text) -> callback null, text
+    error: (data) -> callback data
+    # TODO handle error case for missing files
 
 module.exports = getFile

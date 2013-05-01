@@ -1,5 +1,7 @@
 module.exports = (fns) ->
   (obj) ->
+    if !obj
+      throw Error "attempting to match type of an undefined object"
     constructor = obj.constructor
     fn = fns[constructor.name]
     while !fn and constructor.__super__
