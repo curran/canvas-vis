@@ -1,9 +1,11 @@
 Mark = ->
+  #TODO use singleton so no new objects are created
   x: (@_x) -> @
   y: (@_y) -> @
   _size: 0.01
   size: (@_size) -> @
   render: (ctx, w, h) ->
+    #TODO use Viewport abstraction
     x = @_x * w
     y = @_y * h
     radius = @_size * (w + h) / 4

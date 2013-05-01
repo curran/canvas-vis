@@ -14,8 +14,8 @@ Mark = require './Mark.coffee'
 preprocess = (expr) ->
 
 evaluate = (expr, canvas) ->
-  canvas.width = window.innerWidth
-  canvas.height = window.innerHeight
+  #canvas.width = window.innerWidth
+  #canvas.height = window.innerHeight
   ctx = canvas.getContext '2d'
 
   ast = parse expr
@@ -35,4 +35,16 @@ evaluate = (expr, canvas) ->
         mark.render ctx, canvas.width, canvas.height
 
 # Evaluate a Grammar of Graphics expression from a file.
-getFile 'gg/scatter.gg', (err, expr) -> evaluate expr, canvas
+#getFile 'gg/scatter.gg', (err, expr) -> evaluate expr, canvas
+getFile 'gg/scatter.gg', (err, expr) ->
+  expressionBox.value = expr
+  expressionBox.addEventListener 'input', evalExpressionBox
+  evalExpressionBox()
+
+evalExpressionBox = ->
+  try
+    errorDiv.innerHTML = ''
+    evaluate expressionBox.value, canvas
+  catch error
+    console.log 'here'
+    errorDiv.innerHTML = error

@@ -24,12 +24,11 @@ processScaleStmts = (ast) ->
   return scales ast
 
 extractScalesByDim = (ast) ->
-  scaleStmts = extractScaleStmts ast
   scalesByDim = {}
-  for {fn} in scaleStmts
-    {dim} = argsToOptions fn.args
-    makeScale = scaleFactories[fn.name]
-    scalesByDim[dim.value] = makeScale()
+  for {fn:{args, name}} in (extractScaleStmts ast)
+    {dim:{value}} = argsToOptions args
+    makeScale = scaleFactories[name]
+    scalesByDim[value] = makeScale()
   return scalesByDim
 
 extractScaleStmts = match
