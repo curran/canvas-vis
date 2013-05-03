@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<!-- saved from url=(0059)file://localhost/Users/curran/Downloads/jsbin.anoquy.7.html -->
+<html lang="en"><!--
+  Created using jsbin.com
+  Source can be edited via http://jsbin.com/anoquy/7/edit
+--><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <title>jQuery UI Slider - Range slider</title>
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+  <script src="./tickMarks_files/jquery-1.9.1.js"></script>
+  <script src="./tickMarks_files/jquery-ui.js"></script>
+  <script>
+  $(function() {
+    $( "#slider-range" ).slider({
+      range: true,
+      min: -50,
+      max: 50,
+      values: [ 0, 10 ],
+      slide: function( event, ui ) {
+        var min = ui.values[0],
+            max = ui.values[1]
+        
+        draw(min, max);
+        $( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
+      }
+    });
+    $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
+      " - $" + $( "#slider-range" ).slider( "values", 1 ) );
+  });
+  </script>
+
+<style id="jsbin-css">
+
+</style>
+</head>
+<body>
+ 
+<p>
+  <label for="amount">Price range:</label>
+  <input type="text" id="amount" style="border: 0; color: #f6931f; font-weight: bold;">
+</p>
+ 
+<div id="slider-range" class="ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" aria-disabled="false"><div class="ui-slider-range ui-widget-header ui-corner-all" style="left: 56.00000000000001%; width: 3.999999999999993%;"></div><a class="ui-slider-handle ui-state-default ui-corner-all ui-state-focus" href="file://localhost/Users/curran/Downloads/jsbin.anoquy.7.html#" style="left: 56.00000000000001%;"></a><a class="ui-slider-handle ui-state-default ui-corner-all" href="file://localhost/Users/curran/Downloads/jsbin.anoquy.7.html#" style="left: 60%;"></a></div>
+  <canvas id="canvas" width="400" height="60"></canvas>
+<script>
+var abs, bases, c, centerY, draw, drawLine, floor, log10, n, pow, tickMarkLength, tickMarks;
+
+floor = Math.floor;
+
+pow = Math.pow;
+
+abs = Math.abs;
+
+log10 = function(x) {
+  return (Math.log(x)) / (Math.log(10));
+};
+
+bases = [1, 2, 5];
+
+tickMarks = {
+  interval: function(min, max, n) {
+    var a, b, base, bestBase, exponent, i, rawInterval, span, _i, _ref;
+
+    span = max - min;
+    rawInterval = span / n;
+    exponent = floor(log10(rawInterval));
+    base = rawInterval / (pow(10, exponent));
+    bestBase = bases[0];
+    for (i = _i = 0, _ref = bases.length; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
+      a = abs(base - bases[i]);
+      b = abs(base - bestBase);
+      if (a < b) {
+        bestBase = bases[i];
+      }
+    }
+    return bestBase * Math.pow(10, exponent);
+  },
+  first: function(min, interval) {
+    return Math.ceil(min / interval) * interval;
+  }
+};
+
+c = canvas.getContext('2d');
+
+c.font = '12pt Arial';
+
+c.textAlign = 'center';
+
+c.lineWidth = 2;
+
+n = 8;
+
+centerY = 15;
+
+tickMarkLength = 20;
+
+drawLine = function(x1, y1, x2, y2) {
+  c.beginPath();
+  c.moveTo(x1, y1);
+  c.lineTo(x2, y2);
+  return c.stroke();
+};
+
+draw = function(min, max) {
+  var interval, tickValue, x, y1, y2, _results;
+
+  c.fillStyle = 'lightgray';
+  c.fillRect(0, 0, canvas.width, canvas.height);
+  drawLine(0, centerY, canvas.width, centerY);
+  c.fillStyle = 'black';
+  interval = tickMarks.interval(min, max, n);
+  tickValue = tickMarks.first(min, interval);
+  _results = [];
+  while (tickValue < max) {
+    x = (tickValue - min) / (max - min) * canvas.width;
+    tickValue += interval;
+    c.beginPath();
+    y1 = centerY - tickMarkLength / 2;
+    y2 = centerY + tickMarkLength / 2;
+    drawLine(x, y1, x, y2);
+    _results.push(c.fillText(tickValue, x, centerY + 30));
+  }
+  return _results;
+};
+</script>
+
+</body></html>

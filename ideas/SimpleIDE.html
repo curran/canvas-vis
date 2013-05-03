@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<!--
+  Created using jsbin.com
+  Source can be edited via http://jsbin.com/omijuq/3/edit
+-->
+<head>
+<meta charset=utf-8 />
+<title>JS Bin</title>
+<script src="http://rawgithub.com/ajaxorg/ace-builds/master/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+
+<style id="jsbin-css">
+.wrap {
+    width: 100%;
+}
+.floatleft, .floatright {
+    float:left;
+    width: 50%;
+    background-color: #ff0000;
+    height: 100%;
+}
+.floatright {
+    background-color: #00ff00;
+    width: 50%;
+}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div id="editor" class="floatleft"></div>
+    <div class="floatright">
+      <canvas id="canvas"></canvas>
+    </div>
+  </div>
+  <script>
+    
+  </script>
+<script>
+var editor;
+
+canvas.getContext('2d').fillRect(0, 0, 50, 50);
+
+editor = ace.edit("editor");
+
+editor.setTheme("ace/theme/monokai");
+
+editor.getSession().setMode("ace/mode/javascript");
+
+editor.commands.addCommand({
+  bindKey: {
+    win: 'Ctrl-M',
+    mac: 'Command-M'
+  },
+  exec: function(editor) {
+    return eval(editor.getValue());
+  }
+});
+</script>
+</body>
+</html>
